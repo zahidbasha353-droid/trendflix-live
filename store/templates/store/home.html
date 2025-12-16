@@ -3,109 +3,6 @@
 
 {% block content %}
 
-<div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
-    </div>
-
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1600&q=80" class="d-block w-100 hero-img" alt="Fashion">
-            <div class="carousel-caption d-none d-md-block text-start">
-                <h1 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 4px #000;">Print Your Vibe</h1>
-                <a href="#shop" class="btn btn-light btn-lg rounded-pill fw-bold mt-2">Shop Now</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="https://images.unsplash.com/photo-1544441893-675973e31985?w=1600&q=80" class="d-block w-100 hero-img" alt="Design">
-            <div class="carousel-caption d-none d-md-block text-start">
-                <h1 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 4px #000;">Create & Style</h1>
-                <a href="#" class="btn btn-warning btn-lg rounded-pill fw-bold mt-2">Start Designing</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&q=80" class="d-block w-100 hero-img" alt="Trends">
-        </div>
-    </div>
-    
-    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
-</div>
-
-<section class="py-5" id="shop">
-    <div class="container-fluid px-4"> 
-        <h2 class="fw-bold mb-4 text-center">Trending Collections</h2>
-
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            {% for product in products %}
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm product-card">
-                    
-                    <div class="position-relative overflow-hidden">
-                        <a href="{{ product.get_absolute_url }}">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 300px; object-fit: cover;">
-                            {% else %}
-                                <img src="https://via.placeholder.com/400x300/f8f9fa/6c757d?text=TrendFlix" class="card-img-top" style="height: 300px; object-fit: cover;">
-                            {% endif %}
-                        </a>
-                        <span class="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 m-2 rounded small fw-bold">Bestseller</span>
-                    </div>
-                    
-                    <div class="card-body d-flex flex-column">
-                        <p class="text-muted small mb-1">{{ product.category }}</p>
-                        <h5 class="card-title mb-1">
-                            <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark fw-bold">{{ product.name }}</a>
-                        </h5>
-                        
-                        <div class="mb-3">
-                            <span class="fw-bold text-danger fs-5">₹{{ product.price }}</span>
-                            <span class="text-muted text-decoration-line-through small ms-2">₹{{ product.price|add:"200" }}</span>
-                        </div>
-
-                        <div class="d-grid gap-2 mt-auto">
-                            <button class="btn btn-outline-dark btn-sm fw-bold">Add to Cart</button>
-                            <button class="btn btn-warning btn-sm fw-bold">Buy Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<div class="d-block d-md-none fixed-bottom bg-white border-top shadow py-2">
-    <div class="row text-center m-0">
-        <div class="col-3"><a href="{% url 'home' %}" class="text-danger text-decoration-none"><i class="fas fa-home fa-lg"></i><br><small>Home</small></a></div>
-        <div class="col-3"><a href="#" class="text-dark text-decoration-none"><i class="fas fa-search fa-lg"></i><br><small>Search</small></a></div>
-        <div class="col-3"><a href="#" class="text-dark text-decoration-none"><i class="fas fa-layer-group fa-lg"></i><br><small>Design</small></a></div>
-        <div class="col-3"><a href="#" class="text-dark text-decoration-none"><i class="fas fa-user fa-lg"></i><br><small>Profile</small></a></div>
-    </div>
-</div>
-
-{% endblock %}
-
-{% block extra_css %}
-<style>
-    /* Hero Image Height */
-    .hero-img { height: 250px; object-fit: cover; }
-    @media (min-width: 768px) { .hero-img { height: 500px; } }
-    
-    /* Product Card Hover */
-    .product-card { transition: transform 0.3s; border-radius: 10px; }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-    
-    @media (max-width: 768px) { body { padding-bottom: 70px; } }
-</style>
-{% endblock %}
-{% extends 'store/base.html' %}
-{% load static %}
-
-{% block content %}
-
 <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-inner">
         <div class="carousel-item active">
@@ -123,6 +20,12 @@
             </div>
         </div>
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
 </div>
 
 <section class="py-5 bg-light" id="hot-selling">
