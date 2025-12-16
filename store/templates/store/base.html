@@ -1,53 +1,85 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trendflix | Custom & Artist Marketplace</title>
+    <title>TrendFlix | Print Your Vibe</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; }
-        .navbar-brand { font-weight: 800; font-size: 24px; color: #333; }
-        .navbar-brand span { color: #e11d48; }
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden; /* தடுக்கிறது horizontal scroll */
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 0;
+        }
+        .navbar-brand img {
+            max-height: 40px; /* லோகோ உயரம் */
+            width: auto;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #333 !important;
+            margin: 0 10px;
+        }
+        .nav-link:hover {
+            color: #ff6b6b !important;
+        }
+        .btn-custom {
+            background-color: #ff6b6b;
+            color: white;
+            border-radius: 25px;
+            padding: 8px 25px;
+        }
+        .btn-custom:hover {
+            background-color: #ff5252;
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #ddd;
+            padding: 40px 0;
+        }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}"><i class="fa-solid fa-layer-group"></i> TREND<span>FLIX</span></a>
+
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-layer-group text-danger me-2"></i>
+                <span style="font-weight: 800; font-size: 1.5rem; color: #000;">TREND<span class="text-danger">FLIX</span></span>
+            </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link fw-bold" href="{% url 'home' %}">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold" href="{% url 'custom_design' %}">Design Lab</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-danger" href="{% url 'upload_design' %}">Sell Your Art</a></li>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Design Lab</a></li> <li class="nav-item">
+                        <a class="nav-link position-relative" href="#">
+                            <i class="fas fa-shopping-cart fa-lg"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                0
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a href="#" class="btn btn-custom">Login</a> </li>
                 </ul>
-                
-                <div class="d-flex align-items-center">
-                    <a href="{% url 'cart' %}" class="btn btn-outline-dark me-2 rounded-pill position-relative border-0">
-                        <i class="fa-solid fa-cart-shopping fs-5"></i>
-                        {% if cart_count > 0 %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ cart_count }}</span>{% endif %}
-                    </a>
-                    
-                    {% if user.is_authenticated %}
-                        <div class="dropdown">
-                            <button class="btn btn-dark fw-bold rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fa-solid fa-user me-2"></i> {{ user.username }}
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow">
-                                <li><a class="dropdown-item" href="{% url 'user_profile' %}">My Orders</a></li>
-                                <li><a class="dropdown-item" href="{% url 'designer_dashboard' %}">Artist Dashboard 🎨</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
-                            </ul>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-warning fw-bold rounded-pill">Login</a>
-                    {% endif %}
-                </div>
             </div>
         </div>
     </nav>
@@ -55,6 +87,13 @@
     {% block content %}
     {% endblock %}
 
+    <footer class="text-center mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 TrendFlix. Styled for You.</p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
