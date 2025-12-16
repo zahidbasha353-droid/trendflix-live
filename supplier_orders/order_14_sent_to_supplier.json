@@ -1,0 +1,22 @@
+{
+    "order_id": 14,
+    "customer_name": "Priya Khan",
+    "shipping_address": "19, MG Road, Delhi, Tamil Nadu - 600313",
+    "phone": "9876563699",
+    "items": [
+        {
+            "product_name": "Leather Wallet for Men",
+            "sku": "SKU-2188",
+            "quantity": 1,
+            "price": 599.0
+        },
+        {
+            "product_name": "Stainless Steel Water Bottle",
+            "sku": "SKU-5511",
+            "quantity": 2,
+            "price": 399.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

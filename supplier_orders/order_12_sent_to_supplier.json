@@ -1,0 +1,22 @@
+{
+    "order_id": 12,
+    "customer_name": "Lakshmi Sharma",
+    "shipping_address": "59, Gandhi Road, Mumbai, Tamil Nadu - 600124",
+    "phone": "9876562522",
+    "items": [
+        {
+            "product_name": "Leather Wallet for Men",
+            "sku": "SKU-2188",
+            "quantity": 1,
+            "price": 599.0
+        },
+        {
+            "product_name": "Smart Watch Series 7 - Black",
+            "sku": "SKU-8466",
+            "quantity": 2,
+            "price": 2499.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

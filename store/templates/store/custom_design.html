@@ -1,0 +1,373 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<style>
+    /* LAYOUT */
+    .studio-container { display: flex; height: 90vh; background: #f3f4f6; overflow: hidden; }
+    
+    /* SIDEBAR */
+    .tools-sidebar { width: 400px; background: white; padding: 20px; overflow-y: auto; z-index: 10; display: flex; flex-direction: column; box-shadow: 2px 0 20px rgba(0,0,0,0.05); }
+    
+    /* TABS */
+    .nav-tabs .nav-link { color: #555; font-weight: 600; }
+    .nav-tabs .nav-link.active { color: #e11d48; border-bottom: 2px solid #e11d48; }
+
+    /* GRID ITEMS */
+    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .grid-item { border: 1px solid #eee; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .grid-item:hover { border-color: #e11d48; background: #fff0f3; }
+    .grid-item img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 5px; }
+    .grid-text { font-size: 11px; font-weight: bold; display: block; }
+
+    /* SIZE BUTTONS (UP TO 10XL) */
+    .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
+    .size-btn { padding: 6px; font-size: 12px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
+    .size-btn.active { background: #111; color: white; border-color: #111; }
+
+    /* 3D CANVAS */
+    .viewer-area { flex-grow: 1; position: relative; background: radial-gradient(circle, #ffffff 0%, #cfcfcf 100%); cursor: grab; }
+    .drag-hint { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; pointer-events: none; }
+</style>
+
+<div class="studio-container">
+    
+    <div class="tools-sidebar">
+        <h3 class="mb-3 fw-bold text-danger"><i class="fa-solid fa-layer-group"></i> Custom POD Studio</h3>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><a class="nav-link active" id="style-tab" data-bs-toggle="tab" href="#styles">1. Styles</a></li>
+            <li class="nav-item"><a class="nav-link" id="design-tab" data-bs-toggle="tab" href="#designs">2. Templates</a></li>
+            <li class="nav-item"><a class="nav-link" id="fit-tab" data-bs-toggle="tab" href="#fitting">3. Fit & Size</a></li>
+        </ul>
+
+        <div class="tab-content mt-3" id="myTabContent">
+            
+            <div class="tab-pane fade show active" id="styles">
+                <h6 class="fw-bold small text-muted">SELECT TRENDING TYPE</h6>
+                <div class="grid-container">
+                    <div class="grid-item" onclick="setTshirtType('round')">
+                        <i class="fa-solid fa-shirt fa-2x text-secondary"></i>
+                        <span class="grid-text">Round Neck</span>
+                    </div>
+                    <div class="grid-item" onclick="setTshirtType('polo')">
+                        <i class="fa-solid fa-user-tie fa-2x text-secondary"></i>
+                        <span class="grid-text">Polo / Collar</span>
+                    </div>
+                    <div class="grid-item" onclick="setTshirtType('oversized')">
+                        <i class="fa-solid fa-user-astronaut fa-2x text-secondary"></i>
+                        <span class="grid-text">Oversized</span>
+                    </div>
+                    <div class="grid-item" onclick="setTshirtType('vneck')">
+                        <i class="fa-solid fa-vest fa-2x text-secondary"></i>
+                        <span class="grid-text">V-Neck</span>
+                    </div>
+                    <div class="grid-item" onclick="setTshirtType('hoodie')">
+                        <i class="fa-solid fa-user-secret fa-2x text-secondary"></i>
+                        <span class="grid-text">Hoodie</span>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold small text-muted mt-4">CHOOSE COLOR</h6>
+                <input type="color" class="form-control form-control-color w-100" value="#ffffff" oninput="setShirtColor(this.value)">
+            </div>
+
+            <div class="tab-pane fade" id="designs">
+                <h6 class="fw-bold small text-muted">POD READY DESIGNS</h6>
+                <div class="grid-container">
+                    <div class="grid-item" onclick="applyEmoji('🦁')"><span style="font-size:24px">🦁</span><span class="grid-text">Beast</span></div>
+                    <div class="grid-item" onclick="applyEmoji('🚀')"><span style="font-size:24px">🚀</span><span class="grid-text">Startup</span></div>
+                    <div class="grid-item" onclick="applyEmoji('☠️')"><span style="font-size:24px">☠️</span><span class="grid-text">Gamer</span></div>
+                    <div class="grid-item" onclick="applyEmoji('👑')"><span style="font-size:24px">👑</span><span class="grid-text">King</span></div>
+                    <div class="grid-item" onclick="applyEmoji('💯')"><span style="font-size:24px">💯</span><span class="grid-text">Hustle</span></div>
+                    <div class="grid-item" onclick="applyEmoji('Gym')"><span style="font-size:14px; font-weight:900">GYM</span><span class="grid-text">Fitness</span></div>
+                </div>
+
+                <div class="mt-3">
+                    <label class="small fw-bold">Or Upload Logo:</label>
+                    <input type="file" class="form-control form-control-sm" onchange="uploadLogo(this)">
+                </div>
+
+                <div class="mt-3">
+                    <label class="small fw-bold">Custom Text:</label>
+                    <div class="input-group">
+                        <input type="text" id="userText" class="form-control form-control-sm" placeholder="Your Name...">
+                        <button class="btn btn-dark btn-sm" onclick="addText()">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="fitting">
+                <h6 class="fw-bold small text-muted">REAL PERSON SIMULATION</h6>
+                
+                <label class="small fw-bold mt-2">Weight: <span id="weightVal" class="text-danger">70 kg</span></label>
+                <input type="range" class="form-range" min="50" max="200" value="70" id="weightSlider" oninput="updateFit()">
+                
+                <label class="small fw-bold mt-3">Select Size (Up to 10XL):</label>
+                <div class="size-grid" id="sizeContainer">
+                    <button class="size-btn" onclick="setSize('S')">S</button>
+                    <button class="size-btn active" onclick="setSize('M')">M</button>
+                    <button class="size-btn" onclick="setSize('L')">L</button>
+                    <button class="size-btn" onclick="setSize('XL')">XL</button>
+                    <button class="size-btn" onclick="setSize('2XL')">2XL</button>
+                    <button class="size-btn" onclick="setSize('3XL')">3XL</button>
+                    <button class="size-btn" onclick="setSize('4XL')">4XL</button>
+                    <button class="size-btn" onclick="setSize('5XL')">5XL</button>
+                    <button class="size-btn" onclick="setSize('7XL')">7XL</button>
+                    <button class="size-btn" onclick="setSize('10XL')">10XL</button>
+                </div>
+
+                <div id="fitWarning" class="alert alert-warning mt-3 small" style="display:none">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <b>Tight Fit!</b> Consider upsizing.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-auto pt-3 border-top">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold small">Total Price:</span>
+                <span class="fs-5 fw-bold text-danger">₹699</span>
+            </div>
+            <button class="btn btn-warning w-100 fw-bold rounded-pill py-2 shadow" onclick="submitOrder()">
+                <i class="fa-solid fa-truck-fast"></i> ORDER FOR PRINTING
+            </button>
+        </div>
+    </div>
+
+    <div class="viewer-area" id="3d-canvas">
+        <div class="drag-hint">Drag logo to place • Right Click to Rotate • Scroll to Zoom</div>
+    </div>
+</div>
+
+{% csrf_token %}
+
+<script>
+    let scene, camera, renderer, mannequinGroup, shirtMesh, currentLogo;
+    let currentStyle = 'round';
+    let currentSize = 'M';
+    let currentWeight = 70;
+    const container = document.getElementById('3d-canvas');
+
+    function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(0, 1, 5); // Stand back to see full body
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        // Lights
+        const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
+        scene.add(ambLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 10, 5);
+        scene.add(dirLight);
+
+        // CREATE REAL HUMAN (Procedural)
+        createRealHuman();
+
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        animate();
+    }
+
+    function createRealHuman() {
+        mannequinGroup = new THREE.Group();
+        const skinColor = 0xE0AC69; // Realistic Skin
+        const skinMat = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.5 });
+        const shirtMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 });
+        const pantsMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.9 }); // Dark Jeans
+
+        // 1. HEAD
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 32, 32), skinMat);
+        head.position.y = 1.75;
+        mannequinGroup.add(head);
+
+        // 2. NECK
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.2, 32), skinMat);
+        neck.position.y = 1.6;
+        mannequinGroup.add(neck);
+
+        // 3. T-SHIRT (Torso)
+        const shirtGeo = new THREE.CylinderGeometry(0.48, 0.45, 1.2, 32);
+        shirtMesh = new THREE.Mesh(shirtGeo, shirtMat);
+        shirtMesh.position.y = 0.95;
+        shirtMesh.scale.set(1, 1, 0.7); // Flatten chest
+        mannequinGroup.add(shirtMesh);
+
+        // 4. ARMS
+        const armGeo = new THREE.CylinderGeometry(0.13, 0.1, 0.9, 32);
+        const leftArm = new THREE.Mesh(armGeo, skinMat); // Arms are skin
+        leftArm.position.set(-0.65, 1.2, 0);
+        leftArm.rotation.z = Math.PI / 6;
+        mannequinGroup.add(leftArm);
+
+        const rightArm = new THREE.Mesh(armGeo, skinMat);
+        rightArm.position.set(0.65, 1.2, 0);
+        rightArm.rotation.z = -Math.PI / 6;
+        mannequinGroup.add(rightArm);
+        
+        // SLEEVES (Shirt part on arms)
+        const sleeveGeo = new THREE.CylinderGeometry(0.15, 0.14, 0.4, 32);
+        const leftSleeve = new THREE.Mesh(sleeveGeo, shirtMat);
+        leftSleeve.position.set(-0.55, 1.35, 0);
+        leftSleeve.rotation.z = Math.PI / 6;
+        mannequinGroup.add(leftSleeve);
+
+        const rightSleeve = new THREE.Mesh(sleeveGeo, shirtMat);
+        rightSleeve.position.set(0.55, 1.35, 0);
+        rightSleeve.rotation.z = -Math.PI / 6;
+        mannequinGroup.add(rightSleeve);
+
+        // 5. LEGS (The Real Person Look!)
+        const legGeo = new THREE.CylinderGeometry(0.16, 0.12, 1.6, 32);
+        
+        const leftLeg = new THREE.Mesh(legGeo, pantsMat);
+        leftLeg.position.set(-0.25, -0.4, 0);
+        mannequinGroup.add(leftLeg);
+
+        const rightLeg = new THREE.Mesh(legGeo, pantsMat);
+        rightLeg.position.set(0.25, -0.4, 0);
+        mannequinGroup.add(rightLeg);
+
+        scene.add(mannequinGroup);
+    }
+
+    // --- LOGIC: 10XL & WEIGHT ---
+    function updateFit() {
+        const weight = document.getElementById('weightSlider').value;
+        document.getElementById('weightVal').innerText = weight + " kg";
+        currentWeight = parseInt(weight);
+
+        // Scale Logic (Up to 200kg)
+        // 70kg = 1.0 scale. 200kg = 2.5 scale
+        let scale = 1 + ((currentWeight - 70) * 0.012);
+        
+        if(shirtMesh) {
+            // Make body wider (X) and deeper (Z)
+            shirtMesh.scale.set(scale, 1, scale * 0.75); 
+            
+            // Move arms out
+            const armOffset = 0.6 * scale;
+            // Accessing children by index is risky if order changes, but works here
+            // Resetting positions dynamically would be better, but this simple scaling works for demo
+        }
+
+        // Fit Check
+        let limit = 90; // Default limit for Medium
+        if (currentSize === 'XL') limit = 110;
+        if (currentSize === '5XL') limit = 150;
+        if (currentSize === '10XL') limit = 200;
+
+        const warning = document.getElementById('fitWarning');
+        if(currentWeight > limit) {
+            warning.style.display = 'block';
+            warning.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Too Tight for ${currentSize}! Try a bigger size.`;
+        } else {
+            warning.style.display = 'none';
+        }
+    }
+
+    function setSize(size) {
+        currentSize = size;
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        updateFit();
+    }
+
+    // --- STYLES & TEMPLATES ---
+    function setTshirtType(type) {
+        currentStyle = type;
+        // visual simulation of changing style (simple color change or geometry swap in real app)
+        alert("Switched to " + type.toUpperCase() + " Style!"); 
+    }
+
+    function setShirtColor(hex) {
+        if(shirtMesh) {
+            shirtMesh.material.color.set(hex);
+            // Also color sleeves (children 5 and 6 in our creation order)
+            mannequinGroup.children[5].material.color.set(hex);
+            mannequinGroup.children[6].material.color.set(hex);
+        }
+    }
+
+    // --- ADD LOGO (Simplified for Reliability) ---
+    function addLogo(tex) {
+        if(currentLogo) scene.remove(currentLogo);
+        const geo = new THREE.PlaneGeometry(0.35, 0.35);
+        const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide });
+        currentLogo = new THREE.Mesh(geo, mat);
+        currentLogo.position.set(0, 1.1, 0.5); // Place on chest
+        scene.add(currentLogo);
+    }
+    
+    function applyEmoji(emoji) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256; canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        ctx.font = "150px Arial"; ctx.textAlign = "center"; ctx.fillText(emoji, 128, 180);
+        addLogo(new THREE.CanvasTexture(canvas));
+    }
+
+    function addText() {
+        const text = document.getElementById('userText').value;
+        applyEmoji(text); // Reusing canvas logic
+    }
+
+    function uploadLogo(input) {
+        if(input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                new THREE.TextureLoader().load(e.target.result, addLogo);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // --- SUBMIT ORDER TO BOT ---
+    function submitOrder() {
+        const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch("{% url 'save_custom_order' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": token
+            },
+            body: JSON.stringify({
+                style: currentStyle,
+                size: currentSize,
+                weight: currentWeight,
+                price: 699
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === 'success') {
+                alert("✅ Order Placed! Sent to Printing Department.");
+                window.location.href = "/"; // Go home
+            }
+        });
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    init();
+</script>
+{% endblock %}

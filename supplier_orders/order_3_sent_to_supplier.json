@@ -1,0 +1,22 @@
+{
+    "order_id": 3,
+    "customer_name": "Anita Basha",
+    "shipping_address": "98, Gandhi Road, Bangalore, Chennai, Tamil Nadu - 600085",
+    "phone": "9876539094",
+    "items": [
+        {
+            "product_name": "Men's Premium Cotton T-Shirt (Black)",
+            "sku": "SKU-3715",
+            "quantity": 1,
+            "price": 499.0
+        },
+        {
+            "product_name": "Leather Wallet for Men",
+            "sku": "SKU-2188",
+            "quantity": 1,
+            "price": 599.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

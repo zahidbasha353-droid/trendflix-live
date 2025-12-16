@@ -1,0 +1,28 @@
+{
+    "order_id": 11,
+    "customer_name": "Karthik Das",
+    "shipping_address": "17, MG Road, Salem, Tamil Nadu - 600659",
+    "phone": "9876545543",
+    "items": [
+        {
+            "product_name": "Men's Premium Cotton T-Shirt (Black)",
+            "sku": "SKU-3715",
+            "quantity": 1,
+            "price": 499.0
+        },
+        {
+            "product_name": "Gaming Mouse RGB",
+            "sku": "SKU-8509",
+            "quantity": 1,
+            "price": 899.0
+        },
+        {
+            "product_name": "Stainless Steel Water Bottle",
+            "sku": "SKU-5511",
+            "quantity": 1,
+            "price": 399.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

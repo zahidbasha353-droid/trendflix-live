@@ -1,0 +1,22 @@
+{
+    "order_id": 7,
+    "customer_name": "Sneha Khan",
+    "shipping_address": "86, Station Road, Coimbatore, Tamil Nadu - 600346",
+    "phone": "9876584265",
+    "items": [
+        {
+            "product_name": "Smart Watch Series 7 - Black",
+            "sku": "SKU-8466",
+            "quantity": 2,
+            "price": 2499.0
+        },
+        {
+            "product_name": "Classic Aviator Sunglasses",
+            "sku": "SKU-6482",
+            "quantity": 1,
+            "price": 799.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

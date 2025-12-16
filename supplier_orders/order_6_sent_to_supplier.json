@@ -1,0 +1,16 @@
+{
+    "order_id": 6,
+    "customer_name": "Sneha Patel",
+    "shipping_address": "32, Anna Nagar, Coimbatore, Tamil Nadu - 600770",
+    "phone": "9876547321",
+    "items": [
+        {
+            "product_name": "Wireless Noise Cancelling Headphones",
+            "sku": "SKU-2550",
+            "quantity": 1,
+            "price": 1999.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

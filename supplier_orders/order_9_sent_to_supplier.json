@@ -1,0 +1,22 @@
+{
+    "order_id": 9,
+    "customer_name": "Sneha Das",
+    "shipping_address": "53, North Street, Trichy, Tamil Nadu - 600240",
+    "phone": "9876533025",
+    "items": [
+        {
+            "product_name": "Classic Aviator Sunglasses",
+            "sku": "SKU-6482",
+            "quantity": 1,
+            "price": 799.0
+        },
+        {
+            "product_name": "Stainless Steel Water Bottle",
+            "sku": "SKU-5511",
+            "quantity": 2,
+            "price": 399.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

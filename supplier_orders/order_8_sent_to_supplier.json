@@ -1,0 +1,34 @@
+{
+    "order_id": 8,
+    "customer_name": "Karthik Khan",
+    "shipping_address": "87, Station Road, Trichy, Tamil Nadu - 600219",
+    "phone": "9876560544",
+    "items": [
+        {
+            "product_name": "Leather Wallet for Men",
+            "sku": "SKU-2188",
+            "quantity": 1,
+            "price": 599.0
+        },
+        {
+            "product_name": "Classic Aviator Sunglasses",
+            "sku": "SKU-6482",
+            "quantity": 1,
+            "price": 799.0
+        },
+        {
+            "product_name": "Men's Premium Cotton T-Shirt (Black)",
+            "sku": "SKU-3715",
+            "quantity": 1,
+            "price": 499.0
+        },
+        {
+            "product_name": "Stainless Steel Water Bottle",
+            "sku": "SKU-5511",
+            "quantity": 2,
+            "price": 399.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

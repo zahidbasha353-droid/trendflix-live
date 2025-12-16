@@ -1,0 +1,28 @@
+{
+    "order_id": 1,
+    "customer_name": "Divya Khan",
+    "shipping_address": "84, Gandhi Road, Madurai, Chennai, Tamil Nadu - 600011",
+    "phone": "9876524487",
+    "items": [
+        {
+            "product_name": "Classic Aviator Sunglasses",
+            "sku": "SKU-6482",
+            "quantity": 2,
+            "price": 799.0
+        },
+        {
+            "product_name": "Gaming Mouse RGB",
+            "sku": "SKU-8509",
+            "quantity": 1,
+            "price": 899.0
+        },
+        {
+            "product_name": "Stainless Steel Water Bottle",
+            "sku": "SKU-5511",
+            "quantity": 1,
+            "price": 399.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

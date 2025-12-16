@@ -1,0 +1,16 @@
+{
+    "order_id": 15,
+    "customer_name": "Rahul Patel",
+    "shipping_address": "40, Station Road, Delhi, Tamil Nadu - 600727",
+    "phone": "9876554386",
+    "items": [
+        {
+            "product_name": "Running Sneakers - Sporty White",
+            "sku": "SKU-9087",
+            "quantity": 2,
+            "price": 1299.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

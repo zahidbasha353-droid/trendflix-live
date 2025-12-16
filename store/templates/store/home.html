@@ -1,0 +1,170 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<style>
+    /* HERO SECTION */
+    .hero-section {
+        background: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+        height: 450px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+    .hero-overlay {
+        background: rgba(0, 0, 0, 0.6);
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    
+    /* TRUST BADGES SECTION */
+    .trust-bar {
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 30px 0;
+        margin-top: -30px;
+        position: relative;
+        border-radius: 8px;
+        z-index: 2;
+    }
+    .trust-item {
+        text-align: center;
+        padding: 10px;
+        border-right: 1px solid #eee;
+    }
+    .trust-item:last-child { border-right: none; }
+    .trust-icon {
+        color: #e11d48;
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    .trust-title { font-weight: 700; font-size: 15px; color: #333; margin-bottom: 3px; }
+    .trust-desc { font-size: 12px; color: #777; }
+
+    @media (max-width: 768px) {
+        .trust-item { border-right: none; border-bottom: 1px solid #eee; padding: 20px; }
+        .hero-section { height: 300px; }
+    }
+
+    /* PRODUCT CARDS */
+    .product-card {
+        transition: 0.3s;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-img-top { height: 250px; object-fit: cover; }
+</style>
+
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+        <h1 class="display-4 fw-bold">Print Your Vibe</h1>
+        <p class="lead mb-4">Custom T-Shirts, Hoodies & More. Delivered Worldwide.</p>
+        <a href="{% url 'custom_design' %}" class="btn btn-light btn-lg fw-bold rounded-pill px-5">
+            Start Designing <i class="fa-solid fa-pen-nib ms-2"></i>
+        </a>
+    </div>
+</section>
+
+<div class="container">
+    
+    <div class="row trust-bar mx-2">
+        <div class="col-md-3 trust-item">
+            <i class="fa-solid fa-handshake trust-icon"></i>
+            <div class="trust-title">Trusted Partners</div>
+            <div class="trust-desc">Printed & Delivered by Experts</div>
+        </div>
+        <div class="col-md-3 trust-item">
+            <i class="fa-solid fa-medal trust-icon"></i>
+            <div class="trust-title">100% Quality</div>
+            <div class="trust-desc">Premium Fabric Guarantee</div>
+        </div>
+        <div class="col-md-3 trust-item">
+            <i class="fa-solid fa-earth-americas trust-icon"></i>
+            <div class="trust-title">Global Shipping</div>
+            <div class="trust-desc">Ships Across India & Worldwide</div>
+        </div>
+        <div class="col-md-3 trust-item">
+            <i class="fa-solid fa-boxes-stacked trust-icon"></i>
+            <div class="trust-title">Bulk Orders</div>
+            <div class="trust-desc">Corporate & Event Support</div>
+        </div>
+    </div>
+
+    <div class="text-center my-5">
+        <div class="p-5 bg-dark text-white rounded-3 shadow">
+            <h2>🎨 Want to Design Your Own?</h2>
+            <p class="text-white-50">Upload your logo, check fit on a 3D Model (Slim/Fat), and order instantly!</p>
+            <a href="{% url 'custom_design' %}" class="btn btn-warning fw-bold btn-lg">
+                <i class="fa-solid fa-cube"></i> Open 3D Designer
+            </a>
+        </div>
+    </div>
+
+    <h3 class="fw-bold mb-4">Trending Collections</h3>
+    <div class="row g-4 mb-5">
+        
+        {% for product in products %}
+        <div class="col-md-3 col-6">
+            <div class="card h-100 product-card">
+                <a href="{% url 'product_detail' product.id %}" class="position-relative">
+                    
+                    {% if product.is_trending %}
+                        <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 m-2 rounded small fw-bold shadow">
+                            🔥 Trending
+                        </span>
+                    {% endif %}
+                    
+                    {% if product.is_bestseller %}
+                        <span class="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 m-2 rounded small fw-bold shadow">
+                            🏆 Bestseller
+                        </span>
+                    {% endif %}
+
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% elif product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300" class="card-img-top">
+                    {% endif %}
+                </a>
+                
+                <div class="card-body">
+                    <p class="text-muted small mb-1">{{ product.category }}</p>
+                    <h6 class="card-title fw-bold text-truncate">{{ product.name }}</h6>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="text-danger fw-bold fs-5">₹{{ product.selling_price }}</span>
+                            {% if product.original_price %}
+                            <small class="text-muted text-decoration-line-through ms-1">₹{{ product.original_price }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-dark btn-sm fw-bold w-100">Add to Cart</button>
+                        </form>
+                        <a href="{% url 'buy_now' product.id %}" class="btn btn-warning btn-sm fw-bold">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+        </div>
+
+</div>
+
+{% endblock %}

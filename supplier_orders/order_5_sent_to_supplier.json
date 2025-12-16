@@ -1,0 +1,22 @@
+{
+    "order_id": 5,
+    "customer_name": "Anita Patel",
+    "shipping_address": "61, Gandhi Road, Chennai, Chennai, Tamil Nadu - 600052",
+    "phone": "9876526274",
+    "items": [
+        {
+            "product_name": "Smart Watch Series 7 - Black",
+            "sku": "SKU-8466",
+            "quantity": 1,
+            "price": 2499.0
+        },
+        {
+            "product_name": "Men's Premium Cotton T-Shirt (Black)",
+            "sku": "SKU-3715",
+            "quantity": 1,
+            "price": 499.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

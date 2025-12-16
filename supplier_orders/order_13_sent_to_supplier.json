@@ -1,0 +1,34 @@
+{
+    "order_id": 13,
+    "customer_name": "Anita Das",
+    "shipping_address": "80, Church Street, Delhi, Tamil Nadu - 600668",
+    "phone": "9876581307",
+    "items": [
+        {
+            "product_name": "Smart Watch Series 7 - Black",
+            "sku": "SKU-8466",
+            "quantity": 2,
+            "price": 2499.0
+        },
+        {
+            "product_name": "4K Action Camera Waterproof",
+            "sku": "SKU-2584",
+            "quantity": 2,
+            "price": 3999.0
+        },
+        {
+            "product_name": "Classic Aviator Sunglasses",
+            "sku": "SKU-6482",
+            "quantity": 1,
+            "price": 799.0
+        },
+        {
+            "product_name": "Wireless Noise Cancelling Headphones",
+            "sku": "SKU-2550",
+            "quantity": 1,
+            "price": 1999.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}

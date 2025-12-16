@@ -1,0 +1,175 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 1200px;">
+    <h2 class="mb-4 fw-bold">Checkout</h2>
+
+    <div class="row g-5">
+        
+        <div class="col-md-8">
+            
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold text-dark">1. Delivery Address</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form id="checkout-form" method="POST" action="{% url 'place_cod_order' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <input type="text" name="full_name" class="form-control form-control-lg" value="{{ request.user.first_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Address (House No, Street)</label>
+                            <input type="text" name="address" class="form-control form-control-lg" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">City</label>
+                                <input type="text" name="city" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">State</label>
+                                <select name="state" class="form-select">
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Delhi">Delhi</option>
+                                    </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Pincode</label>
+                                <input type="text" name="zipcode" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <input type="text" name="phone" class="form-control" required>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold text-dark">2. Payment Method</h5>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <div class="form-check p-3 border rounded mb-2 bg-light">
+                        <input class="form-check-input" type="radio" name="payment_method" id="pay_online" value="online" checked onclick="togglePayment('online')">
+                        <label class="form-check-label w-100 fw-bold" for="pay_online">
+                            UPI / Credit / Debit Card (Fast Delivery)
+                            <span class="badge bg-success float-end">Recommended</span>
+                        </label>
+                        <div class="text-muted small ps-1 mt-1">Pay securely via Razorpay</div>
+                    </div>
+
+                    <div class="form-check p-3 border rounded">
+                        <input class="form-check-input" type="radio" name="payment_method" id="pay_cod" value="cod" onclick="togglePayment('cod')">
+                        <label class="form-check-label fw-bold" for="pay_cod">
+                            Cash on Delivery (COD)
+                        </label>
+                        <div class="text-muted small ps-1 mt-1">Pay cash when your order arrives.</div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Order Summary</h5>
+                    
+                    {% for item in cart.items.all %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small">{{ item.quantity }}x {{ item.product.name }}</span>
+                        <span class="fw-bold">₹{{ item.total_price }}</span>
+                    </div>
+                    {% endfor %}
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ cart.total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-success">
+                        <span>Delivery</span>
+                        <span>FREE</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between fs-4 fw-bold text-danger border-top pt-3">
+                        <span>Order Total:</span>
+                        <span>₹{{ cart.total_price }}</span>
+                    </div>
+
+                    <button type="button" id="razorpay-btn" class="btn btn-warning w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">
+                        Proceed to Pay
+                    </button>
+
+                    <button type="submit" id="cod-btn" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm d-none">
+                        Place COD Order
+                    </button>
+                    </form> <div class="text-center mt-3 text-muted small">
+                        <i class="fas fa-lock"></i> Secure Transaction
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    function togglePayment(method) {
+        if (method === 'cod') {
+            document.getElementById('razorpay-btn').classList.add('d-none');
+            document.getElementById('cod-btn').classList.remove('d-none');
+        } else {
+            document.getElementById('razorpay-btn').classList.remove('d-none');
+            document.getElementById('cod-btn').classList.add('d-none');
+        }
+    }
+
+    document.getElementById('razorpay-btn').onclick = function(e) {
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ amount_paise }}", 
+            "currency": "INR",
+            "name": "Trendflix Store",
+            "description": "Payment for Order",
+            "image": "https://cdn-icons-png.flaticon.com/512/4090/4090458.png",
+            "order_id": "{{ razorpay_order_id }}", 
+            "handler": function (response){
+                // On Success, submit a hidden form to 'order_success_view'
+                // For simplicity, we create a dynamic form here
+                var form = document.getElementById('checkout-form');
+                form.action = "{% url 'order_success_view' %}"; 
+                form.submit();
+            },
+            "prefill": {
+                "name": document.getElementsByName('full_name')[0].value,
+                "contact": document.getElementsByName('phone')[0].value
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+
+{% endblock %}

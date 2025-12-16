@@ -1,0 +1,24 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">🎨 Artist Dashboard</h2>
+        <a href="{% url 'upload_design' %}" class="btn btn-warning fw-bold">+ Upload New Art</a>
+    </div>
+    <div class="row g-4 mb-5">
+        <div class="col-md-6"><div class="card bg-dark text-white p-4 rounded-4"><h5>Total Earnings</h5><h1 class="display-4 fw-bold text-success">₹{{ earnings }}</h1></div></div>
+        <div class="col-md-6"><div class="card bg-light p-4 rounded-4 border"><h5>Total Sales</h5><h1 class="display-4 fw-bold text-dark">{{ sales }}</h1></div></div>
+    </div>
+    <h4 class="fw-bold mb-3">My Live Products</h4>
+    <div class="row g-3">
+        {% for product in products %}
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="{{ product.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body"><h6 class="fw-bold">{{ product.name }}</h6><p class="text-danger fw-bold">₹{{ product.selling_price }}</p></div>
+            </div>
+        </div>
+        {% empty %}<div class="col-12 text-center py-5"><h5 class="text-muted">No designs yet.</h5></div>{% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{
+    "order_id": 4,
+    "customer_name": "Priya Nair",
+    "shipping_address": "83, Gandhi Road, Bangalore, Bangalore, Tamil Nadu - 600066",
+    "phone": "9876596322",
+    "items": [
+        {
+            "product_name": "Gaming Mouse RGB",
+            "sku": "SKU-8509",
+            "quantity": 2,
+            "price": 899.0
+        }
+    ],
+    "supplier": "Qikink (Print-on-Demand)",
+    "status": "FORWARDED_TO_PRINTING"
+}
