@@ -92,13 +92,22 @@
                         <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">
                             {% if request.session.currency == 'USD' %} 🇺🇸 USD
                             {% elif request.session.currency == 'EUR' %} 🇪🇺 EUR
+                            {% elif request.session.currency == 'GBP' %} 🇬🇧 UK
+                            {% elif request.session.currency == 'AED' %} 🇦🇪 UAE
+                            {% elif request.session.currency == 'SAR' %} 🇸🇦 KSA
+                            {% elif request.session.currency == 'CAD' %} 🇨🇦 CAD
                             {% else %} 🇮🇳 INR
                             {% endif %}
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                             <li><a class="dropdown-item" href="{% url 'switch_currency' 'INR' %}">🇮🇳 INR (₹)</a></li>
                             <li><a class="dropdown-item" href="{% url 'switch_currency' 'USD' %}">🇺🇸 USD ($)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'EUR' %}">🇪🇺 EUR (€)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'EUR' %}">🇪🇺 Euro (€)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'GBP' %}">🇬🇧 Pound (£)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'AED' %}">🇦🇪 Dirham (AED)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'SAR' %}">🇸🇦 Riyal (SAR)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'CAD' %}">🇨🇦 CAD ($)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'AUD' %}">🇦🇺 AUD ($)</a></li>
                         </ul>
                     </li>
 

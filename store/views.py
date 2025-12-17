@@ -167,6 +167,10 @@ def register_view(request):
         if form.is_valid(): user = form.save(); login(request, user); return redirect('home')
     return render(request, 'store/register.html', {'form': UserCreationForm()})
 def switch_currency(request, currency_code):
-    if currency_code in ['INR', 'USD', 'EUR']:
+    # Allow all major currencies
+    valid_currencies = ['INR', 'USD', 'EUR', 'GBP', 'AED', 'SAR', 'CAD', 'AUD']
+    
+    if currency_code in valid_currencies:
         request.session['currency'] = currency_code
+    
     return redirect(request.META.get('HTTP_REFERER', 'home'))
