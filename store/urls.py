@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     # Base Pages
     path('', views.home, name='home'),
-    path('custom-design/', views.custom_design, name='custom_design'),
+    path('custom-design/', views.custom_design_view, name='custom_design'),  # Fixed Name
     
     # Auth
     path('login/', views.login_view, name='login'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
 
     # Checkout & Payment
-    path('checkout/', views.checkout, name='checkout'),
+    path('checkout/', views.checkout_view, name='checkout'),  # Fixed Name (checkout_view)
     path('place-cod-order/', views.place_cod_order, name='place_cod_order'), 
     
     # 🔥 Success Page URL (Fixed) 🔥
