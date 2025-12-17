@@ -5,144 +5,141 @@
 {% block content %}
 
 <style>
-    /* --- 1. GLOBAL MINIMALIST REFINEMENT --- */
-    body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
+    /* 1. GLOBAL UI & FONTS */
+    body { background-color: #f6f7f9; font-family: 'Inter', sans-serif; color: #333; }
 
-    /* --- 2. 5 MOVEMENT BANNER (Carousel) STYLES --- */
-    .carousel-item { 
-        height: 80vh; 
-        background-size: cover; 
-        background-position: center; 
-    }
+    /* 2. CAROUSEL (VEENA STYLE) */
+    #fashionCarousel { margin-bottom: 20px; }
+    .carousel-item { height: 450px; background-size: cover; background-position: center; border-radius: 0; }
     .banner-overlay { 
-        background: rgba(0,0,0,0.2); 
-        height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;
+        background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
+        height: 100%; display: flex; align-items: center; padding-left: 10%;
     }
-    .banner-text h1 { font-size: 4rem; font-weight: 300; font-style: italic; color: white; margin-bottom: 20px; }
-    .btn-minimal { 
-        background: white; color: black; border-radius: 0; padding: 12px 30px; 
-        text-transform: uppercase; font-weight: 600; font-size: 0.8rem; border: 1px solid white;
+    .banner-text h1 { font-size: 3.5rem; font-weight: 800; color: white; text-transform: uppercase; }
+    .btn-veena { 
+        background: #0071dc; color: white; border-radius: 4px; padding: 12px 30px; 
+        font-weight: 700; border: none; text-transform: uppercase; transition: 0.3s;
     }
+    .btn-veena:hover { background: #005bb5; }
 
-    /* --- 3. COMPACT CATEGORY LINE --- */
-    .cat-box { 
-        background: white; border-radius: 8px; padding: 10px; 
-        text-align: center; transition: 0.3s; border: 1px solid #eee;
+    /* 3. CATEGORY GRID (COMPACT) */
+    .cat-grid { background: white; padding: 20px 0; margin-bottom: 30px; border-bottom: 1px solid #eee; }
+    .cat-item { text-align: center; transition: 0.3s; cursor: pointer; padding: 10px; }
+    .cat-icon-circle { 
+        width: 60px; height: 60px; background: #fcebed; border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;
+        color: #e11d48; font-size: 1.4rem; transition: 0.3s;
     }
-    .cat-box:hover { border-color: #000; transform: translateY(-2px); }
-    .cat-box i { font-size: 1.2rem; color: #000; display: block; margin-bottom: 5px; }
-    .cat-box span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .cat-item:hover .cat-icon-circle { background: #e11d48; color: white; transform: translateY(-5px); }
+    .cat-item span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    /* --- 4. DEAL TIMER SECTION --- */
-    .deal-box {
-        background: #000; color: white; border-radius: 4px; padding: 15px; margin-bottom: 40px;
+    /* 4. DEAL OF THE DAY (EXACT STYLE) */
+    .deal-container {
+        background: #e11d48; color: white; border-radius: 8px; 
+        padding: 15px 25px; margin-bottom: 40px;
+        display: flex; justify-content: space-between; align-items: center;
     }
+    .timer-box { display: flex; align-items: center; gap: 10px; }
     .timer-unit { 
-        background: rgba(255,255,255,0.15); border-radius: 2px; 
-        padding: 4px 8px; margin: 0 3px; font-weight: 700; font-size: 1.1rem;
+        background: rgba(255,255,255,0.2); padding: 5px 12px; 
+        border-radius: 4px; font-weight: 800; font-size: 1.2rem;
     }
 
-    /* --- 5. MINIMAL PRODUCT CARD WITH HEART --- */
+    /* 5. PRODUCT CARD (VEENA MEDIUM STYLE) */
     .pro-card {
-        background: white; border: none; border-radius: 0px; 
-        padding: 10px; transition: 0.3s; position: relative;
+        background: white; border: 1px solid #eee; border-radius: 8px; 
+        padding: 15px; transition: 0.3s; position: relative; height: 100%;
     }
+    .pro-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #0071dc; }
     .fav-heart {
-        position: absolute; top: 15px; right: 15px;
-        background: white; border-radius: 50%; padding: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #ddd; cursor: pointer; z-index: 5;
-        font-size: 0.8rem; transition: 0.3s;
+        position: absolute; top: 15px; right: 15px; color: #ddd; 
+        font-size: 1.1rem; cursor: pointer; transition: 0.3s; z-index: 5;
     }
-    .fav-heart:hover { color: #ff4d4d; }
-    
-    .pro-img-container { height: 350px; background: #f9f9f9; overflow: hidden; }
-    .pro-img-container img { height: 100%; width: 100%; object-fit: cover; transition: 0.6s; }
-    .pro-card:hover img { transform: scale(1.05); }
+    .fav-heart:hover { color: #e11d48; }
+    .pro-img-box { height: 220px; text-align: center; margin-bottom: 15px; }
+    .pro-img-box img { max-height: 100%; object-fit: contain; }
 
-    /* BUTTONS SIDE BY SIDE */
-    .btn-group-pro { display: flex; gap: 4px; margin-top: 12px; }
-    .btn-add { background: transparent; color: #000; flex: 1; font-size: 0.7rem; font-weight: 700; border: 1px solid #000; padding: 8px; text-transform: uppercase; }
-    .btn-add:hover { background: #000; color: #fff; }
-    .btn-buy { background: #000; color: #fff; flex: 1; font-size: 0.7rem; font-weight: 700; text-decoration: none; text-align: center; padding: 8px; text-transform: uppercase; border: 1px solid #000; }
+    /* BUTTONS - SIDE BY SIDE */
+    .pro-btn-group { display: flex; gap: 8px; margin-top: 15px; }
+    .btn-add-cart { background: #0071dc; color: white; border: none; flex: 1; padding: 10px; font-size: 12px; font-weight: 700; border-radius: 4px; text-transform: uppercase; }
+    .btn-buy-now { background: #ffd814; color: #111; border: none; flex: 1; padding: 10px; font-size: 12px; font-weight: 700; border-radius: 4px; text-transform: uppercase; text-decoration: none; text-align: center; }
 
-    /* --- 6. COLLAB BANNERS --- */
-    .collab-banner { height: 200px; background-size: cover; background-position: center; display: flex; align-items: center; padding: 20px; color: white; position: relative; overflow: hidden; }
-    .collab-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.2); }
+    /* 6. COLLAB GRID (3 BANNERS) */
+    .collab-grid { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; height: 500px; margin-bottom: 50px; }
+    .collab-item { background-size: cover; background-position: center; border-radius: 8px; position: relative; overflow: hidden; padding: 40px; color: white; }
+    .collab-1 { grid-row: span 2; }
+    .collab-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); }
     .collab-content { position: relative; z-index: 2; }
 
     @media (max-width: 768px) {
-        .banner-text h1 { font-size: 2.5rem; }
-        .pro-img-container { height: 250px; }
+        .collab-grid { grid-template-columns: 1fr; height: auto; }
+        .banner-text h1 { font-size: 2rem; }
     }
 </style>
 
-<div id="fashionCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+<div id="fashionCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070');">
-            <div class="banner-overlay"><div class="banner-text"><h1>The Legacy Capsule</h1><a href="#shop" class="btn btn-minimal">Shop Now</a></div></div>
+        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070');">
+            <div class="banner-overlay"><div class="banner-text"><h1>Electronics <br>Mega Sale</h1><button class="btn-veena">Shop Now</button></div></div>
         </div>
-        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=1964');">
-            <div class="banner-overlay"><div class="banner-text"><h1>Essential Edit</h1><a href="#shop" class="btn btn-minimal">Explore</a></div></div>
-        </div>
-        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1974');">
-            <div class="banner-overlay"><div class="banner-text"><h1>Creators Club</h1><a href="#shop" class="btn btn-minimal">Join Now</a></div></div>
-        </div>
-        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1539106609214-0d75a469627a?q=80&w=1974');">
-            <div class="banner-overlay"><div class="banner-text"><h1>Season Drop</h1><a href="#shop" class="btn btn-minimal">Buy Items</a></div></div>
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070');">
+            <div class="banner-overlay"><div class="banner-text"><h1>Smart <br>Collections</h1><button class="btn-veena">Explore</button></div></div>
         </div>
         <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=2022');">
-            <div class="banner-overlay"><div class="banner-text"><h1>New Season</h1><a href="#shop" class="btn btn-minimal">Shop Re-stock</a></div></div>
+            <div class="banner-overlay"><div class="banner-text"><h1>Elite <br>Quality Drop</h1><button class="btn-veena">Buy Now</button></div></div>
         </div>
     </div>
 </div>
 
-<div class="container my-4">
-    <div class="row g-2 justify-content-center">
-        <div class="col-3 col-md-1"><div class="cat-box"><i class="fas fa-tshirt"></i><span>Tees</span></div></div>
-        <div class="col-3 col-md-1"><div class="cat-box"><i class="fas fa-user-tie"></i><span>Polos</span></div></div>
-        <div class="col-3 col-md-1"><div class="cat-box"><i class="fas fa-hoodie"></i><span>Hoodies</span></div></div>
-        <div class="col-3 col-md-1"><div class="cat-box"><i class="fas fa-hat-cowboy"></i><span>Caps</span></div></div>
+<div class="cat-grid">
+    <div class="container">
+        <div class="row g-2 justify-content-center">
+            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-headphones"></i></div><span>Audio</span></div></div>
+            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-tablet-alt"></i></div><span>Tablets</span></div></div>
+            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-gamepad"></i></div><span>Gaming</span></div></div>
+            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-laptop"></i></div><span>Laptops</span></div></div>
+            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-mobile-alt"></i></div><span>Mobiles</span></div></div>
+            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-tv"></i></div><span>TV</span></div></div>
+        </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="deal-box d-flex flex-wrap justify-content-between align-items-center">
-        <div><h6 class="fw-bold mb-0 text-uppercase" style="letter-spacing:2px">Deal of the Day</h6></div>
-        <div class="d-flex align-items-center">
-            <span class="small text-uppercase me-2" style="font-size:10px">Ends in:</span>
-            <div class="timer-unit">12</div><div class="timer-unit">45</div><div class="timer-unit">09</div>
+    <div class="deal-container">
+        <div class="d-flex align-items-center gap-3">
+            <h5 class="fw-bold mb-0 text-uppercase">Deal Of The Day : Ends In</h5>
+            <div class="timer-box">
+                <div class="timer-unit">02</div> : <div class="timer-unit">15</div> : <div class="timer-unit">44</div>
+            </div>
         </div>
+        <a href="#" class="btn btn-light btn-sm fw-bold rounded-pill px-4">Claim Offer Now</a>
     </div>
 </div>
 
-<div id="shop" class="container mb-5">
-    <div class="row g-3">
+<div class="container mb-5">
+    <div class="row g-4">
         {% for product in products %}
         <div class="col-6 col-md-3">
-            <div class="pro-card h-100">
+            <div class="pro-card">
                 <div class="fav-heart"><i class="fas fa-heart"></i></div>
                 <a href="{% url 'product_detail' product.id %}">
-                    <div class="pro-img-container">
-                        {% if product.image_url %}
-                            <img src="{{ product.image_url }}" alt="{{ product.name }}">
-                        {% else %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                        {% endif %}
+                    <div class="pro-img-box">
+                        {% if product.image_url %}<img src="{{ product.image_url }}" class="img-fluid">
+                        {% else %}<img src="{{ product.image.url }}" class="img-fluid">{% endif %}
                     </div>
                 </a>
-                <div class="mt-3 text-center">
-                    <h6 class="fw-bold text-truncate mb-1" style="font-size: 0.8rem; letter-spacing:1px; text-transform:uppercase;">{{ product.name }}</h6>
-                    <div class="d-flex justify-content-center align-items-center gap-2">
-                        <span class="fw-bold" style="font-size: 0.9rem;">{{ product.selling_price|currency:request }}</span>
-                        <del class="text-muted small" style="font-size: 0.7rem;">{{ product.cost_price|add:"500"|currency:request }}</del>
+                <div class="text-center">
+                    <h6 class="fw-bold text-truncate mb-1" style="font-size: 14px;">{{ product.name }}</h6>
+                    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                        <span class="text-primary fw-bold">{{ product.selling_price|currency:request }}</span>
+                        <del class="text-muted small">{{ product.cost_price|add:"500"|currency:request }}</del>
                     </div>
                     
-                    <div class="btn-group-pro">
+                    <div class="pro-btn-group">
                         <form action="{% url 'add_to_cart' product.id %}" method="POST" class="flex-grow-1">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-add w-100">Cart</button>
+                            {% csrf_token %}<button type="submit" class="btn-add-cart w-100">Add to Cart</button>
                         </form>
-                        <a href="{% url 'buy_now' product.id %}" class="btn-buy flex-grow-1">Buy</a>
+                        <a href="{% url 'buy_now' product.id %}" class="btn-buy-now flex-grow-1">Buy Now</a>
                     </div>
                 </div>
             </div>
@@ -152,26 +149,29 @@
 </div>
 
 <div class="container my-5">
-    <h6 class="fw-bold mb-4 text-uppercase text-center" style="letter-spacing:3px">Premium Collaborations</h6>
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="collab-banner" style="background-image: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070');">
-                <div class="collab-overlay"></div>
-                <div class="collab-content"><h6 class="fw-bold">CREATORS CLUB</h6><button class="btn btn-outline-light btn-sm rounded-0">Explore</button></div>
+    <div class="collab-grid">
+        <div class="collab-item collab-1" style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070');">
+            <div class="collab-overlay"></div>
+            <div class="collab-content">
+                <h2 class="fw-bold">Ultimate Display <br>Offer</h2>
+                <button class="btn btn-outline-light mt-3">Shop Now</button>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="collab-banner" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070');">
-                <div class="collab-overlay"></div>
-                <div class="collab-content"><h6 class="fw-bold">STREET STYLE</h6><button class="btn btn-outline-light btn-sm rounded-0">Explore</button></div>
+        <div class="collab-item" style="background-image: url('https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2070');">
+            <div class="collab-overlay"></div>
+            <div class="collab-content">
+                <h4 class="fw-bold">Exclusive VR Headset</h4>
+                <button class="btn btn-outline-light btn-sm mt-2">Explore</button>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="collab-banner" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070');">
-                <div class="collab-overlay"></div>
-                <div class="collab-content"><h6 class="fw-bold">NATE ROBINSON</h6><button class="btn btn-outline-light btn-sm rounded-0">Explore</button></div>
+        <div class="collab-item" style="background-image: url('https://images.unsplash.com/photo-1526733158272-60b4944e8d21?q=80&w=2070');">
+            <div class="collab-overlay"></div>
+            <div class="collab-content">
+                <h4 class="fw-bold">Limited Time Sale</h4>
+                <button class="btn btn-outline-light btn-sm mt-2">View Deals</button>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
