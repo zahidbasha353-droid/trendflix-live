@@ -50,7 +50,9 @@ ROOT_URLCONF = 'trendflix_core.urls'  # குறிப்பு: உங்க �
 
 TEMPLATES = [
     {
-        # ... matra lines ...
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -58,13 +60,12 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 
-                # 👇 Itha Add Pannunga 👇
+                # Namma puthusa add panna line
                 'store.context_processors.website_settings',
             ],
         },
     },
 ]
-
 WSGI_APPLICATION = 'trendflix_core.wsgi.application'
 
 
