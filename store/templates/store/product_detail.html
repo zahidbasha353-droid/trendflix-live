@@ -1,74 +1,163 @@
 {% extends 'store/base.html' %}
-{% load static %}
 
 {% block content %}
 
-<div class="container py-5">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
-        </ol>
-    </nav>
+<style>
+    /* 🔥 AMAZON STYLE BUTTONS CSS 🔥 */
+    .btn-amazon-cart, .btn-amazon-buy {
+        width: 100%;
+        font-weight: 600;
+        padding: 12px;
+        border: none;
+        border-radius: 50px;
+        margin-top: 10px;
+        transition: 0.2s;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-size: 1rem;
+    }
 
+    .btn-amazon-cart {
+        background-color: #ffd814;
+        color: #111;
+    }
+    .btn-amazon-cart:hover {
+        background-color: #f7ca00;
+    }
+
+    .btn-amazon-buy {
+        background-color: #ffa41c;
+        color: #111;
+    }
+    .btn-amazon-buy:hover {
+        background-color: #fa8900;
+    }
+
+    /* Size Selector Style */
+    .size-option {
+        cursor: pointer;
+        border: 1px solid #ccc;
+        padding: 8px 15px;
+        margin-right: 5px;
+        border-radius: 5px;
+        display: inline-block;
+        transition: 0.2s;
+    }
+    .size-option:hover { border-color: #000; }
+    input[type="radio"] { display: none; }
+    input[type="radio"]:checked + label {
+        background-color: #000;
+        color: #fff;
+        border-color: #000;
+    }
+
+    /* 🔥 TRIAL ROOM BUTTON STYLE 🔥 */
+    .btn-trial {
+        background: linear-gradient(45deg, #2c3e50, #000000);
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        font-weight: bold;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .btn-trial:hover { color: #ffd814; }
+</style>
+
+<div class="container my-5">
     <div class="row">
+        
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative">
-                <img src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="max-height: 600px; object-fit: contain; background: #f8f9fa;">
-                <span class="position-absolute top-0 start-0 bg-danger text-white px-3 py-1 m-3 rounded-pill small fw-bold">New Arrival</span>
+                
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;" alt="{{ product.name }}">
+                {% elif product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;" alt="{{ product.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/600" class="img-fluid w-100" alt="No Image">
+                {% endif %}
+                
+                {% if product.is_trending %}
+                    <span class="position-absolute top-0 start-0 bg-danger text-white px-3 py-1 m-3 rounded-pill small fw-bold">🔥 Trending</span>
+                {% endif %}
             </div>
         </div>
 
         <div class="col-md-6">
-            <h1 class="fw-bold mb-2">{{ product.name }}</h1>
-            <p class="text-muted mb-3 text-uppercase small tracking-wide">{{ product.category }}</p>
-            
-            <div class="d-flex align-items-center mb-4">
-                <h2 class="fw-bold text-danger mb-0 me-3">₹{{ product.price }}</h2>
-                <span class="text-decoration-line-through text-muted">₹{{ product.price|add:"500" }}</span>
-                <span class="ms-2 badge bg-success bg-opacity-10 text-success">Save ₹500</span>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.category }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="fw-bold display-6">{{ product.name }}</h1>
+            <div class="mb-3">
+                <span class="text-danger fw-bold fs-2">₹{{ product.selling_price }}</span>
+                <span class="text-muted text-decoration-line-through ms-2">₹{{ product.cost_price|add:"500" }}</span>
+                <span class="badge bg-success ms-2">In Stock</span>
             </div>
 
-            <p class="lead text-secondary mb-4" style="font-size: 0.95rem; line-height: 1.6;">
-                {{ product.description }}
-            </p>
+            <p class="text-muted">{{ product.description }}</p>
 
-            <div class="mb-4">
-                <label class="fw-bold mb-2 d-block">Select Size:</label>
-                <div class="btn-group" role="group" aria-label="Size selection">
-                    <input type="radio" class="btn-check" name="size" id="s" autocomplete="off">
-                    <label class="btn btn-outline-dark px-3" for="s">S</label>
+            <hr class="my-4">
 
-                    <input type="radio" class="btn-check" name="size" id="m" autocomplete="off">
-                    <label class="btn btn-outline-dark px-3" for="m">M</label>
-
-                    <input type="radio" class="btn-check" name="size" id="l" autocomplete="off" checked>
-                    <label class="btn btn-outline-dark px-3" for="l">L</label>
-
-                    <input type="radio" class="btn-check" name="size" id="xl" autocomplete="off">
-                    <label class="btn btn-outline-dark px-3" for="xl">XL</label>
-                </div>
-                <a href="#" class="small text-decoration-none ms-3 text-muted" data-bs-toggle="modal" data-bs-target="#sizeChartModal"><i class="fas fa-ruler me-1"></i> Size Chart</a>
-            </div>
-
-            <div class="d-grid gap-2 d-md-flex mt-4 align-items-center">
-                <button class="btn btn-dark btn-lg rounded-pill px-5 flex-grow-1 shadow-sm">
-                    <i class="fas fa-shopping-bag me-2"></i> Add to Cart
-                </button>
+            <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                {% csrf_token %}
                 
-                <button class="btn btn-warning btn-lg rounded-pill px-4 flex-grow-1 fw-bold position-relative overflow-hidden shadow-sm" data-bs-toggle="modal" data-bs-target="#trialRoomModal">
-                    <i class="fas fa-robot me-2"></i> Trial Room
+                <div class="mb-4">
+                    <label class="fw-bold mb-2 d-block">Select Size:</label>
+                    <input type="radio" name="size" id="size-s" value="S">
+                    <label for="size-s" class="size-option">S</label>
+
+                    <input type="radio" name="size" id="size-m" value="M" checked>
+                    <label for="size-m" class="size-option">M</label>
+
+                    <input type="radio" name="size" id="size-l" value="L">
+                    <label for="size-l" class="size-option">L</label>
+
+                    <input type="radio" name="size" id="size-xl" value="XL">
+                    <label for="size-xl" class="size-option">XL</label>
+                    
+                    <input type="radio" name="size" id="size-xxl" value="XXL">
+                    <label for="size-xxl" class="size-option">XXL</label>
+                </div>
+
+                <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#trialRoomModal">
+                    <i class="fas fa-robot me-2"></i> Try in AI Trial Room
                     <span class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-25" style="transform: skewX(-20deg); animation: shine 3s infinite;"></span>
                 </button>
+
+                <div class="row g-2">
+                    <div class="col-12">
+                        <button type="submit" class="btn-amazon-cart">
+                            Add to Cart
+                        </button>
+                    </div>
+                    <div class="col-12">
+                        <a href="{% url 'buy_now' product.id %}" class="btn-amazon-buy">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="mt-4 p-3 bg-light rounded text-muted small">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fa-solid fa-truck-fast me-2"></i> Free Delivery on orders over ₹1000
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-rotate-left me-2"></i> 7 Days Easy Return Policy
+                </div>
             </div>
-            
-            <hr class="my-4">
-            
-            <div class="d-flex justify-content-between small text-muted">
-                <div><i class="fas fa-truck me-2 text-primary"></i> Free Delivery</div>
-                <div><i class="fas fa-undo me-2 text-primary"></i> 7 Days Return</div>
-                <div><i class="fas fa-shield-alt me-2 text-primary"></i> Secure Payment</div>
-            </div>
+
         </div>
     </div>
 </div>
@@ -127,20 +216,17 @@
                         <div class="position-relative mx-auto mb-4" style="width: 180px; height: 240px; background: #2a2a2a; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #444;">
                             <i class="fas fa-user text-secondary" style="font-size: 10rem; opacity: 0.2;"></i>
                             
-                            <img src="{{ product.image.url }}" class="position-absolute" style="width: 85%; top: 25%; opacity: 0.9; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); mix-blend-mode: normal;">
+                            {% if product.image_url %}
+                                <img src="{{ product.image_url }}" class="position-absolute" style="width: 85%; top: 25%; opacity: 0.9;">
+                            {% elif product.image %}
+                                <img src="{{ product.image.url }}" class="position-absolute" style="width: 85%; top: 25%; opacity: 0.9;">
+                            {% endif %}
                             
                             <div class="scan-line"></div>
                         </div>
 
                         <h3 class="text-white fw-bold mb-1">Recommended Size: <span id="recSize" class="text-warning display-4 fw-bold">L</span></h3>
-                        <p class="text-secondary small mb-3" id="fitDesc">Based on 170cm / 70kg</p>
-
-                        <div class="alert alert-dark border-secondary py-2 d-inline-block text-start">
-                            <small class="text-muted" style="font-size: 0.75rem;">
-                                <i class="fas fa-exclamation-triangle text-warning me-1"></i> 
-                                <strong>Note:</strong> TrendFlix AI can make mistakes. Please double-check the size chart before ordering.
-                            </small>
-                        </div>
+                        <p class="text-secondary small mb-3" id="fitDesc">Based on analysis</p>
 
                         <div class="mt-4">
                             <button class="btn btn-outline-light btn-sm rounded-pill px-4" onclick="resetTrial()">Check Another</button>
@@ -169,10 +255,7 @@
     /* Robot Scan Line */
     .scan-line {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
+        top: 0; left: 0; width: 100%; height: 4px;
         background: #ffc107;
         box-shadow: 0 0 15px #ffc107;
         animation: scan 2s infinite linear;
@@ -198,27 +281,23 @@
 {% block extra_js %}
 <script>
     function analyzeFit() {
-        // 1. Get Inputs
         const height = document.getElementById('userHeight').value;
         const weight = document.getElementById('userWeight').value;
         
-        // 2. Hide Input, Show Loading
         document.getElementById('trialInputStep').style.display = 'none';
         document.getElementById('trialResultStep').style.display = 'block';
         document.getElementById('scanningAnim').style.display = 'block';
         document.getElementById('finalResult').style.display = 'none';
 
-        // 3. AI Logic (Robot Brain)
+        // Simple Mock Logic
         let size = 'M';
         let desc = "Standard Fit";
         
-        // Simple logic based on weight (Demo logic)
         if(weight < 60) { size = 'S'; desc = "Slim Fit"; }
         else if(weight < 75) { size = 'M'; desc = "Regular Fit"; }
         else if(weight < 90) { size = 'L'; desc = "Comfort Fit"; }
         else { size = 'XL'; desc = "Relaxed Fit"; }
 
-        // 4. Update UI after 2 seconds (Fake Processing)
         setTimeout(() => {
             document.getElementById('scanningAnim').style.display = 'none';
             document.getElementById('finalResult').style.display = 'block';
@@ -226,8 +305,10 @@
             document.getElementById('recSize').innerText = size;
             document.getElementById('fitDesc').innerText = `Based on ${height}cm / ${weight}kg analysis.`;
             
-            // Auto select the size in the background page
-            document.getElementById(size.toLowerCase()).checked = true;
+            // Auto Select the Radio Button
+            try {
+                document.getElementById('size-' + size.toLowerCase()).checked = true;
+            } catch(e) { console.log("Size ID not found"); }
             
         }, 2000);
     }
