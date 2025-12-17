@@ -20,12 +20,12 @@ urlpatterns = [
 
     # Checkout & Payment
     path('checkout/', views.checkout, name='checkout'),
-    path('place-cod-order/', views.place_cod_order, name='place_cod_order'), # Old functionality preserved
+    path('place-cod-order/', views.place_cod_order, name='place_cod_order'), 
     
-    # 🔥 The Missing URL - FIXED HERE (Name match aagum) 🔥
+    # 🔥 Success Page URL (Fixed) 🔥
     path('order-success/', views.order_success_view, name='order_success_view'),
 
-    # Dashboards & Uploads (From Old Code - Preserved)
+    # Dashboards & Uploads
     path('dashboard/designer/', views.designer_dashboard, name='designer_dashboard'),
     path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
     path('upload-design/', views.upload_design, name='upload_design'),
