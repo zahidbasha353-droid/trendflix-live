@@ -30,3 +30,4 @@ urlpatterns = [
     path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
     path('upload-design/', views.upload_design, name='upload_design'),
 ]
+path('order-success/', views.order_success_view, name='order_success_view'),
