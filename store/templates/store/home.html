@@ -5,141 +5,165 @@
 {% block content %}
 
 <style>
-    /* 1. GLOBAL UI & FONTS */
-    body { background-color: #f6f7f9; font-family: 'Inter', sans-serif; color: #333; }
+    /* 1. GLOBAL DESIGN */
+    body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
 
-    /* 2. CAROUSEL (VEENA STYLE) */
-    #fashionCarousel { margin-bottom: 20px; }
-    .carousel-item { height: 450px; background-size: cover; background-position: center; border-radius: 0; }
+    /* 2. VEENA STYLE CAROUSEL */
+    .carousel-item { height: 500px; background-size: cover; background-position: center; }
     .banner-overlay { 
-        background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
-        height: 100%; display: flex; align-items: center; padding-left: 10%;
+        background: linear-gradient(to right, rgba(0,0,0,0.6), transparent);
+        height: 100%; display: flex; align-items: center; padding-left: 8%;
     }
-    .banner-text h1 { font-size: 3.5rem; font-weight: 800; color: white; text-transform: uppercase; }
-    .btn-veena { 
-        background: #0071dc; color: white; border-radius: 4px; padding: 12px 30px; 
-        font-weight: 700; border: none; text-transform: uppercase; transition: 0.3s;
+    .banner-text h1 { font-size: 3.8rem; font-weight: 800; color: white; line-height: 1.1; }
+    .banner-text p { color: #ddd; font-size: 1.2rem; margin: 20px 0; }
+    .btn-veena-blue { 
+        background: #0071dc; color: white; padding: 12px 35px; border-radius: 4px; 
+        font-weight: 700; border: none; text-transform: uppercase;
     }
-    .btn-veena:hover { background: #005bb5; }
 
-    /* 3. CATEGORY GRID (COMPACT) */
-    .cat-grid { background: white; padding: 20px 0; margin-bottom: 30px; border-bottom: 1px solid #eee; }
-    .cat-item { text-align: center; transition: 0.3s; cursor: pointer; padding: 10px; }
-    .cat-icon-circle { 
-        width: 60px; height: 60px; background: #fcebed; border-radius: 50%; 
-        display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;
-        color: #e11d48; font-size: 1.4rem; transition: 0.3s;
+    /* 3. CATEGORY BOXES WITH IMAGES */
+    .cat-section { background: white; padding: 30px 0; margin-bottom: 30px; border-bottom: 1px solid #eee; }
+    .cat-card { text-align: center; cursor: pointer; transition: 0.3s; }
+    .cat-img-circle { 
+        width: 85px; height: 85px; border-radius: 50%; overflow: hidden; 
+        margin: 0 auto 12px; border: 2px solid #f0f0f0; transition: 0.3s;
+        background: #f9f9f9; display: flex; align-items: center; justify-content: center;
     }
-    .cat-item:hover .cat-icon-circle { background: #e11d48; color: white; transform: translateY(-5px); }
-    .cat-item span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cat-img-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .cat-card:hover .cat-img-circle { border-color: #0071dc; transform: translateY(-5px); }
+    .cat-card span { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #333; }
 
-    /* 4. DEAL OF THE DAY (EXACT STYLE) */
-    .deal-container {
+    /* 4. FLASH SALES & TIMER */
+    .deal-bar {
         background: #e11d48; color: white; border-radius: 8px; 
-        padding: 15px 25px; margin-bottom: 40px;
+        padding: 18px 25px; margin-bottom: 40px;
         display: flex; justify-content: space-between; align-items: center;
     }
-    .timer-box { display: flex; align-items: center; gap: 10px; }
-    .timer-unit { 
-        background: rgba(255,255,255,0.2); padding: 5px 12px; 
-        border-radius: 4px; font-weight: 800; font-size: 1.2rem;
+    .timer-container { display: flex; align-items: center; gap: 8px; }
+    .time-val { 
+        background: rgba(255,255,255,0.25); padding: 6px 12px; 
+        border-radius: 4px; font-weight: 800; font-size: 1.3rem; min-width: 45px; text-align: center;
     }
 
-    /* 5. PRODUCT CARD (VEENA MEDIUM STYLE) */
-    .pro-card {
-        background: white; border: 1px solid #eee; border-radius: 8px; 
+    /* 5. CLOTHING PRODUCT CARDS */
+    .pro-card-veena {
+        background: white; border: 1px solid #f0f0f0; border-radius: 0px; 
         padding: 15px; transition: 0.3s; position: relative; height: 100%;
     }
-    .pro-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #0071dc; }
-    .fav-heart {
+    .pro-card-veena:hover { box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: #0071dc; }
+    .heart-fav {
         position: absolute; top: 15px; right: 15px; color: #ddd; 
-        font-size: 1.1rem; cursor: pointer; transition: 0.3s; z-index: 5;
+        font-size: 1.2rem; cursor: pointer; transition: 0.3s; z-index: 5;
     }
-    .fav-heart:hover { color: #e11d48; }
-    .pro-img-box { height: 220px; text-align: center; margin-bottom: 15px; }
-    .pro-img-box img { max-height: 100%; object-fit: contain; }
+    .heart-fav:hover { color: #e11d48; }
+    .pro-img-veena { height: 280px; overflow: hidden; margin-bottom: 15px; background: #f9f9f9; }
+    .pro-img-veena img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+    .pro-card-veena:hover img { transform: scale(1.08); }
 
-    /* BUTTONS - SIDE BY SIDE */
-    .pro-btn-group { display: flex; gap: 8px; margin-top: 15px; }
-    .btn-add-cart { background: #0071dc; color: white; border: none; flex: 1; padding: 10px; font-size: 12px; font-weight: 700; border-radius: 4px; text-transform: uppercase; }
-    .btn-buy-now { background: #ffd814; color: #111; border: none; flex: 1; padding: 10px; font-size: 12px; font-weight: 700; border-radius: 4px; text-transform: uppercase; text-decoration: none; text-align: center; }
+    /* ACTION BUTTONS */
+    .btn-stack { display: flex; gap: 6px; margin-top: 15px; }
+    .btn-add-veena { background: #0071dc; color: white; border: none; flex: 1; padding: 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .btn-buy-veena { background: #ffd814; color: #111; border: none; flex: 1; padding: 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; text-decoration: none; text-align: center; }
 
-    /* 6. COLLAB GRID (3 BANNERS) */
-    .collab-grid { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; height: 500px; margin-bottom: 50px; }
-    .collab-item { background-size: cover; background-position: center; border-radius: 8px; position: relative; overflow: hidden; padding: 40px; color: white; }
-    .collab-1 { grid-row: span 2; }
+    /* 6. COLLAB GRID */
+    .collab-row { display: grid; grid-template-columns: 1.5fr 1fr; grid-template-rows: 1fr 1fr; gap: 20px; height: 550px; margin: 50px 0; }
+    .collab-box { background-size: cover; background-position: center; position: relative; overflow: hidden; padding: 40px; color: white; display: flex; flex-direction: column; justify-content: flex-end; }
+    .collab-main { grid-row: span 2; }
     .collab-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); }
-    .collab-content { position: relative; z-index: 2; }
+    .collab-text { position: relative; z-index: 2; }
 
     @media (max-width: 768px) {
-        .collab-grid { grid-template-columns: 1fr; height: auto; }
-        .banner-text h1 { font-size: 2rem; }
+        .collab-row { grid-template-columns: 1fr; height: auto; }
+        .banner-text h1 { font-size: 2.2rem; }
     }
 </style>
 
-<div id="fashionCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+<div id="veenaSlider" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070');">
-            <div class="banner-overlay"><div class="banner-text"><h1>Electronics <br>Mega Sale</h1><button class="btn-veena">Shop Now</button></div></div>
+        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070');">
+            <div class="banner-overlay"><div class="banner-text"><h1>SEASON<br>ESSENTIALS</h1><p>Crafted for comfort, styled for the trend.</p><button class="btn-veena-blue">Shop Now</button></div></div>
         </div>
         <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070');">
-            <div class="banner-overlay"><div class="banner-text"><h1>Smart <br>Collections</h1><button class="btn-veena">Explore</button></div></div>
-        </div>
-        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=2022');">
-            <div class="banner-overlay"><div class="banner-text"><h1>Elite <br>Quality Drop</h1><button class="btn-veena">Buy Now</button></div></div>
+            <div class="banner-overlay"><div class="banner-text"><h1>PREMIUM<br>MENSWEAR</h1><p>Luxury bio-washed cotton collections.</p><button class="btn-veena-blue">Explore</button></div></div>
         </div>
     </div>
 </div>
 
-<div class="cat-grid">
+<div class="cat-section">
     <div class="container">
-        <div class="row g-2 justify-content-center">
-            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-headphones"></i></div><span>Audio</span></div></div>
-            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-tablet-alt"></i></div><span>Tablets</span></div></div>
-            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-gamepad"></i></div><span>Gaming</span></div></div>
-            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-laptop"></i></div><span>Laptops</span></div></div>
-            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-mobile-alt"></i></div><span>Mobiles</span></div></div>
-            <div class="col-4 col-md-1"><div class="cat-item"><div class="cat-icon-circle"><i class="fas fa-tv"></i></div><span>TV</span></div></div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-4 col-md-1">
+                <div class="cat-card">
+                    <div class="cat-img-circle"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=100" alt="T-Shirts"></div>
+                    <span>T-Shirts</span>
+                </div>
+            </div>
+            <div class="col-4 col-md-1">
+                <div class="cat-card">
+                    <div class="cat-img-circle"><img src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=100" alt="Polos"></div>
+                    <span>Polos</span>
+                </div>
+            </div>
+            <div class="col-4 col-md-1">
+                <div class="cat-card">
+                    <div class="cat-img-circle"><img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=100" alt="Hoodies"></div>
+                    <span>Hoodies</span>
+                </div>
+            </div>
+            <div class="col-4 col-md-1">
+                <div class="cat-card">
+                    <div class="cat-img-circle"><img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=100" alt="Caps"></div>
+                    <span>Caps</span>
+                </div>
+            </div>
+            <div class="col-4 col-md-1">
+                <div class="cat-card">
+                    <div class="cat-img-circle"><img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=100" alt="Oversize"></div>
+                    <span>Oversize</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="deal-container">
-        <div class="d-flex align-items-center gap-3">
-            <h5 class="fw-bold mb-0 text-uppercase">Deal Of The Day : Ends In</h5>
-            <div class="timer-box">
-                <div class="timer-unit">02</div> : <div class="timer-unit">15</div> : <div class="timer-unit">44</div>
-            </div>
+    <div class="deal-bar flex-column flex-md-row text-center text-md-start">
+        <h5 class="fw-bold mb-3 mb-md-0 text-uppercase" style="letter-spacing:1px">Exclusive Flash Sale : Ends In</h5>
+        <div class="timer-container">
+            <div class="time-val">04</div> <span class="fw-bold">:</span>
+            <div class="time-val">22</div> <span class="fw-bold">:</span>
+            <div class="time-val">15</div> <span class="fw-bold">:</span>
+            <div class="time-val">59</div>
         </div>
-        <a href="#" class="btn btn-light btn-sm fw-bold rounded-pill px-4">Claim Offer Now</a>
+        <a href="#" class="btn btn-light btn-sm fw-bold rounded-pill px-4 mt-3 mt-md-0 shadow-sm">Unlock Deals Now</a>
     </div>
 </div>
 
 <div class="container mb-5">
-    <div class="row g-4">
+    <div class="row g-3">
         {% for product in products %}
         <div class="col-6 col-md-3">
-            <div class="pro-card">
-                <div class="fav-heart"><i class="fas fa-heart"></i></div>
+            <div class="pro-card-veena">
+                <div class="heart-fav"><i class="fas fa-heart"></i></div>
                 <a href="{% url 'product_detail' product.id %}">
-                    <div class="pro-img-box">
-                        {% if product.image_url %}<img src="{{ product.image_url }}" class="img-fluid">
-                        {% else %}<img src="{{ product.image.url }}" class="img-fluid">{% endif %}
+                    <div class="pro-img-veena">
+                        {% if product.image_url %}<img src="{{ product.image_url }}">
+                        {% else %}<img src="{{ product.image.url }}">{% endif %}
                     </div>
                 </a>
                 <div class="text-center">
-                    <h6 class="fw-bold text-truncate mb-1" style="font-size: 14px;">{{ product.name }}</h6>
-                    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
-                        <span class="text-primary fw-bold">{{ product.selling_price|currency:request }}</span>
+                    <small class="text-muted text-uppercase" style="font-size:10px">{{ product.category }}</small>
+                    <h6 class="fw-bold text-truncate mb-2" style="font-size: 13px;">{{ product.name }}</h6>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <span class="text-primary fw-bold" style="font-size: 1.1rem;">{{ product.selling_price|currency:request }}</span>
                         <del class="text-muted small">{{ product.cost_price|add:"500"|currency:request }}</del>
                     </div>
                     
-                    <div class="pro-btn-group">
+                    <div class="btn-stack">
                         <form action="{% url 'add_to_cart' product.id %}" method="POST" class="flex-grow-1">
-                            {% csrf_token %}<button type="submit" class="btn-add-cart w-100">Add to Cart</button>
+                            {% csrf_token %}<button type="submit" class="btn-add-veena w-100">Add to Cart</button>
                         </form>
-                        <a href="{% url 'buy_now' product.id %}" class="btn-buy-now flex-grow-1">Buy Now</a>
+                        <a href="{% url 'buy_now' product.id %}" class="btn-buy-veena flex-grow-1">Buy Now</a>
                     </div>
                 </div>
             </div>
@@ -149,26 +173,27 @@
 </div>
 
 <div class="container my-5">
-    <div class="collab-grid">
-        <div class="collab-item collab-1" style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070');">
+    <div class="collab-row">
+        <div class="collab-box collab-main" style="background-image: url('https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=2070');">
             <div class="collab-overlay"></div>
-            <div class="collab-content">
-                <h2 class="fw-bold">Ultimate Display <br>Offer</h2>
-                <button class="btn btn-outline-light mt-3">Shop Now</button>
+            <div class="collab-text">
+                <h2 class="fw-bold">THE LEGACY <br>COLLECTION</h2>
+                <p>Limited Edition Drops 2025</p>
+                <button class="btn btn-outline-light rounded-0">Shop The Edit</button>
             </div>
         </div>
-        <div class="collab-item" style="background-image: url('https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2070');">
+        <div class="collab-box" style="background-image: url('https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=2070');">
             <div class="collab-overlay"></div>
-            <div class="collab-content">
-                <h4 class="fw-bold">Exclusive VR Headset</h4>
-                <button class="btn btn-outline-light btn-sm mt-2">Explore</button>
+            <div class="collab-text">
+                <h4 class="fw-bold">STREET WEAR</h4>
+                <button class="btn btn-link text-white p-0 text-decoration-none fw-bold">Explore <i class="fas fa-arrow-right small"></i></button>
             </div>
         </div>
-        <div class="collab-item" style="background-image: url('https://images.unsplash.com/photo-1526733158272-60b4944e8d21?q=80&w=2070');">
+        <div class="collab-box" style="background-image: url('https://images.unsplash.com/photo-1539106609214-0d75a469627a?q=80&w=2070');">
             <div class="collab-overlay"></div>
-            <div class="collab-content">
-                <h4 class="fw-bold">Limited Time Sale</h4>
-                <button class="btn btn-outline-light btn-sm mt-2">View Deals</button>
+            <div class="collab-text">
+                <h4 class="fw-bold">ESSENTIALS</h4>
+                <button class="btn btn-link text-white p-0 text-decoration-none fw-bold">Explore <i class="fas fa-arrow-right small"></i></button>
             </div>
         </div>
     </div>
