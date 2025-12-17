@@ -1,7 +1,6 @@
 {% extends 'store/base.html' %}
 {% load static %}
-
-{% block content %}
+{% load custom_filters %} {% block content %}
 
 <style>
     /* --- 1. ELITE STANDARD STYLES (Main Page Design) --- */
@@ -120,9 +119,11 @@
             <h1 class="fw-bold mb-2">{{ product.name }}</h1>
             <p class="text-muted mb-3">{{ product.category }}</p>
             <hr class="my-3">
+            
             <div class="price-block mb-3">
-                <span class="text-danger fs-5 me-2">-25%</span> <span class="current-price">₹{{ product.selling_price }}</span>
-                <div class="text-muted small">M.R.P.: <span class="mrp-price">₹{{ product.cost_price|add:"500" }}</span></div>
+                <span class="text-danger fs-5 me-2">-25%</span> 
+                <span class="current-price">{{ product.selling_price|currency:request }}</span>
+                <div class="text-muted small">M.R.P.: <span class="mrp-price">{{ product.cost_price|add:"500"|currency:request }}</span></div>
             </div>
             
             <div class="mb-4">
@@ -137,7 +138,7 @@
 
         <div class="col-lg-3">
             <div class="buy-box-sidebar sticky-top" style="top: 100px;">
-                <div class="fs-4 fw-bold text-danger mb-2">₹{{ product.selling_price }}</div>
+                <div class="fs-4 fw-bold text-danger mb-2">{{ product.selling_price|currency:request }}</div>
                 <div class="small mb-3">FREE delivery <span class="fw-bold">Tomorrow</span>.</div>
                 <div class="fs-5 text-success fw-bold mb-3">In Stock.</div>
 
