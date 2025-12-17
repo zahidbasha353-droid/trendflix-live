@@ -174,3 +174,48 @@ def switch_currency(request, currency_code):
         request.session['currency'] = currency_code
     
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+from django.db.models import Sum, Count
+from .models import Order, Product
+
+@staff_member_required
+def owner_dashboard(request):
+    # 1. Order Status Counts
+    pending_orders = Order.objects.filter(status='Pending').count()
+    printed_orders = Order.objects.filter(status='Printed').count()
+    shipped_orders = Order.objects.filter(status='Shipped').count()
+
+    # 2. Financials (Revenue vs Profit)
+    # Note: Assuming you have 'total_price' in Order and 'cost_price' in Product
+    total_revenue = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    
+    # Calculate Total Cost (Approximation based on sold items)
+    # Simple logic: Revenue - (Fixed 70% cost estimate if exact cost tracking isn't set per order)
+    # Or purely based on your Product model cost_price
+    total_cost = 0
+    orders = Order.objects.all()
+    for order in orders:
+        if order.product and order.product.cost_price:
+            total_cost += order.product.cost_price * order.quantity
+            
+    total_profit = total_revenue - total_cost
+
+    # 3. Low Balance / Alerts (Mock Logic - APIs connect pannum pothu real aagidum)
+    alerts = []
+    if total_profit < 5000:  # Example threshold
+        alerts.append("⚠️ Low Wallet Balance! Recharge Printrove.")
+    
+    # 4. Top Selling Designs
+    top_products = Product.objects.filter(is_bestseller=True)[:5]
+
+    context = {
+        'pending': pending_orders,
+        'printed': printed_orders,
+        'shipped': shipped_orders,
+        'revenue': total_revenue,
+        'profit': total_profit,
+        'alerts': alerts,
+        'top_products': top_products,
+    }
+    return render(request, 'admin/owner_dashboard.html', context)

@@ -33,3 +33,12 @@ urlpatterns = [
     # 🔥 GLOBAL CURRENCY SWITCHER (New) 🔥
     path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
 ]
+from django.urls import path, include
+from django.contrib import admin
+from store.views import owner_dashboard  # <--- Import this
+
+urlpatterns = [
+    path('admin/dashboard/', owner_dashboard, name='owner_dashboard'), # <--- Add this line BEFORE admin.site.urls
+    path('admin/', admin.site.urls),
+    path('', include('store.urls')),
+]
