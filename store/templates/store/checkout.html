@@ -1,5 +1,7 @@
 {% extends 'store/base.html' %}
-{% load custom_filters %} {% block content %}
+{% load custom_filters %} 
+
+{% block content %}
 <div class="container my-5" style="max-width: 1200px;">
     <h2 class="mb-4 fw-bold">Checkout</h2>
 
@@ -44,11 +46,11 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Country</label>
-                            <select name="country" id="country-select" class="form-select" onchange="updateShipping()">
+                            <select name="country" id="country-select" class="form-select" onchange="updateShippingAndCOD()">
                                 <option value="India">India (Free Shipping)</option>
                                 <option value="USA">United States (+$25 Shipping)</option>
                                 <option value="UK">United Kingdom (+$20 Shipping)</option>
-                                <option value="Canada">Canada (+$20 Shipping)</option>
+                                <option value="Canada">Canada (+$35 Shipping)</option>
                                 <option value="UAE">UAE (Dubai) (+$15 Shipping)</option>
                                 <option value="Europe">Europe (+$22 Shipping)</option>
                             </select>
@@ -73,19 +75,26 @@
                     <h5 class="mb-0 fw-bold text-dark">2. Payment Method</h5>
                 </div>
                 <div class="card-body p-4">
+                    
                     <div class="form-check p-3 border rounded mb-2 bg-light">
                         <input class="form-check-input" type="radio" name="payment_method" id="pay_online" value="online" checked onclick="togglePayment('online')">
                         <label class="form-check-label w-100 fw-bold" for="pay_online">
-                            UPI / Credit / Debit Card (Fast Delivery)
-                            <span class="badge bg-success float-end">Recommended</span>
+                            Pay Online (Card / UPI / PayPal)
+                            <span class="badge bg-success float-end">Fast & Secure</span>
                         </label>
-                        <div class="text-muted small ps-1 mt-1">Pay securely via Razorpay</div>
+                        <div class="text-muted small ps-1 mt-1">Accepts International Cards & Razorpay</div>
                     </div>
-                    <div class="form-check p-3 border rounded">
+
+                    <div class="form-check p-3 border rounded" id="cod-container">
                         <input class="form-check-input" type="radio" name="payment_method" id="pay_cod" value="cod" onclick="togglePayment('cod')">
                         <label class="form-check-label fw-bold" for="pay_cod">Cash on Delivery (COD)</label>
-                        <div class="text-muted small ps-1 mt-1">Pay cash when your order arrives.</div>
+                        <div class="text-muted small ps-1 mt-1">Pay cash when your order arrives. (India Only)</div>
                     </div>
+
+                    <div id="cod-warning" class="alert alert-warning mt-2 d-none small">
+                        <i class="fas fa-info-circle me-1"></i> COD is not available for International Orders. Please pay online.
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -143,14 +152,12 @@
 <script>
     // 1. Get Currency & Total from Hidden Fields
     const currencyCode = document.getElementById('current-currency').value;
-    // Remove symbols if any to get raw number
     const baseTotal = parseFloat(document.getElementById('raw-total').value);
     
     // 2. Set Shipping Rates based on Currency
     let shippingRate = 0;
     let symbol = '₹';
 
-    // Map currency to symbol and rate
     if (currencyCode === 'USD') { shippingRate = 25; symbol = '$'; }
     else if (currencyCode === 'EUR') { shippingRate = 22; symbol = '€'; }
     else if (currencyCode === 'GBP') { shippingRate = 20; symbol = '£'; }
@@ -160,31 +167,49 @@
     else if (currencyCode === 'AUD') { shippingRate = 40; symbol = 'A$'; }
     else { shippingRate = 2000; symbol = '₹'; } // INR International Rate
 
-    // 3. Update Shipping Function
-    function updateShipping() {
+    // 3. MAIN LOGIC: Update Shipping AND Hide COD
+    function updateShippingAndCOD() {
         const country = document.getElementById('country-select').value;
         const shippingDisplay = document.getElementById('shipping-display');
         const totalDisplay = document.getElementById('total-display');
         const subtotalText = document.getElementById('subtotal-display').innerText;
         
-        // Extract number from subtotal string (removes currency symbol)
+        // COD Elements
+        const codContainer = document.getElementById('cod-container');
+        const codWarning = document.getElementById('cod-warning');
+        const payOnlineRadio = document.getElementById('pay_online');
+
+        // Extract number from subtotal (Remove non-numeric except dot)
         let currentSubtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ''));
 
         if (country === 'India') {
-            // Free Shipping for India
+            // --- INDIA LOGIC (Free Ship + Allow COD) ---
             shippingDisplay.innerText = "FREE";
             shippingDisplay.classList.add('text-success');
             shippingDisplay.classList.remove('text-dark');
-            totalDisplay.innerText = subtotalText; // Total remains same
+            totalDisplay.innerText = subtotalText;
+            
+            // SHOW COD
+            codContainer.classList.remove('d-none');
+            codWarning.classList.add('d-none');
+
         } else {
-            // Add Shipping for International
+            // --- INTERNATIONAL LOGIC (Add Cost + HIDE COD) ---
             shippingDisplay.innerText = symbol + shippingRate;
             shippingDisplay.classList.remove('text-success');
             shippingDisplay.classList.add('text-dark');
             
-            // Calculate New Total
+            // Calc New Total
             let newTotal = currentSubtotal + shippingRate;
             totalDisplay.innerText = symbol + newTotal.toFixed(2);
+
+            // HIDE COD & Force Online Payment
+            codContainer.classList.add('d-none'); // Hide the option
+            codWarning.classList.remove('d-none'); // Show warning message
+            
+            // Auto-select Online Payment
+            payOnlineRadio.checked = true;
+            togglePayment('online');
         }
     }
 
@@ -199,7 +224,16 @@
         }
     }
 
-    // 5. Razorpay Logic
+    // 5. Run logic on page load (In case USD is already selected)
+    window.onload = function() {
+        // If currency is NOT INR, default to USA/International Logic
+        if (currencyCode !== 'INR') {
+           document.getElementById('country-select').value = "USA"; // Default to USA for foreign currency
+           updateShippingAndCOD(); // Trigger logic immediately
+        }
+    };
+
+    // 6. Razorpay Logic
     document.getElementById('razorpay-btn').onclick = function(e) {
         e.preventDefault();
         var name = document.getElementById('full_name').value;
@@ -213,7 +247,7 @@
         var options = {
             "key": "{{ razorpay_merchant_key }}",
             "amount": "{{ total_amount|add:'00' }}", 
-            "currency": "INR", // Razorpay usually handles base currency
+            "currency": "INR", // Razorpay handles base currency
             "name": "Elite Class Store",
             "description": "Order Payment",
             "image": "https://cdn-icons-png.flaticon.com/512/4090/4090458.png",
