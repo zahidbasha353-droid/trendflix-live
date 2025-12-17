@@ -206,6 +206,164 @@
 <div style="position:fixed; top:0; width:100%; height:10px; background: repeating-linear-gradient(90deg, #ff0, #f00, #0f0, #00f); z-index:9999; animation: lights 1s infinite;"></div>
 <style>@keyframes lights { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }</style>
 {% endif %}    
+{% if site_config.active_theme == 'diwali' %}
+<style>
+    /* --- 🪔 DIWALI ATMOSPHERE --- */
+    body {
+        background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e) !important;
+        color: #fff !important;
+    }
+    .garage-card, .card-stat { background: rgba(255, 255, 255, 0.1) !important; border: 1px solid #ffd700 !important; color: #fff !important; }
+    h1, h2, h3, h4, h5, p, span, a { color: #fff !important; text-shadow: 0 0 5px #ffd700; }
+    
+    /* Golden Hanging Lights */
+    .diwali-light {
+        position: fixed; top: -20px; width: 20px; height: 50px;
+        background: radial-gradient(circle, #ff0, #f00);
+        border-radius: 50%; box-shadow: 0 10px 20px #ff0;
+        animation: swing 2s infinite ease-in-out alternate; z-index: 100;
+    }
+    @keyframes swing { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+
+    /* --- 🚀 ROCKET ANIMATION OVERLAY --- */
+    #rocket-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9); z-index: 99999; display: none;
+        align-items: center; justify-content: center; overflow: hidden;
+    }
+    .rocket {
+        font-size: 50px; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); transition: bottom 1s ease-in;
+    }
+    .explosion {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+        width: 10px; height: 10px; border-radius: 50%;
+        box-shadow: 0 0 0 0 #ff0, 0 0 0 0 #f0f, 0 0 0 0 #0ff;
+        opacity: 0;
+    }
+    .explode-anim { animation: blast 0.5s ease-out forwards; }
+    @keyframes blast {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+        50% { opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(50); opacity: 0; box-shadow: 0 0 50px 20px #ff0, 0 0 100px 40px #f00, 0 0 150px 60px #0ff; }
+    }
+</style>
+
+<div id="rocket-overlay">
+    <div class="rocket" id="flying-rocket">🚀</div>
+    <div class="explosion" id="firework"></div>
+</div>
+
+<script>
+    // Add hanging lights
+    for(let i=0; i<window.innerWidth; i+=50) {
+        let light = document.createElement('div');
+        light.className = 'diwali-light';
+        light.style.left = i + 'px';
+        light.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        document.body.appendChild(light);
+    }
+
+    // Rocket Click Logic
+    document.querySelectorAll('a[href*="/product/"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Stop instant redirect
+            let targetUrl = this.href;
+            let overlay = document.getElementById('rocket-overlay');
+            let rocket = document.getElementById('flying-rocket');
+            let explosion = document.getElementById('firework');
+
+            overlay.style.display = 'flex';
+            
+            // 1. Rocket goes up
+            setTimeout(() => { rocket.style.bottom = "50%"; }, 100);
+
+            // 2. Explosion happens
+            setTimeout(() => {
+                rocket.style.display = 'none';
+                explosion.classList.add('explode-anim');
+            }, 800);
+
+            // 3. Redirect after explosion
+            setTimeout(() => { window.location.href = targetUrl; }, 1400);
+        });
+    });
+</script>
+
+
+{% elif site_config.active_theme == 'christmas' %}
+<style>
+    /* --- ❄️ CHRISTMAS ICE ATMOSPHERE --- */
+    body {
+        background-color: #e0f7fa !important;
+        background-image: url('https://www.transparenttextures.com/patterns/snow.png');
+    }
+    
+    /* Falling Snow */
+    .snowflake { position: fixed; top: -10px; z-index: 9999; color: #fff; text-shadow: 0 0 5px #000; animation: fall linear infinite; }
+    @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
+
+    /* --- 🧊 ICE BREAK ANIMATION OVERLAY --- */
+    #ice-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.6); 
+        backdrop-filter: blur(5px);
+        z-index: 99999; display: none;
+        align-items: center; justify-content: center;
+    }
+    .ice-sheet {
+        font-size: 100px; opacity: 0.8; transition: transform 0.2s;
+        cursor: pointer; color: #00bcd4;
+    }
+    .shatter-anim {
+        animation: shatter 0.6s ease-out forwards;
+    }
+    @keyframes shatter {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5) rotate(10deg); opacity: 0.8; }
+        100% { transform: scale(3) rotate(-20deg); opacity: 0; letter-spacing: 50px; filter: blur(10px); }
+    }
+</style>
+
+<div id="ice-overlay">
+    <div class="ice-sheet" id="ice-block">❄️🧊❄️</div>
+</div>
+
+<script>
+    // Snowfall Engine
+    setInterval(() => {
+        const flake = document.createElement('div');
+        flake.classList.add('snowflake');
+        flake.innerText = ['❄', '❅', '❆'][Math.floor(Math.random()*3)];
+        flake.style.left = Math.random() * 100 + 'vw';
+        flake.style.fontSize = Math.random() * 20 + 10 + 'px';
+        flake.style.animationDuration = Math.random() * 3 + 2 + 's';
+        document.body.appendChild(flake);
+        setTimeout(() => flake.remove(), 5000);
+    }, 100);
+
+    // Ice Break Click Logic
+    document.querySelectorAll('a[href*="/product/"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            let targetUrl = this.href;
+            let overlay = document.getElementById('ice-overlay');
+            let iceBlock = document.getElementById('ice-block');
+
+            // 1. Freeze Screen
+            overlay.style.display = 'flex';
+            
+            // 2. Play Shatter Sound (Optional visual trigger)
+            setTimeout(() => {
+                iceBlock.classList.add('shatter-anim');
+            }, 100);
+
+            // 3. Redirect after shatter
+            setTimeout(() => { window.location.href = targetUrl; }, 800);
+        });
+    });
+</script>
+{% endif %}
 </body>
 </html>
 {% if site_config.logo %}
