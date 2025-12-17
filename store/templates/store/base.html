@@ -4,87 +4,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Class | Print Your Vibe</title>
+    <title>Trendflixe | Crafted For Your Style</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- 1. NEW PREMIUM LOOK STYLES --- */
+        /* --- PREMIUM MINIMALIST STYLES --- */
         body { 
-            background-color: #f8f9fa; 
-            color: #333; 
-            font-family: 'Poppins', sans-serif; 
+            background-color: #ffffff; 
+            color: #000; 
+            font-family: 'Inter', sans-serif; /* High-end look font */
             overflow-x: hidden;
         }
         
         /* Navbar Customization */
         .navbar { 
             background: white !important; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important; 
-            padding: 15px 0; 
+            border-bottom: 1px solid #eee;
+            padding: 20px 0; 
+            box-shadow: none !important;
         }
+
+        /* Minimalist Navbar Brand */
+        .navbar-brand { 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            font-size: 1.2rem; 
+            color: #000 !important;
+            text-transform: uppercase;
+        }
+
         .nav-link {
             font-weight: 500;
-            color: #333 !important;
-            margin: 0 10px;
+            color: #000 !important;
+            margin: 0 12px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: 0.3s;
         }
         .nav-link:hover {
-            color: #0071dc !important; /* Premium Blue */
+            color: #666 !important; 
         }
         
-        /* Product Card Design */
+        /* Product Card Design (Minimalist) */
         .product-card { 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
-            border-radius: 15px !important; 
+            transition: all 0.4s ease; 
+            border-radius: 0px !important; 
             background: #fff;
             border: none !important;
         }
         .product-card:hover { 
             transform: translateY(-5px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; 
         }
-        .product-card img { transition: transform 0.5s ease; border-radius: 12px; }
-        .product-card:hover img { transform: scale(1.05); }
         
-        /* Modern Category Icons */
-        .category-card { transition: all 0.3s ease; cursor: pointer; border: none !important; }
-        .category-card:hover { 
-            background: #0071dc !important; 
-            color: white !important; 
-            transform: translateY(-3px); 
-        }
-        .category-card:hover i { color: white !important; }
-        
-        /* Improved Buttons */
-        .btn-warning { 
-            background-color: #ffd814 !important; 
-            border-color: #fcd200 !important; 
-            color: #111 !important; 
-            font-weight: 600;
-            border-radius: 50px;
-        }
-        .btn-warning:hover { background-color: #f7ca00 !important; }
+        /* Buttons Style */
         .btn-primary { 
-            background-color: #0071dc !important; 
-            border: none; 
+            background-color: #000 !important; 
+            border: 1px solid #000 !important; 
+            color: #fff !important;
             font-weight: 600;
-            border-radius: 50px;
+            border-radius: 0px; /* Square edges for minimalist look */
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 10px 25px;
         }
-        
-        /* Elite Red Accent (Keeping some old identity) */
-        .badge-elite {
-            background-color: #e11d48;
-            font-size: 0.6rem;
+        .btn-primary:hover {
+            background-color: transparent !important;
+            color: #000 !important;
         }
 
-        /* Footer */
+        .badge-elite {
+            background-color: #000;
+            font-size: 0.6rem;
+            border-radius: 50%;
+        }
+
+        /* Footer Design */
         footer {
-            background-color: #111;
-            color: #ddd;
-            padding: 40px 0;
+            background-color: #fff;
+            color: #000;
+            border-top: 1px solid #eee;
+            padding: 60px 0;
             margin-top: auto;
         }
     </style>
@@ -96,10 +100,10 @@
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'images/logo.png' %}" alt="Trendflixe" style="height: 50px; width: auto;">
+                <img src="{% static 'images/logo.png' %}" alt="Trendflixe" style="height: 40px; width: auto;">
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -110,31 +114,30 @@
                     
                     <li class="nav-item dropdown me-2">
                         <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">
-                            {% if request.session.currency == 'USD' %} 🇺🇸 USD
-                            {% elif request.session.currency == 'EUR' %} 🇪🇺 EUR
-                            {% elif request.session.currency == 'GBP' %} 🇬🇧 UK
-                            {% elif request.session.currency == 'AED' %} 🇦🇪 UAE
-                            {% elif request.session.currency == 'SAR' %} 🇸🇦 KSA
-                            {% elif request.session.currency == 'CAD' %} 🇨🇦 CAD
-                            {% else %} 🇮🇳 INR
+                            {% if request.session.currency == 'USD' %} USD
+                            {% elif request.session.currency == 'EUR' %} EUR
+                            {% elif request.session.currency == 'GBP' %} GBP
+                            {% elif request.session.currency == 'AED' %} AED
+                            {% elif request.session.currency == 'SAR' %} SAR
+                            {% elif request.session.currency == 'CAD' %} CAD
+                            {% else %} INR
                             {% endif %}
                         </a>
-                        <ul class="dropdown-menu border-0 shadow-sm" style="max-height: 300px; overflow-y: auto;">
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'INR' %}">🇮🇳 INR (₹)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'USD' %}">🇺🇸 USD ($)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'EUR' %}">🇪🇺 Euro (€)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'GBP' %}">🇬🇧 Pound (£)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'AED' %}">🇦🇪 Dirham (AED)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'SAR' %}">🇸🇦 Riyal (SAR)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'CAD' %}">🇨🇦 CAD ($)</a></li>
-                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'AUD' %}">🇦🇺 AUD ($)</a></li>
+                        <ul class="dropdown-menu border-0 shadow-sm rounded-0" style="max-height: 300px; overflow-y: auto;">
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'INR' %}">INR (₹)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'USD' %}">USD ($)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'EUR' %}">Euro (€)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'GBP' %}">Pound (£)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'AED' %}">Dirham (AED)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'SAR' %}">Riyal (SAR)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'CAD' %}">CAD ($)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'AUD' %}">AUD ($)</a></li>
                         </ul>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'cart' %}">
-                            <i class="fas fa-shopping-cart fa-lg"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-elite">
+                            <i class="fas fa-shopping-bag fa-lg"></i> <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-elite">
                                 {{ cart_count|default:"0" }}
                             </span>
                         </a>
@@ -143,18 +146,18 @@
                     <li class="nav-item ms-3">
                         {% if user.is_authenticated %}
                             <div class="dropdown">
-                                <a class="btn btn-outline-dark dropdown-toggle rounded-pill px-4" href="#" role="button" data-bs-toggle="dropdown">
-                                    Hello, {{ user.username }}
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    {{ user.username }}
                                 </a>
-                                <ul class="dropdown-menu border-0 shadow-sm">
+                                <ul class="dropdown-menu border-0 shadow-sm rounded-0">
                                     <li><a class="dropdown-item" href="#">My Orders</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
                                 </ul>
                             </div>
                         {% else %}
-                            <a href="{% url 'login' %}" class="btn btn-primary px-4">
-                                Login <i class="fa-solid fa-arrow-right ms-1"></i>
+                            <a href="{% url 'login' %}" class="btn btn-primary">
+                                Login
                             </a>
                         {% endif %}
                     </li>
@@ -167,11 +170,12 @@
     {% block content %}
     {% endblock %}
 
-    <footer class="text-center mt-5">
+    <footer class="text-center">
         <div class="container">
-            <h5 class="fw-bold text-white mb-3">TRENDFLIXE</h5>
-            <p class="text-muted small">Premium Custom Apparels. Crafted for your style.</p>
-            <p class="mb-0 text-white-50 small">&copy; 2025 Trendflixe Store. All rights reserved.</p>
+            <h5 class="fw-bold mb-3" style="letter-spacing: 3px;">TRENDFLIXE</h5>
+            <p class="text-muted small text-uppercase" style="letter-spacing: 2px;">Crafted for your style.</p>
+            <hr class="my-4 mx-auto" style="width: 50px; border-top: 2px solid #000;">
+            <p class="mb-0 text-muted small">&copy; 2025 Trendflixe Store. All rights reserved.</p>
         </div>
     </footer>
 

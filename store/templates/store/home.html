@@ -5,180 +5,141 @@
 {% block content %}
 
 <style>
-    /* --- 1. PREMIUM GLOBAL STYLES --- */
-    body { background-color: #f8f9fa; }
-    
-    /* --- 2. MODERN HERO SECTION --- */
-    .hero-section {
-        background: #f4f7f9;
-        height: 480px;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        position: relative;
+    /* --- 1. PREMIUM MINIMALIST GLOBAL STYLES --- */
+    body { 
+        background-color: #ffffff; 
+        color: #000; 
+        font-family: 'Inter', sans-serif; /* High-end look font */
     }
-    .hero-title { font-size: 3.5rem; font-weight: 800; color: #1a1a1a; }
-    .hero-subtitle { font-size: 1.2rem; color: #555; margin-bottom: 25px; }
 
-    /* --- 3. TRUST BAR (From Old Code Style) --- */
+    /* --- 2. 5 MOVEMENT BANNER (Carousel) STYLES --- */
+    .carousel-item { 
+        height: 85vh; 
+        background-size: cover; 
+        background-position: center; 
+        background-color: #000;
+    }
+    .banner-overlay { 
+        background: rgba(0,0,0,0.2); 
+        height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .banner-text h1 { 
+        font-size: 4.5rem; 
+        font-weight: 300; 
+        font-style: italic; 
+        color: white; 
+        margin-bottom: 20px;
+    }
+    .btn-minimal { 
+        background: white; color: black; border-radius: 0; padding: 15px 40px; 
+        text-transform: uppercase; font-weight: 600; font-size: 0.8rem; border: 1px solid white;
+        transition: 0.3s;
+    }
+    .btn-minimal:hover { background: transparent; color: white; }
+
+    /* --- 3. TRUST BAR (Clean Style) --- */
     .trust-bar {
         background: white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        padding: 25px 0;
-        margin-top: -30px; 
-        position: relative;
-        border-radius: 12px;
-        z-index: 20;
+        padding: 40px 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 50px;
     }
     .trust-item { text-align: center; border-right: 1px solid #eee; }
     .trust-item:last-child { border-right: none; }
-    .trust-icon { color: #0071dc; font-size: 24px; margin-bottom: 8px; }
-    .trust-title { font-weight: 700; font-size: 14px; color: #333; }
+    .trust-icon { color: #000; font-size: 20px; margin-bottom: 10px; }
+    .trust-title { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* --- 4. CATEGORY CARDS --- */
-    .category-card {
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border: none !important;
-        background: white;
-        text-align: center;
-    }
-    .category-card:hover { 
-        background: #0071dc !important; 
-        color: white !important; 
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,113,220,0.2);
-    }
-    .category-card:hover i { color: white !important; }
-
-    /* --- 5. PRODUCT CARDS (Enhanced Design) --- */
-    .product-card {
-        transition: 0.3s;
-        border: none !important;
-        border-radius: 15px;
+    /* --- 4. MINIMAL PRODUCT CARD (Brand Style) --- */
+    .minimal-card { border: none !important; margin-bottom: 50px; transition: 0.3s; }
+    .card-img-container { 
+        background: #f9f9f9; 
+        border-radius: 0px; 
+        padding: 0px; 
         overflow: hidden;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        position: relative;
     }
-    .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    }
-    .card-img-container {
-        padding: 15px;
-        background: #f8f8f8;
-        border-radius: 15px 15px 0 0;
-    }
-    .card-img-top {
-        height: 220px;
-        object-fit: contain;
-        transition: 0.5s;
-    }
-    .product-card:hover .card-img-top { transform: scale(1.08); }
-
-    /* --- 6. BUTTONS (Keeping your logic) --- */
-    .btn-amazon-cart, .btn-amazon-buy {
+    .card-img-top { 
+        height: 450px; 
         width: 100%;
-        font-weight: 700;
-        padding: 10px;
-        border-radius: 50px;
-        margin-top: 8px;
-        display: block;
-        text-align: center;
-        text-decoration: none;
-        font-size: 0.85rem;
-        border: none;
+        object-fit: cover; 
+        transition: 0.6s ease;
     }
-    .btn-amazon-cart { background-color: #ffd814; color: #111; }
-    .btn-amazon-cart:hover { background-color: #f7ca00; }
-    .btn-amazon-buy { background-color: #ffa41c; color: #111; }
-    .btn-amazon-buy:hover { background-color: #fa8900; }
+    .minimal-card:hover .card-img-top { transform: scale(1.05); }
+    
+    .product-title { 
+        font-size: 0.85rem; 
+        font-weight: 600; 
+        text-transform: uppercase; 
+        margin-top: 15px; 
+        letter-spacing: 1px; 
+        color: #000;
+    }
+    .product-price { font-size: 0.9rem; color: #555; font-weight: 500; }
+
+    /* Buttons Style (Side-by-Side) */
+    .btn-action-group { display: flex; gap: 5px; margin-top: 15px; }
+    .btn-cart-min { 
+        border: 1px solid #000; background: transparent; color: #000; 
+        font-size: 0.7rem; padding: 10px; flex: 1; 
+        text-transform: uppercase; font-weight: 700; transition: 0.3s;
+    }
+    .btn-cart-min:hover { background: #000; color: #fff; }
+    
+    .btn-buy-min { 
+        background: #000; color: #fff; border: 1px solid #000; 
+        font-size: 0.7rem; padding: 10px; flex: 1; 
+        text-transform: uppercase; font-weight: 700; text-decoration: none; text-align: center;
+    }
 
     @media (max-width: 768px) {
-        .hero-section { height: auto; padding: 40px 0; }
-        .hero-title { font-size: 2.2rem; }
+        .banner-text h1 { font-size: 2.5rem; }
+        .carousel-item { height: 60vh; }
+        .card-img-top { height: 300px; }
         .trust-item { border-right: none; border-bottom: 1px solid #eee; padding: 15px; }
     }
 </style>
 
-<div class="hero-section">
+<div id="fashionCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner">
+        <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?q=80&w=2070');">
+            <div class="banner-overlay"><div class="banner-text"><h1>The Legacy Capsule</h1><a href="#shop" class="btn btn-minimal">Shop the Re-stock</a></div></div>
+        </div>
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=1964');">
+            <div class="banner-overlay"><div class="banner-text"><h1>Nate Robinson Edit</h1><a href="#shop" class="btn btn-minimal">Explore the Edit</a></div></div>
+        </div>
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1974');">
+            <div class="banner-overlay"><div class="banner-text"><h1>Creator's Club Vol 3.</h1><a href="#shop" class="btn btn-minimal">Join the Club</a></div></div>
+        </div>
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1539106609214-0d75a469627a?q=80&w=1974');">
+            <div class="banner-overlay"><div class="banner-text"><h1>Essential Oversize</h1><a href="#shop" class="btn btn-minimal">Buy Essentials</a></div></div>
+        </div>
+        <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=2022');">
+            <div class="banner-overlay"><div class="banner-text"><h1>New Season Drop</h1><a href="#shop" class="btn btn-minimal">Shop Now</a></div></div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#fashionCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+    <button class="carousel-control-next" type="button" data-bs-target="#fashionCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+</div>
+
+<div class="trust-bar">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6" data-aos="fade-right">
-                <span class="badge bg-soft-primary text-primary px-3 py-2 rounded-pill mb-3" style="background:#e7f1ff">New Arrival 2025</span>
-                <h1 class="hero-title">Trendflixe <br><span class="text-primary">Premium</span> Style</h1>
-                <p class="hero-subtitle">100% Bio-Washed Cotton. Experience the elite comfort with our custom collections.</p>
-                <a href="#collections" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Shop Now <i class="fas fa-shopping-bag ms-2"></i></a>
-            </div>
-            <div class="col-md-6 text-center d-none d-md-block">
-                <img src="https://www.pngarts.com/files/5/Plain-T-Shirt-Transparent-Image.png" class="img-fluid" style="max-height: 400px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));">
-            </div>
+        <div class="row">
+            <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-truck-fast trust-icon"></i><div class="trust-title">Global Shipping</div></div>
+            <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-medal trust-icon"></i><div class="trust-title">100% Quality</div></div>
+            <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-rotate-left trust-icon"></i><div class="trust-title">Easy Returns</div></div>
+            <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-headset trust-icon"></i><div class="trust-title">24/7 Support</div></div>
         </div>
     </div>
 </div>
 
-<div class="container">
-    <div class="row trust-bar mx-2 mb-5">
-        <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-truck-fast trust-icon"></i><div class="trust-title">Global Shipping</div></div>
-        <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-shield-halved trust-icon"></i><div class="trust-title">100% Quality</div></div>
-        <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-rotate-left trust-icon"></i><div class="trust-title">Easy Returns</div></div>
-        <div class="col-md-3 trust-item col-6"><i class="fa-solid fa-headset trust-icon"></i><div class="trust-title">24/7 Support</div></div>
-    </div>
-</div>
-
-<div class="container my-5">
-    <h4 class="fw-bold mb-4">Shop By Category</h4>
-    <div class="row g-4 text-center">
-        <div class="col-4 col-md-2">
-            <div class="category-card p-4 border rounded-4 shadow-sm">
-                <i class="fas fa-tshirt fa-2x mb-2 text-primary"></i>
-                <p class="small fw-bold mb-0">T-Shirts</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="category-card p-4 border rounded-4 shadow-sm">
-                <i class="fas fa-user-tie fa-2x mb-2 text-success"></i>
-                <p class="small fw-bold mb-0">Polos</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="category-card p-4 border rounded-4 shadow-sm">
-                <i class="fas fa-vest fa-2x mb-2 text-danger"></i>
-                <p class="small fw-bold mb-0">Hoodies</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="category-card p-4 border rounded-4 shadow-sm">
-                <i class="fas fa-socks fa-2x mb-2 text-warning"></i>
-                <p class="small fw-bold mb-0">Accessories</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="category-card p-4 border rounded-4 shadow-sm">
-                <i class="fas fa-hat-wizard fa-2x mb-2 text-info"></i>
-                <p class="small fw-bold mb-0">Caps</p>
-            </div>
-        </div>
-        <div class="col-4 col-md-2">
-            <div class="category-card p-4 border rounded-4 shadow-sm">
-                <i class="fas fa-ellipsis-h fa-2x mb-2 text-secondary"></i>
-                <p class="small fw-bold mb-0">More</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="collections" class="container my-5 pb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold mb-0">Trending Collections</h3>
-        <a href="#" class="text-primary text-decoration-none fw-bold small">VIEW ALL <i class="fas fa-chevron-right ms-1"></i></a>
-    </div>
-
+<div id="shop" class="container my-5 pb-5">
+    <h6 class="text-uppercase fw-bold text-center mb-5" style="letter-spacing: 5px; font-size: 0.75rem; color: #888;">Shop the Collection</h6>
+    
     <div class="row g-4">
         {% for product in products %}
         <div class="col-lg-3 col-md-4 col-6">
-            <div class="card product-card h-100">
-                <div class="card-img-container position-relative">
+            <div class="card minimal-card h-100">
+                <div class="card-img-container">
                     <a href="{% url 'product_detail' product.id %}">
                         {% if product.image_url %}
                             <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
@@ -187,27 +148,25 @@
                         {% endif %}
                     </a>
                     {% if product.is_trending %}
-                        <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 m-2 rounded-pill small fw-bold" style="font-size:10px">🔥 TRENDING</span>
+                        <span class="position-absolute top-0 start-0 bg-white text-black px-2 py-1 m-2 small fw-bold" style="font-size:10px; letter-spacing:1px;">NEW</span>
                     {% endif %}
                 </div>
                 
-                <div class="card-body p-3 d-flex flex-column">
-                    <span class="text-muted small mb-1" style="font-size: 11px; text-transform: uppercase;">{{ product.category }}</span>
-                    <h6 class="fw-bold text-truncate mb-2" title="{{ product.name }}">{{ product.name }}</h6>
-                    
-                    <div class="mb-3">
-                        <span class="text-danger fw-bold fs-5">{{ product.selling_price|currency:request }}</span>
-                        <small class="text-muted text-decoration-line-through ms-1">
+                <div class="text-center px-2">
+                    <p class="product-title mb-1 text-truncate">{{ product.name }}</p>
+                    <p class="product-price">
+                        {{ product.selling_price|currency:request }}
+                        <span class="text-muted text-decoration-line-through ms-2" style="font-size: 0.75rem;">
                             {{ product.cost_price|add:"500"|currency:request }}
-                        </small>
-                    </div>
+                        </span>
+                    </p>
                     
-                    <div class="mt-auto">
-                        <form action="{% url 'add_to_cart' product.id %}" method="POST" class="mb-2">
+                    <div class="btn-action-group">
+                        <form action="{% url 'add_to_cart' product.id %}" method="POST" class="flex-grow-1">
                             {% csrf_token %}
-                            <button type="submit" class="btn-amazon-cart shadow-sm">Add to Cart</button>
+                            <button type="submit" class="btn-cart-min w-100">Cart</button>
                         </form>
-                        <a href="{% url 'buy_now' product.id %}" class="btn-amazon-buy shadow-sm">Buy Now</a>
+                        <a href="{% url 'buy_now' product.id %}" class="btn-buy-min flex-grow-1">Buy Now</a>
                     </div>
                 </div>
             </div>
