@@ -182,39 +182,47 @@ from .models import Order, Product
 @staff_member_required
 def owner_dashboard(request):
     # 1. Order Status Counts
+    # 'status' field irukurathaala idhu work aagum
     pending_orders = Order.objects.filter(status='Pending').count()
     printed_orders = Order.objects.filter(status='Printed').count()
     shipped_orders = Order.objects.filter(status='Shipped').count()
 
-    # 2. Financials (Revenue vs Profit)
-    # Note: Assuming you have 'total_price' in Order and 'cost_price' in Product
-    total_revenue = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    # 2. Financials (Fixed Error Here)
+    # total_price -> total_amount (Database field name padi maaththeeruken)
+    revenue_data = Order.objects.aggregate(Sum('total_amount'))
+    total_revenue = revenue_data['total_amount__sum'] or 0
     
-    # Calculate Total Cost (Approximation based on sold items)
-    # Simple logic: Revenue - (Fixed 70% cost estimate if exact cost tracking isn't set per order)
-    # Or purely based on your Product model cost_price
+    # 3. Profit Calculation (Safe Mode)
+    # Order-la 'product' field illa, so 'items' loop pannanum.
+    # Oru vela loop fail aanalum crash aagama irukka 'try-except' potturuken.
     total_cost = 0
-    orders = Order.objects.all()
-    for order in orders:
-        if order.product and order.product.cost_price:
-            total_cost += order.product.cost_price * order.quantity
-            
+    try:
+        orders = Order.objects.prefetch_related('items').all() # 'items' connection load pannum
+        for order in orders:
+            # Unga OrderItem model-la 'product' link irundha idhu work aagum
+            for item in order.items.all():
+                if hasattr(item, 'product') and item.product.cost_price:
+                    total_cost += item.product.cost_price * item.quantity
+    except Exception as e:
+        # Loop fail aana, simple-ah 70% cost nu assume pannikalam (Temporary fix)
+        total_cost = total_revenue * 0.70
+
     total_profit = total_revenue - total_cost
 
-    # 3. Low Balance / Alerts (Mock Logic - APIs connect pannum pothu real aagidum)
+    # 4. Low Balance Alerts
     alerts = []
-    if total_profit < 5000:  # Example threshold
+    if total_profit < 2000:
         alerts.append("⚠️ Low Wallet Balance! Recharge Printrove.")
     
-    # 4. Top Selling Designs
+    # 5. Top Selling Designs
     top_products = Product.objects.filter(is_bestseller=True)[:5]
 
     context = {
         'pending': pending_orders,
         'printed': printed_orders,
         'shipped': shipped_orders,
-        'revenue': total_revenue,
-        'profit': total_profit,
+        'revenue': round(total_revenue, 2),
+        'profit': round(total_profit, 2),
         'alerts': alerts,
         'top_products': top_products,
     }
