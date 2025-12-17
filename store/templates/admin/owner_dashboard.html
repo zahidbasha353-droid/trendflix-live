@@ -1,0 +1,87 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    .dashboard-container { font-family: 'Segoe UI', sans-serif; background-color: #f4f6f9; padding: 20px; border-radius: 8px; }
+    .card-stat { border: none; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; background: white; overflow: hidden; }
+    .card-stat:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .icon-box { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 28px; }
+    .bg-purple { background: linear-gradient(45deg, #6f42c1, #a66efa); color: white; }
+    .bg-green { background: linear-gradient(45deg, #198754, #28a745); color: white; }
+    .bg-orange { background: linear-gradient(45deg, #fd7e14, #ffc107); color: white; }
+    .bg-blue { background: linear-gradient(45deg, #0d6efd, #0dcaf0); color: white; }
+    a { text-decoration: none !important; }
+</style>
+
+<div class="dashboard-container">
+    <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap">
+        <div>
+            <h2 class="fw-bold text-dark m-0"><i class="fas fa-crown text-warning me-2"></i>TrendFlix Master Mind</h2>
+            <p class="text-muted m-0">Welcome back, Owner.</p>
+        </div>
+        <div>
+            <a href="/admin/store/order/" class="btn btn-dark btn-sm rounded-pill px-3"><i class="fas fa-box me-2"></i>Orders</a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card card-stat p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center h-100">
+                    <div><p class="text-muted mb-1 small fw-bold">REVENUE</p><h3 class="fw-bold m-0">₹ {{ revenue|default:"0" }}</h3></div>
+                    <div class="icon-box bg-purple"><i class="fas fa-wallet"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center h-100">
+                    <div><p class="text-muted mb-1 small fw-bold">PROFIT</p><h3 class="fw-bold text-success m-0">₹ {{ profit|default:"0" }}</h3></div>
+                    <div class="icon-box bg-green"><i class="fas fa-chart-line"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center h-100">
+                    <div><p class="text-muted mb-1 small fw-bold">PENDING</p><h3 class="fw-bold text-warning m-0">{{ pending|default:"0" }}</h3></div>
+                    <div class="icon-box bg-orange"><i class="fas fa-clock"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center h-100">
+                    <div><p class="text-muted mb-1 small fw-bold">SHIPPED</p><h3 class="fw-bold text-primary m-0">{{ shipped|default:"0" }}</h3></div>
+                    <div class="icon-box bg-blue"><i class="fas fa-truck"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-stat">
+        <div class="card-header bg-white border-0 py-3"><h5 class="fw-bold m-0">🔥 Top Selling Designs</h5></div>
+        <div class="card-body p-0">
+            <table class="table table-hover m-0">
+                <thead class="bg-light"><tr><th class="ps-4">Product Name</th><th>Price</th><th>Status</th></tr></thead>
+                <tbody>
+                    {% for product in top_products %}
+                    <tr>
+                        <td class="ps-4 fw-bold">{{ product.name }}</td>
+                        <td class="text-success">₹ {{ product.selling_price }}</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center py-3">No sales yet!</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
