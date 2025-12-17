@@ -4,7 +4,7 @@
 {% block content %}
 
 <style>
-    /* --- ELITE STANDARD STYLES (Old Amazon Design) --- */
+    /* --- 1. ELITE STANDARD STYLES (Main Page Design) --- */
     .price-block .current-price { font-size: 28px; font-weight: 700; color: #B12704; }
     .price-block .mrp-price { text-decoration: line-through; color: #565959; font-size: 14px; }
     .price-block .save-price { color: #B12704; font-size: 14px; font-weight: 500; }
@@ -17,18 +17,17 @@
     input[type="radio"] { display: none; }
     input[type="radio"]:checked + label { background-color: #000; color: #fff; border-color: #000; }
     
-    /* Trial Button Style */
-    .btn-trial { background: linear-gradient(135deg, #232526, #414345); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 12px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    /* Trial Button */
+    .btn-trial { background: linear-gradient(135deg, #111, #333); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 12px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     .btn-trial:hover { color: #ffc107; }
     .buy-box-trust { font-size: 12px; color: #565959; }
     .buy-box-trust i { color: #007600; width: 20px; text-align: center; }
 
-    /* 🔥 GOOGLE 3D STUDIO STYLES (Added New) 🔥 */
-    .studio-stage {
+    /* --- 2. REALISTIC 3D STUDIO STYLES (Modal Design) --- */
+    .studio-bg {
         width: 100%;
         height: 100%;
-        /* Clean Gradient Background like Apple/Google */
-        background: radial-gradient(circle at center, #ffffff 0%, #dcdcdc 100%);
+        background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 100%);
         position: relative;
         overflow: hidden;
         display: flex;
@@ -36,38 +35,38 @@
         align-items: flex-end;
     }
 
-    /* 3D Mannequin Body */
-    .model-body {
-        height: 90%;
-        width: 320px; /* Base width */
+    /* The Realistic Model Container */
+    .model-container {
+        height: 95%;
+        width: 350px;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center bottom;
         position: absolute;
         bottom: 0;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4)); /* Realistic Shadow */
+        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4));
+        transition: all 0.4s ease;
         z-index: 10;
     }
 
-    /* Shirt Container & Blending Logic */
-    .shirt-overlay-container {
+    /* Shirt Overlay - THE MAGIC BLEND */
+    .shirt-layer {
         position: absolute;
-        top: 23%; /* Default chest position */
+        top: 21%; /* Male Chest Position Default */
         left: 50%;
         transform: translateX(-50%);
-        width: 145px; /* Adjust shirt size relative to mannequin */
+        width: 155px; /* Adjust based on model size */
         z-index: 20;
-        opacity: 0.95;
-        transition: all 0.4s ease;
+        opacity: 0.96;
+        transition: top 0.3s ease, width 0.3s ease;
     }
 
     .shirt-img {
         width: 100%;
         height: auto;
-        /* 🔥 THE MAGIC TRICK: This removes the white square background! 🔥 */
+        /* 🔥 THIS REMOVES THE WHITE BOX! 🔥 */
         mix-blend-mode: multiply; 
-        filter: contrast(1.1) brightness(1.05);
+        filter: contrast(1.15) brightness(1.05);
     }
 
     /* Controls Panel */
@@ -77,28 +76,17 @@
         z-index: 100;
         box-shadow: 5px 0 15px rgba(0,0,0,0.05);
     }
-    
-    /* Fit Status Badge */
+
+    /* Status Badge */
     .status-badge {
         position: absolute; top: 20px; right: 20px;
-        background: #fff; color: #333;
+        background: #fff; color: #000;
         padding: 8px 20px; border-radius: 30px;
-        font-weight: 700; font-size: 1rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        font-weight: 800; font-size: 1rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         z-index: 50; display: flex; align-items: center; gap: 10px;
     }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
-
-    /* Laser Scanner Line */
-    .scan-line {
-        position: absolute; width: 150%; height: 2px;
-        background: #007bff;
-        box-shadow: 0 0 10px #007bff;
-        top: 0; left: -25%;
-        animation: scanMove 2s infinite alternate;
-        z-index: 30; opacity: 0.6;
-    }
-    @keyframes scanMove { 0% { top: 10%; } 100% { top: 90%; } }
+    .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #28a745; }
 
 </style>
 
@@ -166,8 +154,8 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#google3DModal">
-                        <i class="fas fa-cube me-2"></i> Try in 3D Studio
+                    <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#real3DModal">
+                        <i class="fas fa-street-view me-2"></i> Real 3D Fit Check
                         <span class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-10" style="transform: skewX(-20deg); animation: shine 3s infinite;"></span>
                     </button>
 
@@ -184,34 +172,34 @@
     </div>
 </div>
 
-<div class="modal fade" id="google3DModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="real3DModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0" style="background: #f8f9fa; height: 90vh;">
             <div class="modal-body p-0 d-flex flex-column flex-lg-row h-100">
                 
                 <div class="col-lg-3 p-4 d-flex flex-column justify-content-center controls-panel">
-                    <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-sliders-h me-2"></i>Configure Body</h4>
+                    <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-user-cog me-2"></i>Model Config</h4>
                     
                     <div class="mb-4">
-                        <label class="small fw-bold text-muted mb-2">MODEL GENDER</label>
+                        <label class="small fw-bold text-muted mb-2">SELECT MODEL</label>
                         <div class="btn-group w-100" role="group">
-                            <input type="radio" class="btn-check" name="gender3d" id="g_male" autocomplete="off" checked onclick="setGender('male')">
-                            <label class="btn btn-outline-dark" for="g_male"><i class="fas fa-male"></i> Male</label>
+                            <input type="radio" class="btn-check" name="realGender" id="rg_male" autocomplete="off" checked onclick="setRealGender('male')">
+                            <label class="btn btn-outline-dark" for="rg_male"><i class="fas fa-male"></i> Male</label>
 
-                            <input type="radio" class="btn-check" name="gender3d" id="g_female" autocomplete="off" onclick="setGender('female')">
-                            <label class="btn btn-outline-dark" for="g_female"><i class="fas fa-female"></i> Female</label>
+                            <input type="radio" class="btn-check" name="realGender" id="rg_female" autocomplete="off" onclick="setRealGender('female')">
+                            <label class="btn btn-outline-dark" for="rg_female"><i class="fas fa-female"></i> Female</label>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="small fw-bold text-muted">HEIGHT (CM)</label>
-                        <input type="range" class="form-range" min="150" max="210" value="175" id="rangeHeight" oninput="updateFit()">
+                        <input type="range" class="form-range" min="150" max="210" value="175" id="rangeHeight" oninput="updateRealFit()">
                         <div class="text-end fw-bold small"><span id="valHeight">175</span> cm</div>
                     </div>
 
                     <div class="mb-4">
                         <label class="small fw-bold text-muted">WEIGHT (KG)</label>
-                        <input type="range" class="form-range" min="50" max="150" value="75" id="rangeWeight" oninput="updateFit()">
+                        <input type="range" class="form-range" min="50" max="150" value="75" id="rangeWeight" oninput="updateRealFit()">
                         <div class="text-end fw-bold small"><span id="valWeight">75</span> kg</div>
                     </div>
 
@@ -224,23 +212,23 @@
                     </div>
                 </div>
 
-                <div class="col-lg-9 p-0 studio-stage">
+                <div class="col-lg-9 p-0 studio-bg">
                     
                     <div class="status-badge">
                         <div class="status-dot" id="statusDot"></div>
-                        <span id="fitStatus">Analyzing Fit...</span>
+                        <span id="fitStatus">Perfect Fit</span>
                     </div>
 
-                    <div id="modelBody" class="model-body" style="background-image: url('https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png');"></div>
+                    <div id="realModel" class="model-container" style="background-image: url('https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png');"></div>
 
-                    <div class="shirt-overlay-container" id="shirtContainer">
+                    <div class="shirt-layer" id="realShirtContainer">
                         {% if product.image_url %}
                             <img src="{{ product.image_url }}" class="shirt-img">
                         {% elif product.image %}
                             <img src="{{ product.image.url }}" class="shirt-img">
+                        {% else %}
+                            <div class="text-center mt-5">No Image</div>
                         {% endif %}
-                        
-                        <div class="scan-line"></div>
                     </div>
 
                 </div>
@@ -262,74 +250,79 @@
 
 {% block extra_js %}
 <script>
-    // --- SETTINGS ---
-    const maleModelUrl = "https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png"; 
-    const femaleModelUrl = "https://pngimg.com/uploads/mannequin/mannequin_PNG17.png"; 
+    // --- REALISTIC IMAGE ASSETS ---
+    // Using high quality transparent PNGs
+    const maleRealUrl = "https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png"; 
+    const femaleRealUrl = "https://pngimg.com/uploads/mannequin/mannequin_PNG17.png"; 
     
     let currentGender = 'male';
 
-    function setGender(gender) {
+    function setRealGender(gender) {
         currentGender = gender;
-        const model = document.getElementById('modelBody');
-        const shirt = document.getElementById('shirtContainer');
+        const model = document.getElementById('realModel');
+        const shirt = document.getElementById('realShirtContainer');
         
         if(gender === 'male') {
-            model.style.backgroundImage = `url('${maleModelUrl}')`;
-            shirt.style.top = "23%"; // Male Chest
+            model.style.backgroundImage = `url('${maleRealUrl}')`;
+            // Adjust shirt position for Male
+            shirt.style.top = "21%"; 
+            shirt.style.width = "155px";
         } else {
-            model.style.backgroundImage = `url('${femaleModelUrl}')`;
-            shirt.style.top = "25%"; // Female Chest (Lower)
+            model.style.backgroundImage = `url('${femaleRealUrl}')`;
+            // Adjust shirt position for Female (Lower chest usually)
+            shirt.style.top = "24%"; 
+            shirt.style.width = "140px";
         }
-        updateFit();
+        updateRealFit();
     }
 
-    function updateFit() {
+    function updateRealFit() {
         const height = document.getElementById('rangeHeight').value;
         const weight = document.getElementById('rangeWeight').value;
         
         document.getElementById('valHeight').innerText = height;
         document.getElementById('valWeight').innerText = weight;
 
-        // 1. Body Scaling Logic
+        // 1. Realistic Scaling Logic
         let weightFactor = weight / 75; 
         if(weightFactor < 0.85) weightFactor = 0.85; 
-        if(weightFactor > 1.6) weightFactor = 1.6; 
+        if(weightFactor > 1.5) weightFactor = 1.5; 
 
-        const model = document.getElementById('modelBody');
-        const shirt = document.getElementById('shirtContainer');
+        const model = document.getElementById('realModel');
+        const shirt = document.getElementById('realShirtContainer');
         const status = document.getElementById('fitStatus');
         const dot = document.getElementById('statusDot');
 
-        // Apply width scaling to body
+        // Scale the body width based on weight
         model.style.transform = `scaleX(${weightFactor})`;
 
-        // 2. Funny/Tech Logic
-        if (weight > 100) {
-            // FAT Logic
-            shirt.style.transform = `translateX(-50%) scaleX(${weightFactor * 0.9})`; 
-            status.innerText = "⚠️ TIGHT FIT (Button Popping!)";
-            status.style.color = "red";
-            dot.style.background = "red";
+        // 2. Fit Logic (Shirt vs Body)
+        if (weight > 95) {
+            // Tight Fit
+            shirt.style.transform = `translateX(-50%) scaleX(${weightFactor * 0.92})`; 
+            status.innerText = "Tight Fit (Athletic)";
+            status.style.color = "#d9534f";
+            dot.style.background = "#d9534f";
         } 
-        else if (weight < 60) {
-            // SKINNY Logic
-            shirt.style.transform = `translateX(-50%) scaleX(${weightFactor * 1.2})`;
-            status.innerText = "LOOSE / BAGGY 🧥";
-            status.style.color = "blue";
-            dot.style.background = "blue";
+        else if (weight < 65) {
+            // Baggy Fit
+            shirt.style.transform = `translateX(-50%) scaleX(${weightFactor * 1.15})`;
+            status.innerText = "Relaxed / Baggy Fit";
+            status.style.color = "#007bff";
+            dot.style.background = "#007bff";
         } 
         else {
-            // PERFECT Logic
+            // Perfect Fit
             shirt.style.transform = `translateX(-50%) scaleX(${weightFactor})`;
-            status.innerText = "PERFECT FIT ✅";
-            status.style.color = "green";
-            dot.style.background = "green";
+            status.innerText = "Perfect Regular Fit";
+            status.style.color = "#28a745";
+            dot.style.background = "#28a745";
         }
     }
 
     // Init
     document.addEventListener('DOMContentLoaded', function() {
-        updateFit();
+        updateRealFit();
     });
 </script>
 {% endblock %}
