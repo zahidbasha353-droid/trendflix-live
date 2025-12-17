@@ -81,23 +81,18 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Cart)
 admin.site.register(SavedDesign)
 # --- SITE SETTINGS (Dynamic Logo, Banner & Themes) ---
-class SiteSettings(models.Model):
-    THEME_CHOICES = [
-        ('default', 'Default (No Effect)'),
-        ('christmas', '❄️ Christmas / New Year (Snow)'),
-        ('diwali', '🪔 Diwali / Eid (Golden Lights)'),
-        ('sale', '🎉 Big Sale (Confetti)'),
-    ]
+# --- store/admin.py ---
+from django.contrib import admin
+from .models import Product, Order, Cart, CartItem, SiteSettings  # SiteSettings inga irukanum
 
-    site_name = models.CharField(max_length=100, default="TrendFlix")
-    logo = models.ImageField(upload_to='site_assets/', help_text="Upload transparent PNG logo")
-    hero_banner = models.ImageField(upload_to='site_assets/', help_text="Main Home Banner (1920x600)")
-    
-    # Festival Mode
-    active_theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='default')
-    
-    def __str__(self):
-        return "Website Configuration"
+# ... Vera admin classes irukkum ...
 
-    class Meta:
-        verbose_name_plural = "Site Settings"
+# 👇 Itha mattum add pannunga (Delete old wrong code) 👇
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ('site_name', 'active_theme')
+    
+    def has_add_permission(self, request):
+        if SiteSettings.objects.exists():
+            return False
+        return True
