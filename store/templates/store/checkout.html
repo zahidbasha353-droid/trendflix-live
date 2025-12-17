@@ -1,6 +1,5 @@
 {% extends 'store/base.html' %}
-
-{% block content %}
+{% load custom_filters %} {% block content %}
 <div class="container my-5" style="max-width: 1200px;">
     <h2 class="mb-4 fw-bold">Checkout</h2>
 
@@ -38,17 +37,20 @@
                                     <option value="Kerala">Kerala</option>
                                     <option value="Maharashtra">Maharashtra</option>
                                     <option value="Delhi">Delhi</option>
+                                    <option value="Overseas">International</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Country</label>
-                            <select name="country" class="form-select" onchange="updateShipping(this.value)">
+                            <select name="country" id="country-select" class="form-select" onchange="updateShipping()">
                                 <option value="India">India (Free Shipping)</option>
-                                <option value="USA">United States (+$20 Shipping)</option>
-                                <option value="Europe">Europe (+$20 Shipping)</option>
-                                <option value="Other">Rest of World (+$25 Shipping)</option>
+                                <option value="USA">United States (+$25 Shipping)</option>
+                                <option value="UK">United Kingdom (+$20 Shipping)</option>
+                                <option value="Canada">Canada (+$20 Shipping)</option>
+                                <option value="UAE">UAE (Dubai) (+$15 Shipping)</option>
+                                <option value="Europe">Europe (+$22 Shipping)</option>
                             </select>
                         </div>
 
@@ -96,28 +98,41 @@
                     {% for item in cart.items.all %}
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-muted small">{{ item.quantity }}x {{ item.product.name }}</span>
-                        <span class="fw-bold">₹{{ item.total_price }}</span>
+                        <span class="fw-bold">{{ item.total_price|currency:request }}</span>
                     </div>
                     {% endfor %}
                     
                     <hr>
+                    
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
-                        <span>₹{{ total_amount }}</span>
+                        <span id="subtotal-display" class="fw-bold">{{ total_amount|currency:request }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3 text-success">
                         <span>Delivery</span>
-                        <span>FREE</span>
-                    </div>
-                    <div class="d-flex justify-content-between fs-4 fw-bold text-danger border-top pt-3">
-                        <span>Order Total:</span>
-                        <span>₹{{ total_amount }}</span>
+                        <span id="shipping-display">FREE</span>
                     </div>
 
-                    <button type="button" id="razorpay-btn" class="btn btn-warning w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">Proceed to Pay <i class="fas fa-lock ms-2"></i></button>
-                    <button type="submit" id="cod-btn" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm d-none">Place COD Order</button>
+                    <div class="d-flex justify-content-between fs-4 fw-bold text-danger border-top pt-3">
+                        <span>Order Total:</span>
+                        <span id="total-display">{{ total_amount|currency:request }}</span>
+                    </div>
+
+                    <input type="hidden" id="raw-total" value="{{ total_amount }}">
+                    <input type="hidden" id="current-currency" value="{{ request.session.currency|default:'INR' }}">
+
+                    <button type="button" id="razorpay-btn" class="btn btn-warning w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">
+                        Proceed to Pay <i class="fas fa-lock ms-2"></i>
+                    </button>
+
+                    <button type="submit" id="cod-btn" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm d-none">
+                        Place COD Order
+                    </button>
                     </form> 
-                    <div class="text-center mt-3 text-muted small"><i class="fas fa-lock"></i> Secure Transaction</div>
+                    
+                    <div class="text-center mt-3 text-muted small">
+                        <i class="fas fa-lock"></i> Secure Transaction
+                    </div>
                 </div>
             </div>
         </div>
@@ -126,6 +141,54 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+    // 1. Get Currency & Total from Hidden Fields
+    const currencyCode = document.getElementById('current-currency').value;
+    // Remove symbols if any to get raw number
+    const baseTotal = parseFloat(document.getElementById('raw-total').value);
+    
+    // 2. Set Shipping Rates based on Currency
+    let shippingRate = 0;
+    let symbol = '₹';
+
+    // Map currency to symbol and rate
+    if (currencyCode === 'USD') { shippingRate = 25; symbol = '$'; }
+    else if (currencyCode === 'EUR') { shippingRate = 22; symbol = '€'; }
+    else if (currencyCode === 'GBP') { shippingRate = 20; symbol = '£'; }
+    else if (currencyCode === 'AED') { shippingRate = 100; symbol = 'AED '; }
+    else if (currencyCode === 'SAR') { shippingRate = 100; symbol = 'SAR '; }
+    else if (currencyCode === 'CAD') { shippingRate = 35; symbol = 'C$'; }
+    else if (currencyCode === 'AUD') { shippingRate = 40; symbol = 'A$'; }
+    else { shippingRate = 2000; symbol = '₹'; } // INR International Rate
+
+    // 3. Update Shipping Function
+    function updateShipping() {
+        const country = document.getElementById('country-select').value;
+        const shippingDisplay = document.getElementById('shipping-display');
+        const totalDisplay = document.getElementById('total-display');
+        const subtotalText = document.getElementById('subtotal-display').innerText;
+        
+        // Extract number from subtotal string (removes currency symbol)
+        let currentSubtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ''));
+
+        if (country === 'India') {
+            // Free Shipping for India
+            shippingDisplay.innerText = "FREE";
+            shippingDisplay.classList.add('text-success');
+            shippingDisplay.classList.remove('text-dark');
+            totalDisplay.innerText = subtotalText; // Total remains same
+        } else {
+            // Add Shipping for International
+            shippingDisplay.innerText = symbol + shippingRate;
+            shippingDisplay.classList.remove('text-success');
+            shippingDisplay.classList.add('text-dark');
+            
+            // Calculate New Total
+            let newTotal = currentSubtotal + shippingRate;
+            totalDisplay.innerText = symbol + newTotal.toFixed(2);
+        }
+    }
+
+    // 4. Payment Toggle Logic
     function togglePayment(method) {
         if (method === 'cod') {
             document.getElementById('razorpay-btn').classList.add('d-none');
@@ -136,6 +199,7 @@
         }
     }
 
+    // 5. Razorpay Logic
     document.getElementById('razorpay-btn').onclick = function(e) {
         e.preventDefault();
         var name = document.getElementById('full_name').value;
@@ -149,7 +213,7 @@
         var options = {
             "key": "{{ razorpay_merchant_key }}",
             "amount": "{{ total_amount|add:'00' }}", 
-            "currency": "INR",
+            "currency": "INR", // Razorpay usually handles base currency
             "name": "Elite Class Store",
             "description": "Order Payment",
             "image": "https://cdn-icons-png.flaticon.com/512/4090/4090458.png",
