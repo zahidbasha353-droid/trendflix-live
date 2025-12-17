@@ -3,7 +3,7 @@
 {% block content %}
 
 <style>
-    /* HERO SECTION (OLD DESIGN) */
+    /* HERO SECTION (No Change) */
     .hero-section {
         background: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
         height: 450px;
@@ -21,7 +21,7 @@
     }
     .hero-content { position: relative; z-index: 1; }
     
-    /* TRUST BADGES SECTION (OLD DESIGN) */
+    /* TRUST BADGES SECTION (No Change) */
     .trust-bar {
         background: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -50,12 +50,15 @@
         .hero-section { height: 300px; }
     }
 
-    /* PRODUCT CARDS (OLD DESIGN) */
+    /* PRODUCT CARDS - Updated for Flex Layout */
     .product-card {
         transition: 0.3s;
         border: 1px solid #eee;
         border-radius: 10px;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Ensures cards are same height */
     }
     .product-card:hover {
         transform: translateY(-5px);
@@ -63,8 +66,36 @@
     }
     .card-img-top { height: 250px; object-fit: cover; }
 
-    /* NEW BUTTON STYLE (Amazon Logic) */
-    .btn-action { font-size: 0.8rem; font-weight: 600; padding: 6px 12px; }
+    /* 🔥 AMAZON STYLE BUTTONS CSS 🔥 */
+    .btn-amazon-cart, .btn-amazon-buy {
+        width: 100%;
+        font-weight: 600;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 50px; /* Rounded Corners */
+        margin-top: 8px;
+        transition: 0.2s;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    .btn-amazon-cart {
+        background-color: #ffd814; /* Amazon Yellow */
+        color: #111;
+    }
+    .btn-amazon-cart:hover {
+        background-color: #f7ca00;
+    }
+
+    .btn-amazon-buy {
+        background-color: #ffa41c; /* Amazon Orange */
+        color: #111;
+    }
+    .btn-amazon-buy:hover {
+        background-color: #fa8900;
+    }
 </style>
 
 <section class="hero-section">
@@ -118,7 +149,7 @@
         
         {% for product in products %}
         <div class="col-md-3 col-6">
-            <div class="card h-100 product-card">
+            <div class="card product-card">
                 <a href="{% url 'product_detail' product.id %}" class="position-relative">
                     
                     {% if product.is_trending %}
@@ -142,25 +173,24 @@
                     {% endif %}
                 </a>
                 
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <p class="text-muted small mb-1">{{ product.category }}</p>
                     <h6 class="card-title fw-bold text-truncate">{{ product.name }}</h6>
                     
-                    <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="mb-2">
                         <span class="text-danger fw-bold fs-5">₹{{ product.selling_price }}</span>
-                        
-                        <div class="d-flex gap-1">
-                            <form action="{% url 'add_to_cart' product.id %}" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-dark btn-action" title="Add to Cart">
-                                    <i class="fa-solid fa-cart-plus"></i>
-                                </button>
-                            </form>
+                    </div>
+                    
+                    <div class="mt-auto"> <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-amazon-cart" title="Add to Cart">
+                                Add to Cart
+                            </button>
+                        </form>
 
-                            <a href="{% url 'buy_now' product.id %}" class="btn btn-danger btn-action text-white" title="Buy Now">
-                                <i class="fa-solid fa-bolt"></i> Buy
-                            </a>
-                        </div>
+                        <a href="{% url 'buy_now' product.id %}" class="btn-amazon-buy" title="Buy Now">
+                            Buy Now
+                        </a>
                     </div>
                     </div>
             </div>
