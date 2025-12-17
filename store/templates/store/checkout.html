@@ -18,7 +18,7 @@
                         
                         <div class="mb-3">
                             <label class="form-label fw-bold">Full Name</label>
-                            <input type="text" name="full_name" class="form-control form-control-lg" value="{{ request.user.first_name }}" required>
+                            <input type="text" name="full_name" id="full_name" class="form-control form-control-lg" value="{{ request.user.first_name }}" required>
                         </div>
 
                         <div class="mb-3">
@@ -39,7 +39,7 @@
                                     <option value="Kerala">Kerala</option>
                                     <option value="Maharashtra">Maharashtra</option>
                                     <option value="Delhi">Delhi</option>
-                                    </select>
+                                </select>
                             </div>
                         </div>
 
@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Phone Number</label>
-                                <input type="text" name="phone" class="form-control" required>
+                                <input type="text" name="phone" id="phone" class="form-control" required>
                             </div>
                         </div>
                     
@@ -101,7 +101,7 @@
                     
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
-                        <span>₹{{ cart.total_price }}</span>
+                        <span>₹{{ total_amount }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3 text-success">
                         <span>Delivery</span>
@@ -110,17 +110,19 @@
 
                     <div class="d-flex justify-content-between fs-4 fw-bold text-danger border-top pt-3">
                         <span>Order Total:</span>
-                        <span>₹{{ cart.total_price }}</span>
+                        <span>₹{{ total_amount }}</span>
                     </div>
 
                     <button type="button" id="razorpay-btn" class="btn btn-warning w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">
-                        Proceed to Pay
+                        Proceed to Pay <i class="fas fa-lock ms-2"></i>
                     </button>
 
                     <button type="submit" id="cod-btn" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm d-none">
                         Place COD Order
                     </button>
-                    </form> <div class="text-center mt-3 text-muted small">
+                    </form> 
+                    
+                    <div class="text-center mt-3 text-muted small">
                         <i class="fas fa-lock"></i> Secure Transaction
                     </div>
                 </div>
@@ -132,6 +134,7 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+    // 1. Toggle Button Logic
     function togglePayment(method) {
         if (method === 'cod') {
             document.getElementById('razorpay-btn').classList.add('d-none');
@@ -142,33 +145,48 @@
         }
     }
 
+    // 2. Razorpay Click Logic
     document.getElementById('razorpay-btn').onclick = function(e) {
+        e.preventDefault(); // Prevent form submit
+
+        // Get User Details from Form
+        var name = document.getElementById('full_name').value;
+        var phone = document.getElementById('phone').value;
+
+        if(name === "" || phone === "") {
+            alert("Please fill in Name and Phone Number");
+            return;
+        }
+
         var options = {
-            "key": "{{ razorpay_key_id }}",
-            "amount": "{{ amount_paise }}", 
+            "key": "{{ razorpay_merchant_key }}", // Key from views.py
+            "amount": "{{ total_amount|add:'00' }}", // Amount in paise (Append 00)
             "currency": "INR",
-            "name": "Trendflix Store",
-            "description": "Payment for Order",
+            "name": "Elite Class Store",
+            "description": "Order Payment",
             "image": "https://cdn-icons-png.flaticon.com/512/4090/4090458.png",
-            "order_id": "{{ razorpay_order_id }}", 
+            "order_id": "{{ razorpay_order_id }}", // Order ID from views.py
             "handler": function (response){
-                // On Success, submit a hidden form to 'order_success_view'
-                // For simplicity, we create a dynamic form here
-                var form = document.getElementById('checkout-form');
-                form.action = "{% url 'order_success_view' %}"; 
-                form.submit();
+                // On Payment Success -> Redirect to Success Page
+                window.location.href = "{% url 'order_success_view' %}";
             },
             "prefill": {
-                "name": document.getElementsByName('full_name')[0].value,
-                "contact": document.getElementsByName('phone')[0].value
+                "name": name,
+                "contact": phone
             },
             "theme": {
                 "color": "#3399cc"
             }
         };
+
         var rzp1 = new Razorpay(options);
+        
+        // Error Handling
+        rzp1.on('payment.failed', function (response){
+            alert("Payment Failed: " + response.error.description);
+        });
+
         rzp1.open();
-        e.preventDefault();
     }
 </script>
 

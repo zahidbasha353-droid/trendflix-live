@@ -134,3 +134,6 @@ JAZZMIN_SETTINGS = {
     "search_model": "store.Product",
     "user_avatar": None,
 }
+# RAZORPAY SETTINGS
+RAZORPAY_KEY_ID = 'rzp_live_Rrq5jqy3nk3pA6'  # Unga Key ID inga podunga
+RAZORPAY_KEY_SECRET = 'waywumrUF8mLOG0JuUKb9hDF'   # Unga Secret Key inga podunga
