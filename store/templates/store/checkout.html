@@ -107,7 +107,7 @@
                     {% for item in cart.items.all %}
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-muted small">{{ item.quantity }}x {{ item.product.name }}</span>
-                        <span class="fw-bold">{{ item.total_price|currency:request }}</span>
+                        <span class="fw-bold item-price-display">{{ item.total_price|currency:request }}</span>
                     </div>
                     {% endfor %}
                     
@@ -150,70 +150,88 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    // 1. Get Currency & Total from Hidden Fields
-    const currencyCode = document.getElementById('current-currency').value;
-    const baseTotal = parseFloat(document.getElementById('raw-total').value);
-    
-    // 2. Set Shipping Rates based on Currency
-    let shippingRate = 0;
-    let symbol = '₹';
+    // 1. EXCHANGE RATES (Matches your custom_filters.py)
+    const rates = {
+        'USD': 0.012, 'EUR': 0.011, 'GBP': 0.0095, 'AED': 0.044,
+        'SAR': 0.045, 'CAD': 0.016, 'AUD': 0.018, 'INR': 1
+    };
 
-    if (currencyCode === 'USD') { shippingRate = 25; symbol = '$'; }
-    else if (currencyCode === 'EUR') { shippingRate = 22; symbol = '€'; }
-    else if (currencyCode === 'GBP') { shippingRate = 20; symbol = '£'; }
-    else if (currencyCode === 'AED') { shippingRate = 100; symbol = 'AED '; }
-    else if (currencyCode === 'SAR') { shippingRate = 100; symbol = 'SAR '; }
-    else if (currencyCode === 'CAD') { shippingRate = 35; symbol = 'C$'; }
-    else if (currencyCode === 'AUD') { shippingRate = 40; symbol = 'A$'; }
-    else { shippingRate = 2000; symbol = '₹'; } // INR International Rate
+    const symbols = {
+        'USD': '$', 'EUR': '€', 'GBP': '£', 'AED': 'AED ',
+        'SAR': 'SAR ', 'CAD': 'C$', 'AUD': 'A$', 'INR': '₹'
+    };
 
-    // 3. MAIN LOGIC: Update Shipping AND Hide COD
+    // 2. MAIN LOGIC: Update Shipping, Currency & COD
     function updateShippingAndCOD() {
         const country = document.getElementById('country-select').value;
-        const shippingDisplay = document.getElementById('shipping-display');
-        const totalDisplay = document.getElementById('total-display');
-        const subtotalText = document.getElementById('subtotal-display').innerText;
+        const currentCurrencyCode = document.getElementById('current-currency').value;
+        const baseTotal = parseFloat(document.getElementById('raw-total').value); // Always in INR from backend
+        
+        const subtotalEl = document.getElementById('subtotal-display');
+        const shippingEl = document.getElementById('shipping-display');
+        const totalEl = document.getElementById('total-display');
         
         // COD Elements
         const codContainer = document.getElementById('cod-container');
         const codWarning = document.getElementById('cod-warning');
         const payOnlineRadio = document.getElementById('pay_online');
 
-        // Extract number from subtotal (Remove non-numeric except dot)
-        let currentSubtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ''));
-
         if (country === 'India') {
-            // --- INDIA LOGIC (Free Ship + Allow COD) ---
-            shippingDisplay.innerText = "FREE";
-            shippingDisplay.classList.add('text-success');
-            shippingDisplay.classList.remove('text-dark');
-            totalDisplay.innerText = subtotalText;
+            // === INDIA LOGIC (Force INR) ===
+            // Even if session is USD, India checkout must be in ₹
             
+            // Format numbers to INR
+            subtotalEl.innerText = "₹" + baseTotal.toLocaleString('en-IN');
+            shippingEl.innerText = "FREE";
+            shippingEl.classList.add('text-success');
+            shippingEl.classList.remove('text-dark');
+            totalEl.innerText = "₹" + baseTotal.toLocaleString('en-IN');
+
             // SHOW COD
             codContainer.classList.remove('d-none');
             codWarning.classList.add('d-none');
 
         } else {
-            // --- INTERNATIONAL LOGIC (Add Cost + HIDE COD) ---
-            shippingDisplay.innerText = symbol + shippingRate;
-            shippingDisplay.classList.remove('text-success');
-            shippingDisplay.classList.add('text-dark');
+            // === INTERNATIONAL LOGIC (Use Session Currency) ===
             
-            // Calc New Total
-            let newTotal = currentSubtotal + shippingRate;
-            totalDisplay.innerText = symbol + newTotal.toFixed(2);
+            let targetCurrency = currentCurrencyCode;
+            // If Session is INR but country is foreign, default to USD (Better UX)
+            if(targetCurrency === 'INR') targetCurrency = 'USD'; 
 
-            // HIDE COD & Force Online Payment
-            codContainer.classList.add('d-none'); // Hide the option
-            codWarning.classList.remove('d-none'); // Show warning message
+            let rate = rates[targetCurrency] || 1;
+            let symbol = symbols[targetCurrency] || '₹';
+
+            // Define Shipping Cost based on Currency
+            let shippingCost = 0;
+            if (targetCurrency === 'USD') shippingCost = 25;
+            else if (targetCurrency === 'EUR') shippingCost = 22;
+            else if (targetCurrency === 'GBP') shippingCost = 20;
+            else if (targetCurrency === 'AED') shippingCost = 100;
+            else if (targetCurrency === 'SAR') shippingCost = 100;
+            else if (targetCurrency === 'CAD') shippingCost = 35;
+            else shippingCost = 25; // Default USD shipping
+
+            // Calculate converted amounts
+            let convertedSubtotal = baseTotal * rate;
+            let finalTotal = convertedSubtotal + shippingCost;
+
+            // Update UI
+            subtotalEl.innerText = symbol + convertedSubtotal.toFixed(2);
+            shippingEl.innerText = symbol + shippingCost;
+            shippingEl.classList.remove('text-success');
+            shippingEl.classList.add('text-dark');
+            totalEl.innerText = symbol + finalTotal.toFixed(2);
+
+            // HIDE COD & Force Online
+            codContainer.classList.add('d-none'); 
+            codWarning.classList.remove('d-none'); 
             
-            // Auto-select Online Payment
             payOnlineRadio.checked = true;
             togglePayment('online');
         }
     }
 
-    // 4. Payment Toggle Logic
+    // 3. Payment Toggle Logic
     function togglePayment(method) {
         if (method === 'cod') {
             document.getElementById('razorpay-btn').classList.add('d-none');
@@ -224,16 +242,26 @@
         }
     }
 
-    // 5. Run logic on page load (In case USD is already selected)
+    // 4. Initial Load Check
     window.onload = function() {
-        // If currency is NOT INR, default to USA/International Logic
+        const currencyCode = document.getElementById('current-currency').value;
+        const countryVal = document.getElementById('country-select').value;
+
+        // If currency is NOT INR, force logic to run immediately to show correct currency/shipping
         if (currencyCode !== 'INR') {
-           document.getElementById('country-select').value = "USA"; // Default to USA for foreign currency
-           updateShippingAndCOD(); // Trigger logic immediately
+           // If dropdown defaults to India, but currency is USD, logic will force INR.
+           // If you want to default to USA when USD is selected:
+           if (countryVal === 'India') {
+               document.getElementById('country-select').value = "USA"; 
+           }
+           updateShippingAndCOD(); 
+        } else {
+            // If INR, ensure India logic runs to show COD
+            updateShippingAndCOD();
         }
     };
 
-    // 6. Razorpay Logic
+    // 5. Razorpay Logic
     document.getElementById('razorpay-btn').onclick = function(e) {
         e.preventDefault();
         var name = document.getElementById('full_name').value;
@@ -247,7 +275,7 @@
         var options = {
             "key": "{{ razorpay_merchant_key }}",
             "amount": "{{ total_amount|add:'00' }}", 
-            "currency": "INR", // Razorpay handles base currency
+            "currency": "INR", // Razorpay usually handles base currency
             "name": "Elite Class Store",
             "description": "Order Payment",
             "image": "https://cdn-icons-png.flaticon.com/512/4090/4090458.png",
