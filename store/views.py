@@ -2,39 +2,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Product, Cart, CartItem, Order, OrderItem, SavedDesign, Category
-from .forms import ProductUploadForm
+from .models import Product, Cart, CartItem, Order, OrderItem, SavedDesign
+# from .forms import ProductUploadForm  <-- TEMPORARY DISABLED
 from django.http import JsonResponse, HttpResponse
-from django.db.models import Sum, Count
+from django.db.models import Sum
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 import json
-import requests
-import razorpay
-
-print("✅ SUPER VIEWS.PY LOADED SUCCESSFULLY!")
-
-# ==========================================
-# 🏭 AUTOMATION CONFIGURATION (Simple)
-# ==========================================
-# (Tokens are assumed to be correct from your old code)
-
-def send_order_to_printrove(order):
-    print(f"🔄 [Printrove] Processing Order #{order.id}...")
-    # (Simplified for now - just saves status)
-    order.supplier_name = "Printrove"
-    order.save()
-    return True
-
-def send_order_to_printify(order):
-    print(f"✈️ [Printify] Processing Order #{order.id}...")
-    order.supplier_name = "Printify"
-    order.save()
-    return True
-
-# ==========================================
-# 🛍️ STORE VIEWS
-# ==========================================
+# import razorpay <-- TEMPORARY DISABLED (Settings la key podanum)
+# from .utils import generate_print_manifest, push_to_supplier <-- TEMPORARY DISABLED
+# from .ai_brain import run_ai_optimization  <-- TEMPORARY DISABLED
 
 def _get_cart(request):
     if request.user.is_authenticated:
@@ -45,33 +23,37 @@ def _get_cart(request):
         cart, created = Cart.objects.get_or_create(session_id=session_id)
     return cart
 
-def home(request):
-    # FIXED: 'is_active' used instead of 'is_approved'
-    products = Product.objects.filter(is_active=True).order_by('-created')
-    cart = _get_cart(request)
-    return render(request, 'store/home.html', {'products': products, 'cart_count': cart.items.count()})
+@user_passes_test(lambda u: u.is_superuser)
+def trigger_ai(request):
+    # report = run_ai_optimization()
+    return HttpResponse("<h1>🤖 AI is Sleeping (Code coming soon)</h1>")
 
-def product_detail(request, slug):
-    # FIXED: Uses 'slug' instead of 'product_id'
-    product = get_object_or_404(Product, slug=slug, is_active=True)
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.view_count += 1
+    product.save()
     cart = _get_cart(request)
     return render(request, 'store/product_detail.html', {'product': product, 'cart_count': cart.items.count()})
+
+def home(request):
+    products = Product.objects.filter(is_approved=True).order_by('-is_trending', '-created_at')
+    cart = _get_cart(request)
+    return render(request, 'store/home.html', {'products': products, 'cart_count': cart.items.count()})
 
 def cart_view(request):
     cart = _get_cart(request)
     return render(request, 'store/cart.html', {'cart': cart, 'cart_count': cart.items.count()})
 
-def add_to_cart(request, slug): # Changed product_id to slug
-    product = get_object_or_404(Product, slug=slug)
-    cart = _get_cart(request)
-    
-    # Simple Add Logic
-    size = request.POST.get('size', 'M')
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product, size=size)
-    if not created: cart_item.quantity += 1
-    cart_item.save()
-    
-    return redirect('cart')
+def add_to_cart(request, product_id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, id=product_id)
+        cart = _get_cart(request)
+        size = request.POST.get('size', 'M')
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product, size=size)
+        if not created: cart_item.quantity += 1
+        cart_item.save()
+        return redirect('cart')
+    return redirect('home')
 
 def remove_from_cart(request, item_id):
     get_object_or_404(CartItem, id=item_id).delete()
@@ -80,53 +62,50 @@ def remove_from_cart(request, item_id):
 def checkout_view(request):
     cart = _get_cart(request)
     if cart.items.count() == 0: return redirect('home')
-    
-    # Razorpay Logic
-    total_amount = int(cart.total_price * 100)
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-    payment = client.order.create({'amount': total_amount, 'currency': 'INR', 'payment_capture': '1'})
-    
-    return render(request, 'store/checkout.html', {
-        'cart': cart, 
-        'cart_count': cart.items.count(), 
-        'razorpay_order_id': payment['id'], 
-        'razorpay_key_id': settings.RAZORPAY_KEY_ID, 
-        'total_price': cart.total_price, 
-        'amount_paise': total_amount
-    })
+    # Dummy Razorpay setup for now to prevent crash
+    return render(request, 'store/checkout.html', {'cart': cart, 'cart_count': cart.items.count(), 'total_price': cart.total_price})
 
-@csrf_exempt
-def order_success_view(request):
+def place_cod_order(request):
     if request.method == "POST":
         cart = _get_cart(request)
-        
-        # Create Order
+        if cart.items.count() == 0: return redirect('home')
+        total_qty = sum(item.quantity for item in cart.items.all())
+        is_bulk = True if total_qty >= 10 else False
         order = Order.objects.create(
             user=request.user if request.user.is_authenticated else None,
-            full_name=request.POST.get('full_name', 'Guest'),
-            address=request.POST.get('address', 'Online Payment'),
-            city=request.POST.get('city', 'India'),
-            state=request.POST.get('state', 'TN'),
-            country="India",
-            zipcode=request.POST.get('zipcode', '000000'),
-            phone=request.POST.get('phone', '9999999999'),
-            total_amount=cart.total_price, 
-            status="Processing"
+            full_name=request.POST.get('full_name'),
+            address=request.POST.get('address'),
+            city=request.POST.get('city'),
+            state=request.POST.get('state'),
+            zipcode=request.POST.get('zipcode'),
+            phone=request.POST.get('phone'),
+            total_amount=cart.total_price,
+            status="Processing",
+            is_bulk_order=is_bulk
         )
-        
-        # Move items to Order
         for item in cart.items.all():
-            OrderItem.objects.create(order=order, product=item.product, price=item.product.price, quantity=item.quantity)
-        
-        cart.items.all().delete() # Clear Cart
-
-        # Automation Trigger
-        send_order_to_printrove(order)
-
+            OrderItem.objects.create(order=order, product=item.product, price=item.price, quantity=item.quantity)
+        cart.items.all().delete()
         return render(request, 'store/order_success.html')
-    return redirect('home')
+    return redirect('checkout')
 
-# --- AUTH & OTHER VIEWS ---
+def order_success_view(request):
+    return render(request, 'store/order_success.html')
+
+# MARKETPLACE & DASHBOARD
+@login_required
+def upload_design(request):
+    return HttpResponse("Upload Design Page (Needs Forms.py)")
+
+@login_required
+def designer_dashboard(request):
+    return HttpResponse("Designer Dashboard (Coming Soon)")
+
+def owner_dashboard(request):
+    return HttpResponse("Owner Dashboard (Coming Soon)")
+
+# CUSTOM & AUTH
+def custom_design_view(request): return render(request, 'store/custom_design.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -134,15 +113,32 @@ def login_view(request):
         if form.is_valid(): login(request, form.get_user()); return redirect('home')
     return render(request, 'store/login.html', {'form': AuthenticationForm()})
 
-def logout_view(request):
-    logout(request); return redirect('home')
+def logout_view(request): logout(request); return redirect('home')
 
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid(): user = form.save(); login(request, user); return redirect('home')
     return render(request, 'store/register.html', {'form': UserCreationForm()})
+# Itha store/views.py oda kadaisiya podunga
 
-# Design Lab
-def design_lab(request):
-    return render(request, 'store/design_lab.html')
+def buy_now(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart = _get_cart(request)
+    # Add item to cart
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += 1
+    cart_item.save()
+    # Direct ah checkout page ku pogum
+    return redirect('checkout')
+# store/views.py la last line-a idha podunga
+
+def buy_now(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart = _get_cart(request)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += 1
+    cart_item.save()
+    return redirect('checkout')

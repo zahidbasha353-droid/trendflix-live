@@ -1,53 +1,38 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
 
-# 1. CATEGORY (New Code Style - Better)
-class Category(models.Model):
-    name = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=255, unique=True)
-
-    class Meta:
-        verbose_name_plural = 'categories'
-
-    def __str__(self):
-        return self.name
-
-# 2. PRODUCT (Merged: Old Features + New Fixes)
 class Product(models.Model):
-    # Basic Info
-    category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
-    description = models.TextField(blank=True)
-    
-    # Pricing (Changed 'selling_price' to 'price' to fix errors)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    # MARKETPLACE FIELDS
+    designer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    is_marketplace = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=True)
+
+    # BASIC FIELDS
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
     cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=300.00)
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    image_url = models.URLField(max_length=500, blank=True, null=True)
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    sku = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    category = models.CharField(max_length=100, default="T-Shirt")
+    created_at = models.DateTimeField(auto_now_add=True)
     
-    # Images
-    image = models.ImageField(upload_to='images/')
-    image_url = models.URLField(max_length=500, blank=True, null=True) # Script needs this
-    
-    # Status
-    is_active = models.BooleanField(default=True)
+    # 🔥 AI BRAIN FIELDS
+    view_count = models.PositiveIntegerField(default=0)
     is_bestseller = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    is_trending = models.BooleanField(default=False)
+    ai_pricing_active = models.BooleanField(default=True)
 
-    # Print-on-Demand Fields (From Old Code)
-    sku = models.CharField(max_length=100, unique=True, blank=True, null=True)
-    
-    class Meta:
-        ordering = ('-created',)
-
-    def get_absolute_url(self):
-        return reverse('product_detail', args=[self.slug])
+    @property
+    def profit(self):
+        return self.selling_price - self.cost_price
 
     def __str__(self):
-        return self.name
+        tag = "🔥 " if self.is_trending else ""
+        return f"{tag}{self.name}"
 
-# 3. CART (From Old Code)
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     session_id = models.CharField(max_length=200, null=True, blank=True)
@@ -64,17 +49,22 @@ class CartItem(models.Model):
     size = models.CharField(max_length=10, default="M")
 
     @property
-    def total_price(self):
-        return self.product.price * self.quantity
+    def price(self):
+        if self.quantity >= 10: return int(self.product.selling_price * 0.90)
+        return self.product.selling_price
 
-# 4. ORDER (From Old Code)
+    @property
+    def total_price(self):
+        return self.price * self.quantity
+
 class Order(models.Model):
     STATUS_CHOICES = (
-        ('Pending', 'Pending'), ('Processing', 'Processing'),
-        ('Shipped', 'Shipped'), ('Delivered', 'Delivered'),
-        ('Cancelled', 'Cancelled'), ('RTO', 'RTO (Returned)')
+        ('Pending', 'Pending'),
+        ('Processing', 'Processing'),
+        ('Dispatched', 'Dispatched'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled')
     )
-    
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     full_name = models.CharField(max_length=200)
     address = models.TextField()
@@ -83,16 +73,19 @@ class Order(models.Model):
     country = models.CharField(max_length=100, default="India")
     zipcode = models.CharField(max_length=20)
     phone = models.CharField(max_length=20)
-    
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    tracking_number = models.CharField(max_length=100, blank=True, null=True)
-    
     created_at = models.DateTimeField(auto_now_add=True)
+    tracking_number = models.CharField(max_length=100, blank=True, null=True)
+    is_bulk_order = models.BooleanField(default=False)
+    qc_passed = models.BooleanField(default=False)
 
-    def __str__(self): return f"Order #{self.id}"
+    supplier_name = models.CharField(max_length=50, default="Pending", blank=True)
+    supplier_order_id = models.CharField(max_length=100, blank=True, null=True)
+    api_response = models.TextField(blank=True, null=True)
 
-# 5. ORDER ITEM (From Old Code)
+    def __str__(self): return f"Order #{self.id} - {self.full_name}"
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -101,7 +94,6 @@ class OrderItem(models.Model):
 
     def __str__(self): return f"{self.quantity} x {self.product.name}"
 
-# 6. SAVED DESIGN (For 3D Lab)
 class SavedDesign(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, default="My Custom Design")

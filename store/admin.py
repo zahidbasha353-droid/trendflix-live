@@ -1,15 +1,15 @@
-import csv
-from django.http import HttpResponse
 from django.contrib import admin
+from django.http import HttpResponse
 from django.utils.html import format_html
-from .models import Product, Order, OrderItem, Cart, Category, SavedDesign
+import csv
+from .models import Product, Order, OrderItem, Cart, SavedDesign
 
-# --- QC ACTION ---
+# --- QC ACTION (Quality Check) ---
 def mark_qc_passed(modeladmin, request, queryset):
     queryset.update(qc_passed=True)
 mark_qc_passed.short_description = "✅ Mark QC Passed"
 
-# --- EXPORT ACTIONS ---
+# --- EXPORT ACTIONS (India vs Global) ---
 def export_india_orders(modeladmin, request, queryset):
     # Filter for India
     india_orders = queryset.filter(country__iexact='India')
@@ -43,15 +43,16 @@ def mark_as_dispatched(modeladmin, request, queryset):
     queryset.update(status='Dispatched')
 mark_as_dispatched.short_description = "🚚 Mark as Dispatched"
 
-# --- ADMIN CONFIG ---
+# --- INLINE ITEMS (Order kulla items kaata) ---
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     readonly_fields = ['price']
 
+# --- ORDER ADMIN ---
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    # 🔥 Added Tracking Number & QC Status
+    # 🔥 List Display Updated
     list_display = ('id', 'full_name', 'country_flag', 'total_amount', 'status', 'tracking_number', 'qc_passed')
     list_filter = ('country', 'status', 'qc_passed', 'created_at')
     search_fields = ('id', 'full_name', 'phone', 'tracking_number')
@@ -62,19 +63,20 @@ class OrderAdmin(admin.ModelAdmin):
         return "🇮🇳 IND" if obj.country.lower() == 'india' else f"🌍 {obj.country}"
     country_flag.short_description = "Country"
 
+# --- PRODUCT ADMIN ---
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    # 🔥 FIXED: Changed 'selling_price' to 'price' to match new models
-    list_display = ('name', 'price', 'cost_price', 'category', 'is_active', 'is_bestseller')
-    list_filter = ('category', 'is_active', 'is_bestseller')
-    search_fields = ('name', 'slug')
-    list_editable = ('price', 'is_active', 'is_bestseller')
-    prepopulated_fields = {'slug': ('name',)}
+    # 🔥 FIXED: Matching New Models.py
+    # Removed 'slug', changed 'price' -> 'selling_price', 'is_active' -> 'is_approved'
+    list_display = ('name', 'selling_price', 'cost_price', 'profit', 'category', 'is_approved', 'is_trending', 'is_bestseller')
+    list_filter = ('category', 'is_approved', 'is_trending', 'is_bestseller')
+    search_fields = ('name', 'sku', 'category')
+    list_editable = ('selling_price', 'is_approved', 'is_trending', 'is_bestseller')
+    
+    # Optional: Display Image thumbnail in Admin (Advanced)
+    # def image_tag(self, obj):
+    #     return format_html('<img src="{}" width="50" height="50" />'.format(obj.image.url)) if obj.image else "-"
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
-    prepopulated_fields = {'slug': ('name',)}
-
+# --- OTHER REGISTRATIONS ---
 admin.site.register(Cart)
 admin.site.register(SavedDesign)
