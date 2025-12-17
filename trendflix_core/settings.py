@@ -137,3 +137,32 @@ JAZZMIN_SETTINGS = {
 # RAZORPAY SETTINGS
 RAZORPAY_KEY_ID = 'rzp_live_Rrq5jqy3nk3pA6'  # Unga Key ID inga podunga
 RAZORPAY_KEY_SECRET = 'waywumrUF8mLOG0JuUKb9hDF'   # Unga Secret Key inga podunga
+# JAZZMIN SETTINGS (Admin Sidebar Customization)
+JAZZMIN_SETTINGS = {
+    "site_title": "TrendFlix HQ",
+    "site_header": "TrendFlix",
+    "site_brand": "TrendFlix Owner",
+    "welcome_sign": "Welcome back, Boss!",
+    "copyright": "TrendFlix Ltd",
+    
+    # Custom Links (Ithu dhaan mukkiyam)
+    "custom_links": {
+        "store": [{
+            "name": "Owner Dashboard", 
+            "url": "owner_dashboard", 
+            "icon": "fas fa-crown",
+        }]
+    },
+    
+    # Order of apps in sidebar
+    "order_with_respect_to": ["store", "auth", "orders"],
+    
+    # Icons for models
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "store.Product": "fas fa-tshirt",
+        "store.Order": "fas fa-shopping-cart",
+    },
+}
