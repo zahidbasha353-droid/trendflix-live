@@ -17,117 +17,99 @@
     input[type="radio"] { display: none; }
     input[type="radio"]:checked + label { background-color: #000; color: #fff; border-color: #000; }
     
-    .btn-trial { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 12px; font-size: 0.9rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-    .btn-trial:hover { color: #ffd700; }
+    .btn-trial { background: linear-gradient(135deg, #000428, #004e92); color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 12px; font-size: 0.9rem; box-shadow: 0 0 15px rgba(0, 78, 146, 0.5); border: 1px solid #004e92; }
+    .btn-trial:hover { box-shadow: 0 0 25px rgba(0, 78, 146, 0.8); color: #fff; }
 
-    /* 🔥 3D MIRROR ROOM STYLES 🔥 */
+    /* 🔥 2050 HOLOGRAM ROOM STYLES 🔥 */
     .room-stage {
         width: 100%;
         height: 100%;
-        background: url('https://img.freepik.com/premium-photo/futuristic-sci-fi-room-with-neon-lights_160097-90.jpg') no-repeat center bottom/cover;
+        /* Dark Sci-Fi Lab Background */
+        background: url('https://img.freepik.com/premium-photo/dark-sci-fi-corridor-with-red-blue-neon-lights-background_146508-687.jpg') no-repeat center center/cover;
         position: relative;
         overflow: hidden;
-        perspective: 1200px; /* Creates 3D Depth */
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        box-shadow: inset 0 0 150px rgba(0,0,0,0.8); /* Vignette */
     }
 
-    /* Floor Reflection Effect */
-    .room-floor {
+    /* The Advanced Robot */
+    .robot-body {
+        height: 85%;
+        width: 280px;
+        /* Cool Sci-Fi Robot Image */
+        background: url('https://purepng.com/public/uploads/large/purepng.com-robotrobotautomatic-machinehumanoid-1421526462719d3f1l.png') no-repeat center bottom/contain;
         position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 30%;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        z-index: 5;
+        bottom: 10px;
+        transition: transform 0.5s ease;
+        filter: drop-shadow(0 0 20px cyan);
+        z-index: 10;
     }
 
-    /* Common Robot Style */
-    .mannequin-container {
+    /* The "Hologram" Shirt */
+    .hologram-container {
         position: absolute;
-        bottom: 30px;
-        height: 80%;
-        width: 220px; /* Adjusted Width for Robot */
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center bottom;
-    }
-
-    /* The Mirror Reflection (Backside) */
-    .reflection-layer {
-        z-index: 1; /* Behind real robot */
-        opacity: 0.3; /* Faded like a reflection */
-        transform: scaleX(-1) translateZ(-100px) translateY(-20px); /* Flipped & pushed back */
-        filter: blur(2px) brightness(0.5) sepia(1) hue-rotate(180deg);
-        background-image: url('https://pngimg.com/uploads/robot/robot_PNG64.png');
-    }
-
-    /* The Real Robot (Front) */
-    .real-layer {
-        z-index: 10; /* Front */
-        filter: drop-shadow(0 30px 40px rgba(0,255,255,0.3));
-        background-image: url('https://pngimg.com/uploads/robot/robot_PNG64.png');
-    }
-
-    /* Shirt Overlay */
-    .shirt-overlay {
-        position: absolute;
-        top: 18%;
+        top: 25%;
         left: 50%;
         transform: translateX(-50%);
-        width: 105%;
-        transition: width 0.5s ease;
+        width: 160px; /* Shirt Size */
         z-index: 20;
-        filter: brightness(1.2) contrast(1.1);
+        opacity: 0.9;
     }
 
-    /* 🔥 FLOWER JAR WITH ANIMATION 🔥 */
-    .flower-jar {
-        position: absolute;
-        bottom: 15%;
-        right: 10%;
-        width: 120px;
+    .shirt-image {
+        width: 100%;
         height: auto;
-        z-index: 8;
-        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
-        transform-origin: bottom center;
-        animation: swaying 4s ease-in-out infinite;
+        /* Hologram Effect: Blue tint + slight transparency */
+        filter: drop-shadow(0 0 10px cyan) hue-rotate(180deg) brightness(1.2);
+        opacity: 0.85;
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
     }
 
-    @keyframes swaying {
-        0% { transform: rotate(0deg); }
-        25% { transform: rotate(1.5deg); }
-        75% { transform: rotate(-1.5deg); }
-        100% { transform: rotate(0deg); }
+    /* Scanning Laser Animation */
+    .scan-laser {
+        position: absolute;
+        top: 0; left: -10%;
+        width: 120%; height: 5px;
+        background: cyan;
+        box-shadow: 0 0 15px cyan, 0 0 30px white;
+        opacity: 0.8;
+        animation: laserScan 2s infinite ease-in-out;
+        z-index: 25;
+    }
+
+    @keyframes laserScan {
+        0% { top: 0%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+    }
+
+    /* Hologram Box Border */
+    .holo-border {
+        position: absolute;
+        top: -10px; left: -10px; right: -10px; bottom: -10px;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        border-radius: 10px;
+        box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.2);
     }
 
     /* Controls Panel */
     .controls-panel {
-        background: rgba(10, 10, 20, 0.95);
+        background: rgba(5, 5, 10, 0.95);
         border-right: 1px solid #333;
         z-index: 100;
-    }
-
-    .fit-badge {
-        position: absolute;
-        top: 30px;
-        right: 30px;
-        background: rgba(255, 255, 255, 0.9);
-        color: black;
-        padding: 10px 25px;
-        border-radius: 50px;
-        font-weight: 800;
-        font-size: 1.2rem;
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-        z-index: 50;
-        text-transform: uppercase;
+        color: #0ff; /* Neon Text */
     }
     
-    .buy-box-trust { font-size: 12px; color: #565959; }
-    .buy-box-trust i { color: #007600; width: 20px; text-align: center; }
+    .controls-panel h4, .controls-panel label, .controls-panel div {
+        color: #0ff !important;
+        text-shadow: 0 0 5px #004e92;
+    }
+
+    /* Range Slider Neon */
+    input[type=range] { accent-color: #0ff; }
+
 </style>
 
 <div class="container my-5">
@@ -143,9 +125,9 @@
         <div class="col-lg-5 mb-4">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative sticky-top" style="top: 100px;">
                 {% if product.image_url %}
-                    <img src="{{ product.image_url }}" class="img-fluid w-100">
+                    <img src="{{ product.image_url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;">
                 {% elif product.image %}
-                    <img src="{{ product.image.url }}" class="img-fluid w-100">
+                    <img src="{{ product.image.url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;">
                 {% else %}
                     <img src="https://via.placeholder.com/600" class="img-fluid w-100">
                 {% endif %}
@@ -198,8 +180,8 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#mirrorRoomModal">
-                        <i class="fas fa-vr-cardboard me-2"></i> 3D Trial Room (2050 Edition)
+                    <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#hologramRoomModal">
+                        <i class="fas fa-robot me-2"></i> 2050 Hologram Scan
                         <span class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-25" style="transform: skewX(-20deg); animation: shine 3s infinite;"></span>
                     </button>
 
@@ -216,74 +198,70 @@
     </div>
 </div>
 
-<div class="modal fade" id="mirrorRoomModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="hologramRoomModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0" style="background: #000; height: 90vh;">
             <div class="modal-body p-0 d-flex flex-column flex-lg-row h-100">
                 
                 <div class="col-lg-3 p-4 d-flex flex-column justify-content-center controls-panel">
-                    <h4 class="fw-bold text-warning mb-4"><i class="fas fa-sliders-h me-2"></i>Body Config</h4>
+                    <h4 class="fw-bold mb-4"><i class="fas fa-microchip me-2"></i>SYS.CONFIG</h4>
                     
                     <div class="mb-4">
-                        <label class="small text-secondary fw-bold">HEIGHT</label>
-                        <input type="range" class="form-range" min="150" max="210" value="170" id="rangeHeight" oninput="update3DModel()">
-                        <div class="text-end text-warning fw-bold"><span id="valHeight">170</span> cm</div>
+                        <label class="small fw-bold">HEIGHT SCAN</label>
+                        <input type="range" class="form-range" min="150" max="210" value="170" id="rangeHeight" oninput="updateHologram()">
+                        <div class="text-end fw-bold"><span id="valHeight">170</span> cm</div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="small text-secondary fw-bold">WEIGHT</label>
-                        <input type="range" class="form-range" min="50" max="150" value="70" id="rangeWeight" oninput="update3DModel()">
-                        <div class="text-end text-warning fw-bold"><span id="valWeight">70</span> kg</div>
+                        <label class="small fw-bold">WEIGHT SCAN</label>
+                        <input type="range" class="form-range" min="50" max="150" value="70" id="rangeWeight" oninput="updateHologram()">
+                        <div class="text-end fw-bold"><span id="valWeight">70</span> kg</div>
                     </div>
 
-                    <hr class="border-secondary my-4">
-                    <h5 class="fw-bold text-white mb-3">Select Size:</h5>
+                    <hr class="border-secondary my-4" style="border-color: cyan !important;">
+                    <h5 class="fw-bold mb-3">SELECT SIZE PROTOCOL:</h5>
                     <div class="d-grid gap-2">
                         <div class="btn-group" role="group">
-                            <button class="btn btn-outline-secondary" onclick="changeSize('S')">S</button>
-                            <button class="btn btn-outline-secondary" onclick="changeSize('M')">M</button>
-                            <button class="btn btn-outline-secondary" onclick="changeSize('L')">L</button>
-                            <button class="btn btn-outline-secondary" onclick="changeSize('XL')">XL</button>
-                            <button class="btn btn-outline-light" onclick="changeSize('XXL')">XXL</button>
+                            <button class="btn btn-outline-info btn-sm" onclick="changeSize('S')">S</button>
+                            <button class="btn btn-outline-info btn-sm" onclick="changeSize('M')">M</button>
+                            <button class="btn btn-outline-info btn-sm" onclick="changeSize('L')">L</button>
+                            <button class="btn btn-outline-info btn-sm" onclick="changeSize('XL')">XL</button>
+                            <button class="btn btn-outline-info btn-sm" onclick="changeSize('XXL')">XXL</button>
                         </div>
                     </div>
                     
                     <div class="mt-auto pt-4">
-                        <div class="alert alert-dark small">
-                            <i class="fas fa-robot text-info"></i> AI Rec: <strong class="text-white" id="aiRec">M</strong>
+                        <div class="alert alert-dark small" style="border:1px solid cyan; background: rgba(0,255,255,0.1); color: cyan;">
+                            <i class="fas fa-brain"></i> AI SUGGESTION: <strong id="aiRec">M</strong>
                         </div>
-                        <button class="btn btn-warning w-100 fw-bold rounded-pill" data-bs-dismiss="modal">Confirm Size</button>
+                        <button class="btn btn-info w-100 fw-bold rounded-pill text-black" data-bs-dismiss="modal">CONFIRM</button>
                     </div>
                 </div>
 
                 <div class="col-lg-9 p-0 room-stage">
                     
-                    <div class="fit-badge" id="fitStatus">Perfect Fit ✅</div>
+                    <div id="robotBody" class="robot-body"></div>
 
-                    <div id="robotReflection" class="mannequin-container reflection-layer">
+                    <div class="hologram-container" id="holoContainer">
+                        <div class="holo-border"></div>
+                        <div class="scan-laser"></div>
+                        
                         {% if product.image_url %}
-                            <img src="{{ product.image_url }}" id="shirtReflection" class="shirt-overlay">
+                            <img src="{{ product.image_url }}" class="shirt-image">
                         {% elif product.image %}
-                            <img src="{{ product.image.url }}" id="shirtReflection" class="shirt-overlay">
+                            <img src="{{ product.image.url }}" class="shirt-image">
+                        {% else %}
+                            <p class="text-white text-center mt-5">Loading...</p>
                         {% endif %}
                     </div>
 
-                    <div id="robotReal" class="mannequin-container real-layer">
-                        {% if product.image_url %}
-                            <img src="{{ product.image_url }}" id="shirtReal" class="shirt-overlay">
-                        {% elif product.image %}
-                            <img src="{{ product.image.url }}" id="shirtReal" class="shirt-overlay">
-                        {% endif %}
+                    <div id="fitStatus" style="position: absolute; top: 20px; right: 20px; font-size: 2rem; font-weight: 900; color: white; text-shadow: 0 0 10px cyan;">
+                        ANALYZING...
                     </div>
-
-                    <img src="https://pngimg.com/uploads/vase/vase_PNG56.png" class="flower-jar" alt="Swaying Flower">
-
-                    <div class="room-floor"></div>
 
                 </div>
 
             </div>
-            
             <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4" data-bs-dismiss="modal"></button>
         </div>
     </div>
@@ -294,7 +272,6 @@
 {% block extra_css %}
 <style>
     @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-    input[type=range] { accent-color: #ffc107; }
 </style>
 {% endblock %}
 
@@ -302,56 +279,41 @@
 <script>
     let currentSize = 'M';
     const sizeScales = { 'S': 0.85, 'M': 1.0, 'L': 1.15, 'XL': 1.3, 'XXL': 1.5 };
-    const baseWidth = 220; // Base px width of robot
+    const baseWidth = 280; // Robot base width
 
-    function update3DModel() {
+    function updateHologram() {
         const height = document.getElementById('rangeHeight').value;
         const weight = document.getElementById('rangeWeight').value;
         
         document.getElementById('valHeight').innerText = height;
         document.getElementById('valWeight').innerText = weight;
 
-        // 1. Calculate Body Shape (Simulate Fat/Slim)
-        let weightFactor = weight / 70; 
-        if(weightFactor < 0.8) weightFactor = 0.8;
-        if(weightFactor > 2.2) weightFactor = 2.2;
+        // Robot Size Logic (Scale Transform)
+        let weightFactor = weight / 70;
+        // Clamp scaling
+        if(weightFactor < 0.85) weightFactor = 0.85;
+        if(weightFactor > 1.8) weightFactor = 1.8;
 
-        const realRobot = document.getElementById('robotReal');
-        const reflectRobot = document.getElementById('robotReflection');
-        
-        const realShirt = document.getElementById('shirtReal');
-        const reflectShirt = document.getElementById('shirtReflection');
-        
+        const robot = document.getElementById('robotBody');
+        robot.style.transform = `scaleX(${weightFactor})`;
+
+        // Hologram Logic
         const status = document.getElementById('fitStatus');
-
-        // Apply Width to BOTH Robots (Mirror Effect)
-        let newWidth = (baseWidth * weightFactor) + 'px';
-        realRobot.style.width = newWidth;
-        reflectRobot.style.width = newWidth; // Mirror copies width
-
-        // 2. Calculate Shirt Fit
         let shirtScale = sizeScales[currentSize];
-        let fitRatio = shirtScale / weightFactor; 
-        let finalShirtWidth = 105; // Base percent for new robot
-        
+        let fitRatio = shirtScale / weightFactor;
+
         if (fitRatio > 1.1) {
-            finalShirtWidth = 105 * fitRatio; 
-            status.innerText = "Too Baggy 🧥";
-            status.style.color = "blue";
+            status.innerText = "LOOSE FIT";
+            status.style.color = "#0dcaf0"; // Cyan
         } else if (fitRatio < 0.85) {
-            finalShirtWidth = 100; 
-            status.innerText = "⚠️ Button Popping!";
+            status.innerText = "TIGHT FIT ⚠️";
             status.style.color = "red";
         } else {
-            finalShirtWidth = 105;
-            status.innerText = "Perfect Fit ✅";
-            status.style.color = "green";
+            status.innerText = "PERFECT MATCH ✅";
+            status.style.color = "#0f0"; // Green
         }
 
-        realShirt.style.width = finalShirtWidth + '%';
-        reflectShirt.style.width = finalShirtWidth + '%';
-        
-        // AI Rec Logic
+        // AI Rec
         let rec = 'M';
         if(weight < 60) rec = 'S';
         else if(weight < 75) rec = 'M';
@@ -363,11 +325,11 @@
 
     function changeSize(size) {
         currentSize = size;
-        update3DModel();
+        updateHologram();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        update3DModel();
+        updateHologram();
     });
 </script>
 {% endblock %}
