@@ -7,7 +7,6 @@
     <div class="row g-5">
         
         <div class="col-md-8">
-            
             <div class="card shadow-sm mb-4 border-0">
                 <div class="card-header bg-white border-bottom py-3">
                     <h5 class="mb-0 fw-bold text-dark">1. Delivery Address</h5>
@@ -43,6 +42,16 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Country</label>
+                            <select name="country" class="form-select" onchange="updateShipping(this.value)">
+                                <option value="India">India (Free Shipping)</option>
+                                <option value="USA">United States (+$20 Shipping)</option>
+                                <option value="Europe">Europe (+$20 Shipping)</option>
+                                <option value="Other">Rest of World (+$25 Shipping)</option>
+                            </select>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Pincode</label>
@@ -62,7 +71,6 @@
                     <h5 class="mb-0 fw-bold text-dark">2. Payment Method</h5>
                 </div>
                 <div class="card-body p-4">
-                    
                     <div class="form-check p-3 border rounded mb-2 bg-light">
                         <input class="form-check-input" type="radio" name="payment_method" id="pay_online" value="online" checked onclick="togglePayment('online')">
                         <label class="form-check-label w-100 fw-bold" for="pay_online">
@@ -71,18 +79,13 @@
                         </label>
                         <div class="text-muted small ps-1 mt-1">Pay securely via Razorpay</div>
                     </div>
-
                     <div class="form-check p-3 border rounded">
                         <input class="form-check-input" type="radio" name="payment_method" id="pay_cod" value="cod" onclick="togglePayment('cod')">
-                        <label class="form-check-label fw-bold" for="pay_cod">
-                            Cash on Delivery (COD)
-                        </label>
+                        <label class="form-check-label fw-bold" for="pay_cod">Cash on Delivery (COD)</label>
                         <div class="text-muted small ps-1 mt-1">Pay cash when your order arrives.</div>
                     </div>
-
                 </div>
             </div>
-
         </div>
 
         <div class="col-md-4">
@@ -98,7 +101,6 @@
                     {% endfor %}
                     
                     <hr>
-                    
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal</span>
                         <span>₹{{ total_amount }}</span>
@@ -107,34 +109,23 @@
                         <span>Delivery</span>
                         <span>FREE</span>
                     </div>
-
                     <div class="d-flex justify-content-between fs-4 fw-bold text-danger border-top pt-3">
                         <span>Order Total:</span>
                         <span>₹{{ total_amount }}</span>
                     </div>
 
-                    <button type="button" id="razorpay-btn" class="btn btn-warning w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">
-                        Proceed to Pay <i class="fas fa-lock ms-2"></i>
-                    </button>
-
-                    <button type="submit" id="cod-btn" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm d-none">
-                        Place COD Order
-                    </button>
+                    <button type="button" id="razorpay-btn" class="btn btn-warning w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">Proceed to Pay <i class="fas fa-lock ms-2"></i></button>
+                    <button type="submit" id="cod-btn" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm d-none">Place COD Order</button>
                     </form> 
-                    
-                    <div class="text-center mt-3 text-muted small">
-                        <i class="fas fa-lock"></i> Secure Transaction
-                    </div>
+                    <div class="text-center mt-3 text-muted small"><i class="fas fa-lock"></i> Secure Transaction</div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    // 1. Toggle Button Logic
     function togglePayment(method) {
         if (method === 'cod') {
             document.getElementById('razorpay-btn').classList.add('d-none');
@@ -145,11 +136,8 @@
         }
     }
 
-    // 2. Razorpay Click Logic
     document.getElementById('razorpay-btn').onclick = function(e) {
-        e.preventDefault(); // Prevent form submit
-
-        // Get User Details from Form
+        e.preventDefault();
         var name = document.getElementById('full_name').value;
         var phone = document.getElementById('phone').value;
 
@@ -159,35 +147,25 @@
         }
 
         var options = {
-            "key": "{{ razorpay_merchant_key }}", // Key from views.py
-            "amount": "{{ total_amount|add:'00' }}", // Amount in paise (Append 00)
+            "key": "{{ razorpay_merchant_key }}",
+            "amount": "{{ total_amount|add:'00' }}", 
             "currency": "INR",
             "name": "Elite Class Store",
             "description": "Order Payment",
             "image": "https://cdn-icons-png.flaticon.com/512/4090/4090458.png",
-            "order_id": "{{ razorpay_order_id }}", // Order ID from views.py
+            "order_id": "{{ razorpay_order_id }}",
             "handler": function (response){
-                // On Payment Success -> Redirect to Success Page
                 window.location.href = "{% url 'order_success_view' %}";
             },
-            "prefill": {
-                "name": name,
-                "contact": phone
-            },
-            "theme": {
-                "color": "#3399cc"
-            }
+            "prefill": { "name": name, "contact": phone },
+            "theme": { "color": "#3399cc" }
         };
 
         var rzp1 = new Razorpay(options);
-        
-        // Error Handling
         rzp1.on('payment.failed', function (response){
             alert("Payment Failed: " + response.error.description);
         });
-
         rzp1.open();
     }
 </script>
-
 {% endblock %}

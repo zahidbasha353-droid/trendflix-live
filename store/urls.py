@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     # Base Pages
     path('', views.home, name='home'),
-    path('custom-design/', views.custom_design_view, name='custom_design'),  # Fixed Name
+    path('custom-design/', views.custom_design_view, name='custom_design'),
     
     # Auth
     path('login/', views.login_view, name='login'),
@@ -19,14 +19,17 @@ urlpatterns = [
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
 
     # Checkout & Payment
-    path('checkout/', views.checkout_view, name='checkout'),  # Fixed Name (checkout_view)
+    path('checkout/', views.checkout_view, name='checkout'),
     path('place-cod-order/', views.place_cod_order, name='place_cod_order'), 
     
-    # 🔥 Success Page URL (Fixed) 🔥
+    # Success Page
     path('order-success/', views.order_success_view, name='order_success_view'),
 
     # Dashboards & Uploads
     path('dashboard/designer/', views.designer_dashboard, name='designer_dashboard'),
     path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
     path('upload-design/', views.upload_design, name='upload_design'),
+
+    # 🔥 GLOBAL CURRENCY SWITCHER (New) 🔥
+    path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
 ]

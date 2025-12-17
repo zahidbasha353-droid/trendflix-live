@@ -66,12 +66,6 @@
             padding: 40px 0;
             margin-top: auto;
         }
-
-        /* 🔥 SHINING ANIMATION (For AI Scan Button) 🔥 */
-        @keyframes btnShine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -93,6 +87,21 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    
+                    <li class="nav-item dropdown me-2">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">
+                            {% if request.session.currency == 'USD' %} 🇺🇸 USD
+                            {% elif request.session.currency == 'EUR' %} 🇪🇺 EUR
+                            {% else %} 🇮🇳 INR
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'INR' %}">🇮🇳 INR (₹)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'USD' %}">🇺🇸 USD ($)</a></li>
+                            <li><a class="dropdown-item" href="{% url 'switch_currency' 'EUR' %}">🇪🇺 EUR (€)</a></li>
+                        </ul>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{% url 'cart' %}">
                             <i class="fas fa-shopping-cart fa-lg"></i>
