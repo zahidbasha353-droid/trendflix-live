@@ -27,18 +27,11 @@ urlpatterns = [
 
     # Dashboards & Uploads
     path('dashboard/designer/', views.designer_dashboard, name='designer_dashboard'),
-    path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
     path('upload-design/', views.upload_design, name='upload_design'),
+    
+    # (Optional: Inga owner dashboard irukalam, but main urls-la irukurathu thaan mukkiyam)
+    path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard_app'),
 
-    # 🔥 GLOBAL CURRENCY SWITCHER (New) 🔥
+    # 🔥 GLOBAL CURRENCY SWITCHER 🔥
     path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
-]
-from django.urls import path, include
-from django.contrib import admin
-from store.views import owner_dashboard  # <--- Import this
-
-urlpatterns = [
-    path('admin/dashboard/', owner_dashboard, name='owner_dashboard'), # <--- Add this line BEFORE admin.site.urls
-    path('admin/', admin.site.urls),
-    path('', include('store.urls')),
 ]
