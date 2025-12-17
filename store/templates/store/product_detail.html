@@ -1,80 +1,78 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block content %}
 
 <style>
-    /* 🔥 AMAZON STYLE BUTTONS CSS 🔥 */
-    .btn-amazon-cart, .btn-amazon-buy {
-        width: 100%;
-        font-weight: 600;
-        padding: 12px;
-        border: none;
-        border-radius: 50px;
-        margin-top: 10px;
-        transition: 0.2s;
-        text-align: center;
-        text-decoration: none;
-        display: block;
-        font-size: 1rem;
-    }
+    /* --- ELITE HYBRID STYLES --- */
 
-    .btn-amazon-cart {
-        background-color: #ffd814;
-        color: #111;
-    }
-    .btn-amazon-cart:hover {
-        background-color: #f7ca00;
-    }
+    /* Price Block (Amazon Inspired) */
+    .price-block .current-price { font-size: 28px; font-weight: 700; color: #B12704; }
+    .price-block .mrp-price { text-decoration: line-through; color: #565959; font-size: 14px; }
+    .price-block .save-price { color: #B12704; font-size: 14px; font-weight: 500; }
 
-    .btn-amazon-buy {
-        background-color: #ffa41c;
-        color: #111;
-    }
-    .btn-amazon-buy:hover {
-        background-color: #fa8900;
-    }
-
-    /* Size Selector Style */
-    .size-option {
-        cursor: pointer;
-        border: 1px solid #ccc;
-        padding: 8px 15px;
-        margin-right: 5px;
-        border-radius: 5px;
-        display: inline-block;
-        transition: 0.2s;
-    }
-    .size-option:hover { border-color: #000; }
-    input[type="radio"] { display: none; }
-    input[type="radio"]:checked + label {
-        background-color: #000;
-        color: #fff;
-        border-color: #000;
-    }
-
-    /* 🔥 TRIAL ROOM BUTTON STYLE 🔥 */
-    .btn-trial {
-        background: linear-gradient(45deg, #2c3e50, #000000);
-        color: white;
-        border: none;
-        width: 100%;
+    /* Offer Boxes */
+    .offer-box {
+        border: 1px solid #ddd;
+        border-radius: 8px;
         padding: 10px;
-        border-radius: 10px;
-        font-weight: bold;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        background: #fff;
+        font-size: 13px;
+        height: 100%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    .offer-title { font-weight: 700; color: #e11d48; margin-bottom: 5px; }
+
+    /* BUY BOX SIDEBAR (Right Column) */
+    .buy-box-sidebar {
+        border: 1px solid #d5d9d9;
+        border-radius: 12px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* More shadow for Elite feel */
+    }
+
+    /* Amazon Buttons */
+    .btn-amazon-cart, .btn-amazon-buy {
+        width: 100%; font-weight: 600; padding: 10px; border: none; border-radius: 50px;
+        margin-top: 8px; transition: 0.2s; text-align: center; text-decoration: none; display: block; font-size: 0.95rem;
+    }
+    .btn-amazon-cart { background-color: #ffd814; color: #111; }
+    .btn-amazon-cart:hover { background-color: #f7ca00; }
+    .btn-amazon-buy { background-color: #ffa41c; color: #111; }
+    .btn-amazon-buy:hover { background-color: #fa8900; }
+
+    /* Size Selector & Trial Button */
+    .size-option { cursor: pointer; border: 1px solid #ccc; padding: 6px 10px; margin-right: 4px; border-radius: 4px; display: inline-block; transition: 0.2s; font-size: 13px; font-weight: 600; }
+    .size-option:hover { border-color: #000; background: #f8f9fa; }
+    input[type="radio"] { display: none; }
+    input[type="radio"]:checked + label { background-color: #000; color: #fff; border-color: #000; }
+    
+    .btn-trial {
+        background: linear-gradient(135deg, #1e1e1e, #3a3a3a); color: white; border: none; width: 100%; padding: 10px;
+        border-radius: 8px; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 12px; font-size: 0.9rem;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
     .btn-trial:hover { color: #ffd814; }
+
+    /* Trust Icons */
+    .buy-box-trust { font-size: 12px; color: #565959; }
+    .buy-box-trust i { color: #007600; width: 20px; text-align: center; }
 </style>
 
 <div class="container my-5">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
     <div class="row">
         
-        <div class="col-md-6 mb-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative">
-                
+        <div class="col-lg-5 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative sticky-top" style="top: 100px; z-index: 1;">
                 {% if product.image_url %}
                     <img src="{{ product.image_url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;" alt="{{ product.name }}">
                 {% elif product.image %}
@@ -89,76 +87,97 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ product.category }}</li>
-                </ol>
-            </nav>
+        <div class="col-lg-4 px-lg-4 mb-4">
+            <h1 class="fw-bold mb-2">{{ product.name }}</h1>
+            <p class="text-muted mb-3 text-uppercase small tracking-wide">{{ product.category }}</p>
 
-            <h1 class="fw-bold display-6">{{ product.name }}</h1>
-            <div class="mb-3">
-                <span class="text-danger fw-bold fs-2">₹{{ product.selling_price }}</span>
-                <span class="text-muted text-decoration-line-through ms-2">₹{{ product.cost_price|add:"500" }}</span>
-                <span class="badge bg-success ms-2">In Stock</span>
+            <hr class="my-3">
+
+            <div class="price-block mb-3">
+                <div class="d-flex align-items-baseline">
+                    <span class="text-danger fs-5 me-2">-25%</span> <span class="current-price">₹{{ product.selling_price }}</span>
+                </div>
+                <div class="text-muted small">
+                    M.R.P.: <span class="mrp-price">₹{{ product.cost_price|add:"500" }}</span>
+                </div>
+                <div class="save-price small">
+                    You Save: ₹500 (25%)
+                </div>
+                <div class="small text-muted mt-1">Inclusive of all taxes</div>
             </div>
 
-            <p class="text-muted">{{ product.description }}</p>
-
-            <hr class="my-4">
-
-            <form action="{% url 'add_to_cart' product.id %}" method="POST">
-                {% csrf_token %}
-                
-                <div class="mb-4">
-                    <label class="fw-bold mb-2 d-block">Select Size:</label>
-                    <input type="radio" name="size" id="size-s" value="S">
-                    <label for="size-s" class="size-option">S</label>
-
-                    <input type="radio" name="size" id="size-m" value="M" checked>
-                    <label for="size-m" class="size-option">M</label>
-
-                    <input type="radio" name="size" id="size-l" value="L">
-                    <label for="size-l" class="size-option">L</label>
-
-                    <input type="radio" name="size" id="size-xl" value="XL">
-                    <label for="size-xl" class="size-option">XL</label>
-                    
-                    <input type="radio" name="size" id="size-xxl" value="XXL">
-                    <label for="size-xxl" class="size-option">XXL</label>
-                </div>
-
-                <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#trialRoomModal">
-                    <i class="fas fa-robot me-2"></i> Try in AI Trial Room
-                    <span class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-25" style="transform: skewX(-20deg); animation: shine 3s infinite;"></span>
-                </button>
-
-                <div class="row g-2">
-                    <div class="col-12">
-                        <button type="submit" class="btn-amazon-cart">
-                            Add to Cart
-                        </button>
+            <div class="mb-4">
+                <h6 class="fw-bold"><i class="fa-solid fa-tags text-danger me-1"></i> Available Offers</h6>
+                <div class="row g-2 mt-1">
+                    <div class="col-6">
+                        <div class="offer-box">
+                            <div class="offer-title">Bank Offer</div>
+                            Get 5% Cashback on Elite HDFC Credit Cards.
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <a href="{% url 'buy_now' product.id %}" class="btn-amazon-buy">
-                            Buy Now
-                        </a>
+                    <div class="col-6">
+                        <div class="offer-box">
+                            <div class="offer-title">Partner Offer</div>
+                            Sign up for Elite Prime and get free faster delivery.
+                        </div>
                     </div>
-                </div>
-
-            </form>
-
-            <div class="mt-4 p-3 bg-light rounded text-muted small">
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fa-solid fa-truck-fast me-2"></i> Free Delivery on orders over ₹1000
-                </div>
-                <div class="d-flex align-items-center">
-                    <i class="fa-solid fa-rotate-left me-2"></i> 7 Days Easy Return Policy
                 </div>
             </div>
+            
+            <hr class="my-3">
 
+            <h6 class="fw-bold mb-2">Product Description</h6>
+            <p class="text-muted small" style="line-height: 1.6;">
+                {{ product.description }}<br><br>
+                • Premium Quality Fabric designed for comfort.<br>
+                • Perfect fit for casual and streetwear vibes.<br>
+                • Machine Washable. Durable print guarantee.
+            </p>
         </div>
+
+        <div class="col-lg-3">
+            <div class="buy-box-sidebar sticky-top" style="top: 100px;">
+                
+                <div class="fs-4 fw-bold text-danger mb-2">₹{{ product.selling_price }}</div>
+                
+                <div class="small mb-3">
+                    FREE delivery <span class="fw-bold text-dark">Tomorrow, Dec 18</span>.
+                    <div class="text-success small">Order within 2 hrs 30 mins.</div>
+                </div>
+                
+                <div class="fs-5 text-success fw-bold mb-3">In Stock.</div>
+
+                <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold small mb-1 d-block">Select Size:</label>
+                        <div>
+                            <input type="radio" name="size" id="size-s" value="S"><label for="size-s" class="size-option">S</label>
+                            <input type="radio" name="size" id="size-m" value="M" checked><label for="size-m" class="size-option">M</label>
+                            <input type="radio" name="size" id="size-l" value="L"><label for="size-l" class="size-option">L</label>
+                            <input type="radio" name="size" id="size-xl" value="XL"><label for="size-xl" class="size-option">XL</label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#trialRoomModal">
+                        <i class="fas fa-robot me-2"></i> AI Fit Check
+                        <span class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-25" style="transform: skewX(-20deg); animation: shine 3s infinite;"></span>
+                    </button>
+
+                    <button type="submit" class="btn-amazon-cart">Add to Cart</button>
+                    <a href="{% url 'buy_now' product.id %}" class="btn-amazon-buy">Buy Now</a>
+                </form>
+
+                <div class="buy-box-trust mt-3 pt-3 border-top text-muted">
+                    <div class="mb-2"><i class="fa-solid fa-lock"></i> Secure transaction</div>
+                    <div class="mb-2"><i class="fa-solid fa-truck"></i> Dispatched by Elite Class</div>
+                    <div><i class="fa-solid fa-rotate-left"></i> 7 Days Replacement</div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -245,36 +264,11 @@
 
 {% block extra_css %}
 <style>
-    /* Button Shine Animation */
-    @keyframes shine {
-        0% { left: -100%; }
-        20% { left: 100%; }
-        100% { left: 100%; }
-    }
-
-    /* Robot Scan Line */
-    .scan-line {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 4px;
-        background: #ffc107;
-        box-shadow: 0 0 15px #ffc107;
-        animation: scan 2s infinite linear;
-    }
-
-    @keyframes scan {
-        0% { top: 0%; opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { top: 100%; opacity: 0; }
-    }
-    
-    .animate-pulse {
-        animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: .5; }
-    }
+    @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+    .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #ffc107; box-shadow: 0 0 15px #ffc107; animation: scan 2s infinite linear; }
+    @keyframes scan { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+    .animate-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
 </style>
 {% endblock %}
 
@@ -289,30 +283,20 @@
         document.getElementById('scanningAnim').style.display = 'block';
         document.getElementById('finalResult').style.display = 'none';
 
-        // Simple Mock Logic
         let size = 'M';
-        let desc = "Standard Fit";
-        
-        if(weight < 60) { size = 'S'; desc = "Slim Fit"; }
-        else if(weight < 75) { size = 'M'; desc = "Regular Fit"; }
-        else if(weight < 90) { size = 'L'; desc = "Comfort Fit"; }
-        else { size = 'XL'; desc = "Relaxed Fit"; }
+        if(weight < 60) size = 'S';
+        else if(weight < 75) size = 'M';
+        else if(weight < 90) size = 'L';
+        else size = 'XL';
 
         setTimeout(() => {
             document.getElementById('scanningAnim').style.display = 'none';
             document.getElementById('finalResult').style.display = 'block';
-            
             document.getElementById('recSize').innerText = size;
             document.getElementById('fitDesc').innerText = `Based on ${height}cm / ${weight}kg analysis.`;
-            
-            // Auto Select the Radio Button
-            try {
-                document.getElementById('size-' + size.toLowerCase()).checked = true;
-            } catch(e) { console.log("Size ID not found"); }
-            
+            try { document.getElementById('size-' + size.toLowerCase()).checked = true; } catch(e) {}
         }, 2000);
     }
-
     function resetTrial() {
         document.getElementById('trialResultStep').style.display = 'none';
         document.getElementById('trialInputStep').style.display = 'block';
