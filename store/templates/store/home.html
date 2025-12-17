@@ -4,7 +4,7 @@
 {% block content %}
 
 <style>
-    /* --- 1. CAROUSEL STYLES (New Moving Banners) --- */
+    /* --- 1. CAROUSEL STYLES --- */
     .carousel-item {
         height: 500px; /* Banner Height */
         background-color: #000;
@@ -14,7 +14,7 @@
         height: 100%;
         width: 100%;
         object-fit: cover;
-        opacity: 0.6; /* Dark Overlay for Text Readability */
+        opacity: 0.6; /* Dark Overlay */
     }
     .carousel-caption {
         bottom: 35%;
@@ -45,21 +45,20 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    /* Animation Keyframes */
     @keyframes slideUp {
         from { transform: translateY(50px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
 
-    /* --- 2. TRUST BADGES (Old Design Preserved) --- */
+    /* --- 2. TRUST BADGES --- */
     .trust-bar {
         background: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         padding: 30px 0;
-        margin-top: -40px; /* Overlap Effect */
+        margin-top: -40px; 
         position: relative;
         border-radius: 8px;
-        z-index: 20; /* Sit above carousel */
+        z-index: 20;
     }
     .trust-item {
         text-align: center;
@@ -81,7 +80,7 @@
         .carousel-caption h1 { font-size: 2rem; }
     }
 
-    /* --- 3. PRODUCT CARDS & BUTTONS (Old Design Preserved) --- */
+    /* --- 3. PRODUCT CARDS --- */
     .product-card {
         transition: 0.3s;
         border: 1px solid #eee;
@@ -130,7 +129,7 @@
             <div class="carousel-caption d-none d-md-block">
                 <h1 class="text-white">Print Your Vibe</h1>
                 <p class="text-light">Custom T-Shirts, Hoodies & More. Delivered Worldwide.</p>
-                <a href="{% url 'custom_design' %}" class="btn btn-light btn-banner text-dark">Start Designing <i class="fas fa-paint-brush ms-2"></i></a>
+                <a href="#shop-section" class="btn btn-light btn-banner text-dark">Explore Now <i class="fas fa-arrow-right ms-2"></i></a>
             </div>
         </div>
 
@@ -148,7 +147,7 @@
             <div class="carousel-caption d-none d-md-block">
                 <h1 class="text-warning">Flat 25% OFF</h1>
                 <p class="text-light">On your first custom order. Use Code: ELITE25</p>
-                <a href="{% url 'custom_design' %}" class="btn btn-warning btn-banner text-dark">Claim Offer <i class="fas fa-tag ms-2"></i></a>
+                <a href="#shop-section" class="btn btn-warning btn-banner text-dark">Shop Now <i class="fas fa-tag ms-2"></i></a>
             </div>
         </div>
     </div>
@@ -163,7 +162,7 @@
 
 <div class="container">
     
-    <div class="row trust-bar mx-2">
+    <div class="row trust-bar mx-2 mb-5">
         <div class="col-md-3 trust-item">
             <i class="fa-solid fa-handshake trust-icon"></i>
             <div class="trust-title">Trusted Partners</div>
@@ -183,16 +182,6 @@
             <i class="fa-solid fa-boxes-stacked trust-icon"></i>
             <div class="trust-title">Bulk Orders</div>
             <div class="trust-desc">Corporate & Event Support</div>
-        </div>
-    </div>
-
-    <div class="text-center my-5">
-        <div class="p-5 bg-dark text-white rounded-3 shadow" style="background: linear-gradient(45deg, #111, #333);">
-            <h2>🎨 Want to Design Your Own?</h2>
-            <p class="text-white-50">Upload your logo, check fit on a 3D Model, and order instantly!</p>
-            <a href="{% url 'custom_design' %}" class="btn btn-warning fw-bold btn-lg rounded-pill px-5 shadow">
-                <i class="fa-solid fa-cube me-2"></i> Open 3D Designer
-            </a>
         </div>
     </div>
 
