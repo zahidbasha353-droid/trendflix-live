@@ -182,6 +182,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     {% block extra_js %}{% endblock %}
-    
+{% if site_config.active_theme == 'christmas' %}
+<style>
+    /* Snow Effect */
+    body { position: relative; }
+    .snowflake { position: fixed; top: -10px; z-index: 9999; color: #fff; font-size: 1em; animation: fall linear infinite; }
+    @keyframes fall { to { transform: translateY(100vh); } }
+</style>
+<script>
+    setInterval(() => {
+        const flake = document.createElement('div');
+        flake.classList.add('snowflake');
+        flake.innerText = '❄';
+        flake.style.left = Math.random() * 100 + 'vw';
+        flake.style.animationDuration = Math.random() * 3 + 2 + 's';
+        flake.style.opacity = Math.random();
+        document.body.appendChild(flake);
+        setTimeout(() => flake.remove(), 5000);
+    }, 100);
+</script>
+
+{% elif site_config.active_theme == 'diwali' %}
+<div style="position:fixed; top:0; width:100%; height:10px; background: repeating-linear-gradient(90deg, #ff0, #f00, #0f0, #00f); z-index:9999; animation: lights 1s infinite;"></div>
+<style>@keyframes lights { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }</style>
+{% endif %}    
 </body>
 </html>
+{% if site_config.logo %}
+    <img src="{{ site_config.logo.url }}" alt="Logo" height="40">
+{% else %}
+    <h2>TrendFlix</h2> {% endif %}

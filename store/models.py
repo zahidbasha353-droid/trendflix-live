@@ -101,3 +101,24 @@ class SavedDesign(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self): return f"{self.user.username} - {self.name}"
+    # --- SITE SETTINGS (Dynamic Logo, Banner & Themes) ---
+class SiteSettings(models.Model):
+    THEME_CHOICES = [
+        ('default', 'Default (No Effect)'),
+        ('christmas', '❄️ Christmas / New Year (Snow)'),
+        ('diwali', '🪔 Diwali / Eid (Golden Lights)'),
+        ('sale', '🎉 Big Sale (Confetti)'),
+    ]
+
+    site_name = models.CharField(max_length=100, default="TrendFlix")
+    logo = models.ImageField(upload_to='site_assets/', help_text="Upload transparent PNG logo")
+    hero_banner = models.ImageField(upload_to='site_assets/', help_text="Main Home Banner (1920x600)")
+    
+    # Festival Mode
+    active_theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='default')
+    
+    def __str__(self):
+        return "Website Configuration"
+
+    class Meta:
+        verbose_name_plural = "Site Settings"

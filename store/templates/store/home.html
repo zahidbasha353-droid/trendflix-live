@@ -161,3 +161,10 @@
 </div>
 
 {% endblock %}
+<style>
+    .hero-banner {
+        /* Default Image if nothing uploaded */
+        background-image: url('{% if site_config.hero_banner %}{{ site_config.hero_banner.url }}{% else %}https://images.unsplash.com/photo-1490481651871-ab68de25d43d{% endif %}');
+        /* ... matra styles same ... */
+    }
+</style>
