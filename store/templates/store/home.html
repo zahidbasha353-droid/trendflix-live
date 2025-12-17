@@ -1,35 +1,65 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block content %}
 
 <style>
-    /* HERO SECTION (No Change) */
-    .hero-section {
-        background: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
-        height: 450px;
+    /* --- 1. CAROUSEL STYLES (New Moving Banners) --- */
+    .carousel-item {
+        height: 500px; /* Banner Height */
+        background-color: #000;
         position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
     }
-    .hero-overlay {
-        background: rgba(0, 0, 0, 0.6);
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
+    .carousel-item img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        opacity: 0.6; /* Dark Overlay for Text Readability */
     }
-    .hero-content { position: relative; z-index: 1; }
-    
-    /* TRUST BADGES SECTION (No Change) */
+    .carousel-caption {
+        bottom: 35%;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        z-index: 10;
+    }
+    .carousel-caption h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        animation: slideUp 1s ease-out;
+        margin-bottom: 15px;
+    }
+    .carousel-caption p {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        font-weight: 500;
+        animation: slideUp 1.2s ease-out;
+    }
+    .btn-banner {
+        padding: 12px 35px;
+        font-weight: bold;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: slideUp 1.4s ease-out;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Animation Keyframes */
+    @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* --- 2. TRUST BADGES (Old Design Preserved) --- */
     .trust-bar {
         background: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         padding: 30px 0;
-        margin-top: -30px;
+        margin-top: -40px; /* Overlap Effect */
         position: relative;
         border-radius: 8px;
-        z-index: 2;
+        z-index: 20; /* Sit above carousel */
     }
     .trust-item {
         text-align: center;
@@ -47,10 +77,11 @@
 
     @media (max-width: 768px) {
         .trust-item { border-right: none; border-bottom: 1px solid #eee; padding: 20px; }
-        .hero-section { height: 300px; }
+        .carousel-item { height: 350px; }
+        .carousel-caption h1 { font-size: 2rem; }
     }
 
-    /* PRODUCT CARDS - Updated for Flex Layout */
+    /* --- 3. PRODUCT CARDS & BUTTONS (Old Design Preserved) --- */
     .product-card {
         transition: 0.3s;
         border: 1px solid #eee;
@@ -58,7 +89,7 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        height: 100%; /* Ensures cards are same height */
+        height: 100%;
     }
     .product-card:hover {
         transform: translateY(-5px);
@@ -66,13 +97,12 @@
     }
     .card-img-top { height: 250px; object-fit: cover; }
 
-    /* 🔥 AMAZON STYLE BUTTONS CSS 🔥 */
     .btn-amazon-cart, .btn-amazon-buy {
         width: 100%;
         font-weight: 600;
         padding: 8px 12px;
         border: none;
-        border-radius: 50px; /* Rounded Corners */
+        border-radius: 50px;
         margin-top: 8px;
         transition: 0.2s;
         text-align: center;
@@ -80,34 +110,56 @@
         display: block;
         font-size: 0.9rem;
     }
-
-    .btn-amazon-cart {
-        background-color: #ffd814; /* Amazon Yellow */
-        color: #111;
-    }
-    .btn-amazon-cart:hover {
-        background-color: #f7ca00;
-    }
-
-    .btn-amazon-buy {
-        background-color: #ffa41c; /* Amazon Orange */
-        color: #111;
-    }
-    .btn-amazon-buy:hover {
-        background-color: #fa8900;
-    }
+    .btn-amazon-cart { background-color: #ffd814; color: #111; }
+    .btn-amazon-cart:hover { background-color: #f7ca00; }
+    .btn-amazon-buy { background-color: #ffa41c; color: #111; }
+    .btn-amazon-buy:hover { background-color: #fa8900; }
 </style>
 
-<section class="hero-section">
-    <div class="hero-overlay"></div>
-    <div class="hero-content container">
-        <h1 class="display-4 fw-bold">Print Your Vibe</h1>
-        <p class="lead mb-4">Custom T-Shirts, Hoodies & More. Delivered Worldwide.</p>
-        <a href="{% url 'custom_design' %}" class="btn btn-light btn-lg fw-bold rounded-pill px-5">
-            Start Designing <i class="fa-solid fa-pen-nib ms-2"></i>
-        </a>
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3500">
+    
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
     </div>
-</section>
+
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070&auto=format&fit=crop" class="d-block w-100" alt="Fashion">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="text-white">Print Your Vibe</h1>
+                <p class="text-light">Custom T-Shirts, Hoodies & More. Delivered Worldwide.</p>
+                <a href="{% url 'custom_design' %}" class="btn btn-light btn-banner text-dark">Start Designing <i class="fas fa-paint-brush ms-2"></i></a>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" class="d-block w-100" alt="Premium">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="text-white">Elite Quality</h1>
+                <p class="text-light">100% Bio-Washed Cotton. Premium Finish Guaranteed.</p>
+                <a href="#shop-section" class="btn btn-danger btn-banner">Shop Collections <i class="fas fa-shopping-bag ms-2"></i></a>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop" class="d-block w-100" alt="Offers">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="text-warning">Flat 25% OFF</h1>
+                <p class="text-light">On your first custom order. Use Code: ELITE25</p>
+                <a href="{% url 'custom_design' %}" class="btn btn-warning btn-banner text-dark">Claim Offer <i class="fas fa-tag ms-2"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
 
 <div class="container">
     
@@ -135,16 +187,16 @@
     </div>
 
     <div class="text-center my-5">
-        <div class="p-5 bg-dark text-white rounded-3 shadow">
+        <div class="p-5 bg-dark text-white rounded-3 shadow" style="background: linear-gradient(45deg, #111, #333);">
             <h2>🎨 Want to Design Your Own?</h2>
-            <p class="text-white-50">Upload your logo, check fit on a 3D Model (Slim/Fat), and order instantly!</p>
-            <a href="{% url 'custom_design' %}" class="btn btn-warning fw-bold btn-lg">
-                <i class="fa-solid fa-cube"></i> Open 3D Designer
+            <p class="text-white-50">Upload your logo, check fit on a 3D Model, and order instantly!</p>
+            <a href="{% url 'custom_design' %}" class="btn btn-warning fw-bold btn-lg rounded-pill px-5 shadow">
+                <i class="fa-solid fa-cube me-2"></i> Open 3D Designer
             </a>
         </div>
     </div>
 
-    <h3 class="fw-bold mb-4">Trending Collections</h3>
+    <h3 class="fw-bold mb-4" id="shop-section">Trending Collections</h3>
     <div class="row g-4 mb-5">
         
         {% for product in products %}
@@ -179,9 +231,11 @@
                     
                     <div class="mb-2">
                         <span class="text-danger fw-bold fs-5">₹{{ product.selling_price }}</span>
+                        <small class="text-muted text-decoration-line-through">₹{{ product.cost_price|add:"500" }}</small>
                     </div>
                     
-                    <div class="mt-auto"> <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                    <div class="mt-auto">
+                        <form action="{% url 'add_to_cart' product.id %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn-amazon-cart" title="Add to Cart">
                                 Add to Cart
@@ -192,7 +246,7 @@
                             Buy Now
                         </a>
                     </div>
-                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
