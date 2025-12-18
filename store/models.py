@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# --- CATEGORY MODEL (For Dynamic Homepage) ---
+class Category(models.Model):
+    name = models.CharField(max_length=100)  # Category peyar (e.g., Men, Women)
+    image = models.ImageField(upload_to='category_images/') # Category image
+    
+    def __str__(self):
+        return self.name
+
+# --- PRODUCT MODEL ---
 class Product(models.Model):
     # MARKETPLACE FIELDS
     designer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -16,7 +25,7 @@ class Product(models.Model):
     image_url = models.URLField(max_length=500, blank=True, null=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     sku = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    category = models.CharField(max_length=100, default="T-Shirt")
+    category = models.CharField(max_length=100, default="T-Shirt") # Note: Ithu text field. Future la Category model ku link pannalam.
     created_at = models.DateTimeField(auto_now_add=True)
     
     # 🔥 AI BRAIN FIELDS
@@ -33,6 +42,7 @@ class Product(models.Model):
         tag = "🔥 " if self.is_trending else ""
         return f"{tag}{self.name}"
 
+# --- CART SYSTEM ---
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     session_id = models.CharField(max_length=200, null=True, blank=True)
@@ -57,6 +67,7 @@ class CartItem(models.Model):
     def total_price(self):
         return self.price * self.quantity
 
+# --- ORDER SYSTEM ---
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
@@ -101,7 +112,8 @@ class SavedDesign(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self): return f"{self.user.username} - {self.name}"
-    # --- SITE SETTINGS (Dynamic Logo, Banner & Themes) ---
+
+# --- SITE SETTINGS (Dynamic Admin Control) ---
 class SiteSettings(models.Model):
     THEME_CHOICES = [
         ('default', 'Default (No Effect)'),
@@ -111,26 +123,19 @@ class SiteSettings(models.Model):
     ]
 
     site_name = models.CharField(max_length=100, default="TrendFlix")
-    logo = models.ImageField(upload_to='site_assets/', help_text="Upload transparent PNG logo")
-    hero_banner = models.ImageField(upload_to='site_assets/', help_text="Main Home Banner (1920x600)")
     
-    # Festival Mode
+    # Neenga ketta "New Code" Fields:
+    banner = models.ImageField(upload_to='site_banners/', blank=True, null=True)
+    caption = models.TextField(blank=True, null=True)
+    
+    # Extra fields for full control
+    logo = models.ImageField(upload_to='site_assets/', help_text="Upload transparent PNG logo", blank=True, null=True)
     active_theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='default')
     
-    def __str__(self):
-        return "Website Configuration"
-
-    class SiteSettings(models.Model):
-    # unga fields (banner, logo etc) inga irukum...
-
     class Meta:
         verbose_name = "Site Setting"
         verbose_name_plural = "Site Settings"
-        from django.db import models
+        # Corrected: Removed the 'models =' line that caused the error
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)  # Category peyar (e.g., Men, Women)
-    image = models.ImageField(upload_to='category_images/') # Category image
-    
     def __str__(self):
-        return self.name
+        return "Website Configuration"
