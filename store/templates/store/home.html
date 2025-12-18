@@ -3,155 +3,163 @@
 {% load custom_filters %} 
 
 {% block content %}
-
 <style>
-    /* --- 1. GLOBAL UI & FONTS --- */
-    body { background-color: #ffffff; font-family: 'Inter', sans-serif; color: #000; }
-    .top-promo-bar { background: #000; color: #fff; font-size: 11px; padding: 8px 0; text-align: center; letter-spacing: 1px; }
-
-    /* --- 2. HERO BANNER (From Old Code) --- */
-    .hero-banner {
-        height: 500px;
-        background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070');
-        background-size: cover; background-position: center;
-        display: flex; align-items: center; justify-content: center; text-align: center;
-    }
-    .hero-content { background: rgba(255,255,255,0.95); padding: 30px 50px; border-radius: 0px; }
-    .hero-content h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 15px; }
-
-    /* --- 3. CATEGORY ALIGNMENT FIX --- */
-    .cat-wrapper { padding: 30px 0; border-bottom: 1px solid #f0f0f0; }
-    .cat-item-circle { 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        text-align: center;
-    }
-    .circle-img { 
-        width: 75px; height: 75px; border-radius: 50%; overflow: hidden; 
-        margin-bottom: 8px; border: 1px solid #eee; transition: 0.3s;
-    }
-    .circle-img img { width: 100%; height: 100%; object-fit: cover; }
-    .cat-item-circle span { 
-        font-size: 11px; font-weight: 700; text-transform: uppercase; 
-        display: block; width: 100%; 
-    }
-    .cat-item-circle:hover .circle-img { border-color: #000; transform: scale(1.1); }
-
-    /* --- 4. YELLOW FLASH BAR (From Old Code) --- */
-    .flash-sale-bar {
-        background: #fdf59a; padding: 15px 0; margin: 30px 0;
-        display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;
-    }
-    .flash-text { font-weight: 700; font-size: 12px; text-transform: uppercase; }
-    .timer-display { font-size: 20px; font-weight: 800; }
-
-    /* --- 5. 3D COMPACT PRODUCT CARDS --- */
-    .garage-card { 
-        border: none !important; 
-        margin-bottom: 25px; 
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        border-radius: 15px; 
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-    }
-    .garage-card:hover {
-        transform: translateY(-8px); 
-        box-shadow: 0 15px 30px rgba(0,0,0,0.12); 
-    }
-
-    .img-box-compact { 
-        background: #f9f9f9; 
-        height: 220px; 
-        overflow: hidden; 
-        display: flex; align-items: center; justify-content: center;
-        border-radius: 15px 15px 0 0; 
-    }
-    .img-box-compact img { height: 100%; width: 100%; object-fit: cover; transition: 0.5s; }
-    .garage-card:hover img { transform: scale(1.1); }
+    /* --- HERO SECTION --- */
+    .hero-wrap { padding: 30px 0; }
+    .main-banner { height: 450px; background-size: cover; background-position: center; border-radius: 10px; position: relative; overflow: hidden; display: flex; align-items: center; padding: 50px; }
+    .side-banner { height: 215px; background-size: cover; background-position: center; border-radius: 10px; position: relative; display: flex; align-items: center; padding: 30px; margin-bottom: 20px; transition: 0.3s; }
+    .side-banner:last-child { margin-bottom: 0; }
+    .side-banner:hover { transform: translateY(-5px); }
     
-    .card-meta-compact { padding: 12px; text-align: center; }
-    .product-name-compact { 
-        font-size: 11px; font-weight: 600; margin-bottom: 4px; 
-        height: 32px; overflow: hidden; color: #333;
-    }
-    .price-compact { font-size: 13px; font-weight: 800; color: #000; }
-
-    /* Compact Buttons Design */
-    .btn-group-compact { display: flex; gap: 3px; margin-top: 10px; }
-    .btn-add-c { 
-        border: 1px solid #000; background: transparent; color: #000; 
-        font-size: 9px; padding: 7px; flex: 1; font-weight: 700; 
-        text-transform: uppercase; border-radius: 5px;
-    }
-    .btn-add-c:hover { background: #000; color: #fff; }
-    .btn-buy-c { 
-        background: #000; color: #fff; border: 1px solid #000; 
-        font-size: 9px; padding: 7px; flex: 1; font-weight: 700; 
-        text-transform: uppercase; text-align: center; text-decoration: none;
+    .hero-content h4 { font-weight: 300; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+    .hero-content h1 { font-size: 50px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; }
+    
+    /* --- FLASH SALE BAR (From Old Code) --- */
+    .flash-sale-bar {
+        background: #fdf59a; padding: 15px 0; margin: 0 0 40px 0;
+        display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;
         border-radius: 5px;
     }
+    .flash-text { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .timer-display { font-size: 20px; font-weight: 800; font-family: monospace; }
 
-    @media (max-width: 768px) {
-        .hero-banner { height: 350px; }
-        .hero-content h1 { font-size: 1.8rem; }
-    }
+    /* --- CIRCULAR CATEGORIES --- */
+    .cat-circle-item { text-align: center; margin: 30px 0; transition: 0.3s; }
+    .cat-circle-item:hover { transform: translateY(-5px); }
+    .cat-img-box { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 15px; border: 2px solid transparent; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .cat-circle-item:hover .cat-img-box { border-color: #0d6efd; }
+    .cat-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    .cat-name { font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* --- PRODUCT CARD --- */
+    .section-title { font-weight: 700; text-transform: uppercase; margin-bottom: 30px; position: relative; display: inline-block; }
+    .section-title::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 50px; height: 3px; background: #0d6efd; }
+    
+    .product-card { border: 1px solid #f0f0f0; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; position: relative; margin-bottom: 30px; }
+    .product-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-color: white; }
+    .product-img-wrap { height: 280px; position: relative; overflow: hidden; background: #f9f9f9; }
+    .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .product-card:hover .product-img-wrap img { transform: scale(1.05); }
+    
+    .product-actions { position: absolute; top: 15px; right: -50px; transition: 0.3s; display: flex; flex-direction: column; gap: 10px; }
+    .product-card:hover .product-actions { right: 15px; }
+    .action-btn { width: 35px; height: 35px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; box-shadow: 0 3px 10px rgba(0,0,0,0.1); transition: 0.3s; }
+    .action-btn:hover { background: #0d6efd; color: white; }
+
+    .product-info { padding: 15px; text-align: center; }
+    .product-cat { font-size: 11px; text-transform: uppercase; color: #999; margin-bottom: 5px; }
+    .product-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .product-price { color: #0d6efd; font-weight: 700; font-size: 16px; }
+    .product-price .old-price { color: #ccc; text-decoration: line-through; font-size: 13px; margin-left: 5px; font-weight: 400; }
+    
+    .btn-shop { background: #0d6efd; color: white; padding: 10px 30px; border-radius: 30px; font-weight: 600; border: none; transition: 0.3s; }
+    .btn-shop:hover { background: #004bb5; box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3); }
 </style>
 
-<div class="top-promo-bar text-uppercase">Free Express Shipping on orders over $500!</div>
-
-<div class="hero-banner">
-    <div class="hero-content">
-        <h4>Modern Elegance</h4>
-        <h1>Season Edit 2025</h1>
-        <button class="btn btn-dark rounded-0 px-4">Shop Collection</button>
-    </div>
-</div>
-
-<div class="cat-wrapper">
-    <div class="container">
-        <div class="row row-cols-3 row-cols-md-6 g-3 justify-content-center">
-            <div class="col"><div class="cat-item-circle"><div class="circle-img"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=100"></div><span>T-Shirts</span></div></div>
-            <div class="col"><div class="cat-item-circle"><div class="circle-img"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=100"></div><span>Jackets</span></div></div>
-            <div class="col"><div class="cat-item-circle"><div class="circle-img"><img src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=100"></div><span>Jeans</span></div></div>
-            <div class="col"><div class="cat-item-circle"><div class="circle-img"><img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=100"></div><span>Caps</span></div></div>
-            <div class="col"><div class="cat-item-circle"><div class="circle-img"><img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=100"></div><span>Hoodies</span></div></div>
+<div class="container hero-wrap">
+    <div class="row">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="main-banner" style="background-image: url('{% if site_config.hero_banner %}{{ site_config.hero_banner.url }}{% else %}https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80{% endif %}');">
+                <div class="hero-content text-white">
+                    <h4>New Collection</h4>
+                    <h1>Summer Sale <br> Min 40% Off</h1>
+                    <a href="#" class="btn-shop">SHOP NOW</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="side-banner" style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');">
+                <div class="hero-content text-white">
+                    <h4>Men's Shoes</h4>
+                    <h2>Up to 50% Off</h2>
+                    <a href="#" class="text-white fw-bold text-decoration-underline">Discover Now</a>
+                </div>
+            </div>
+            <div class="side-banner" style="background-image: url('https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80');">
+                <div class="hero-content text-white">
+                    <h4>Accessories</h4>
+                    <h2>New Arrivals</h2>
+                    <a href="#" class="text-white fw-bold text-decoration-underline">Shop Bags</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="flash-sale-bar">
-    <div class="flash-text">Flash Sale now on!</div>
-    <div class="timer-display">00 : 09 : 27 : 59</div>
-    <div class="flash-text d-none d-md-block">Save on new arrivals, bestsellers + more</div>
-    <button class="btn btn-dark btn-sm rounded-0">FLASH50</button>
+<div class="container">
+    <div class="flash-sale-bar">
+        <div class="flash-text">Flash Sale now on!</div>
+        <div class="timer-display">00 : 09 : 27 : 59</div>
+        <div class="flash-text d-none d-md-block">Save on new arrivals, bestsellers + more</div>
+        <button class="btn btn-dark btn-sm rounded-0">FLASH50</button>
+    </div>
 </div>
 
-<div class="container my-5">
-    <h5 class="fw-bold mb-4 text-uppercase" style="letter-spacing: 2px;">New Arrivals</h5>
-    <div class="row row-cols-2 row-cols-md-6 g-3">
+<div class="container py-5 border-bottom border-top">
+    <div class="d-flex justify-content-between overflow-auto" style="gap: 20px;">
+        <div class="cat-circle-item">
+            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1617137968427-85924c809a22?auto=format&fit=crop&w=300&q=80" alt="Men"></div>
+            <div class="cat-name">Men</div>
+        </div>
+        <div class="cat-circle-item">
+            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=300&q=80" alt="Women"></div>
+            <div class="cat-name">Women</div>
+        </div>
+        <div class="cat-circle-item">
+            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80" alt="Shoes"></div>
+            <div class="cat-name">Shoes</div>
+        </div>
+        <div class="cat-circle-item">
+            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=300&q=80" alt="Watches"></div>
+            <div class="cat-name">Watches</div>
+        </div>
+        <div class="cat-circle-item">
+            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=300&q=80" alt="Bags"></div>
+            <div class="cat-name">Bags</div>
+        </div>
+        <div class="cat-circle-item">
+            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1599643478518-17488fbbcd75?auto=format&fit=crop&w=300&q=80" alt="Jewelry"></div>
+            <div class="cat-name">Jewellery</div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="section-title">Featured Products</h3>
+        <a href="#" class="btn btn-outline-dark btn-sm rounded-pill px-4">View All</a>
+    </div>
+
+    <div class="row">
         {% for product in products %}
-        <div class="col">
-            <div class="garage-card">
-                <a href="{% url 'product_detail' product.id %}">
-                    <div class="img-box-compact">
-                        {% if product.image_url %}<img src="{{ product.image_url }}">
-                        {% else %}<img src="{{ product.image.url }}">{% endif %}
-                    </div>
-                </a>
-                <div class="card-meta-compact">
-                    <p class="product-name-compact mb-1">{{ product.name }}</p>
-                    <div class="price-compact">
-                        <span>{{ product.selling_price|currency:request }}</span>
-                    </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="product-card">
+                <div class="product-img-wrap">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x400" alt="No Image">
+                    {% endif %}
                     
-                    <div class="btn-group-compact">
-                        <form action="{% url 'add_to_cart' product.id %}" method="POST" class="flex-grow-1">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-add-c w-100"><i class="fas fa-shopping-cart"></i></button>
-                        </form>
-                        <a href="{% url 'buy_now' product.id %}" class="btn-buy-c flex-grow-1">Buy</a>
+                    <div class="product-actions">
+                        <a href="#" class="action-btn"><i class="far fa-heart"></i></a>
+                        <a href="{% url 'product_detail' product.id %}" class="action-btn"><i class="far fa-eye"></i></a>
+                        <a href="{% url 'add_to_cart' product.id %}" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <div class="product-cat">{{ product.category }}</div>
+                    <div class="product-title"><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></div>
+                    <div class="text-warning small mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <div class="product-price">
+                        {{ product.selling_price|currency:request }}
+                        <span class="old-price">
+                            {% comment %} Calculation logic requires custom filter or backend, simplified display here {% endcomment %}
+                             ₹ {{ product.cost_price|add:"200" }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -160,11 +168,18 @@
     </div>
 </div>
 
+<div class="container mb-5">
+    <div class="row g-0 rounded overflow-hidden shadow-sm">
+        <div class="col-md-6 bg-light d-flex align-items-center p-5">
+            <div>
+                <span class="badge bg-danger mb-2">LIMITED TIME</span>
+                <h2 class="fw-bold mb-3">Men's Premium Collection</h2>
+                <p class="text-muted mb-4">Discover the latest trends in men's fashion. Suits, Casuals, and more.</p>
+                <a href="#" class="btn btn-dark rounded-pill px-4 py-2">EXPLORE NOW</a>
+            </div>
+        </div>
+        <div class="col-md-6" style="min-height: 300px; background: url('https://images.unsplash.com/photo-1617137968427-85924c809a22?auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+    </div>
+</div>
+
 {% endblock %}
-<style>
-    .hero-banner {
-        /* Default Image if nothing uploaded */
-        background-image: url('{% if site_config.hero_banner %}{{ site_config.hero_banner.url }}{% else %}https://images.unsplash.com/photo-1490481651871-ab68de25d43d{% endif %}');
-        /* ... matra styles same ... */
-    }
-</style>
