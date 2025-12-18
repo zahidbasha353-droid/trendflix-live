@@ -5,81 +5,80 @@
 {% block content %}
 
 <style>
-    /* --- 1. NEW DESIGN STYLES (Clean & Sticky) --- */
+    /* --- 1. GENERAL LAYOUT STYLES --- */
     body { font-family: 'Arial', sans-serif; background-color: #fff; color: #333; }
     
     .product-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
-    /* Layout Grid */
+    /* Layout: Left (Images) - Right (Details) */
     .product-wrapper {
         display: grid;
-        grid-template-columns: 1.5fr 1fr; /* Image wider than details */
-        gap: 50px;
+        grid-template-columns: 1.2fr 1fr; /* Images slightly wider */
+        gap: 60px;
         margin-bottom: 60px;
     }
 
-    /* Left Side: Gallery */
-    .product-gallery { display: flex; flex-direction: column; gap: 20px; }
+    /* LEFT SIDE: Vertical Scroll Gallery (Amazon Style) */
+    .product-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
     .product-gallery img {
         width: 100%;
-        border-radius: 12px;
-        background-color: #f4f4f4;
+        border-radius: 0px; 
         object-fit: cover;
+        cursor: zoom-in;
     }
 
-    /* Right Side: Sticky Details */
+    /* RIGHT SIDE: Sticky Details */
     .product-info {
         position: sticky;
-        top: 100px; /* Header height adjust pannikalam */
+        top: 100px; 
         height: fit-content;
+        padding-top: 10px;
     }
 
-    .category-tag { color: #888; font-size: 14px; margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 1px;}
-    .product-title { margin: 0 0 10px 0; font-size: 2.5rem; font-weight: 700; line-height: 1.1; }
-    
-    .price-block { margin-bottom: 25px; align-items: center; display: flex; gap: 15px; }
-    .current-price { font-size: 1.8rem; font-weight: bold; color: #000; }
-    .mrp-price { text-decoration: line-through; color: #888; font-size: 1.1rem; }
-    .discount-badge { background: #ffebeb; color: #d32f2f; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; }
+    /* Typography & Price */
+    .product-title { margin: 0 0 10px 0; font-size: 2rem; font-weight: 700; line-height: 1.2; color: #0F1111; }
+    .price-block { margin-bottom: 15px; border-bottom: 1px solid #e7e7e7; padding-bottom: 20px; }
+    .current-price { font-size: 1.8rem; font-weight: 500; color: #0F1111; }
+    .discount-badge { color: #CC0C39; font-size: 1.8rem; font-weight: 300; margin-right: 10px; }
+    .mrp-price { text-decoration: line-through; color: #565959; font-size: 0.9rem; margin-left: 10px;}
 
-    /* Size Selector - Custom Radio Style */
-    .size-wrapper { margin-bottom: 25px; }
-    .size-label { font-weight: bold; display: block; margin-bottom: 10px; font-size: 0.9rem; }
-    .size-options { display: flex; gap: 10px; flex-wrap: wrap; }
+    /* --- 2. BUTTONS STYLES --- */
     
-    /* Hiding actual radio button */
-    .size-options input[type="radio"] { display: none; }
-    
-    /* Styling the label as a button */
-    .size-btn-label {
-        border: 1px solid #ddd;
-        background: #fff;
-        padding: 12px 25px;
-        border-radius: 30px;
+    /* Game Button (Attention Seeker) */
+    .btn-game-offer {
+        background: linear-gradient(45deg, #ff9900, #ffc107);
+        color: #000;
+        border: 2px dashed #000;
+        width: 100%;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 800;
+        margin-bottom: 20px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         transition: 0.2s;
-        font-weight: 500;
-        min-width: 50px;
-        text-align: center;
+        text-transform: uppercase;
+        animation: pulse 2s infinite;
     }
-    /* When radio is checked */
-    .size-options input[type="radio"]:checked + .size-btn-label {
-        background: #000;
-        color: #fff;
-        border-color: #000;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    .size-btn-label:hover { border-color: #000; }
+    .btn-game-offer:hover { transform: scale(1.02); background: #ff9900; }
 
-    /* 3D Fit Button */
+    /* 3D Fit Button (Functional) */
     .btn-3d-trial {
         background: linear-gradient(135deg, #222, #444);
         color: white;
         border: none;
         width: 100%;
-        padding: 12px;
+        padding: 10px;
         border-radius: 8px;
         font-weight: bold;
+        margin-top: 15px;
         margin-bottom: 20px;
         cursor: pointer;
         display: flex;
@@ -87,50 +86,61 @@
         justify-content: center;
         gap: 10px;
         transition: 0.3s;
+        font-size: 14px;
     }
     .btn-3d-trial:hover { background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 165, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0); }
+    }
+
+    /* Size Selector */
+    .size-wrapper { margin-bottom: 15px; }
+    .size-label { font-weight: bold; display: block; margin-bottom: 10px; font-size: 0.9rem; }
+    .size-options { display: flex; gap: 10px; }
+    .size-btn-label {
+        border: 1px solid #ddd; padding: 10px 20px;
+        border-radius: 4px; cursor: pointer; transition: 0.2s;
+        min-width: 40px; text-align: center;
+    }
+    input[type="radio"]:checked + .size-btn-label {
+        border: 1px solid #e77600; background: #fff0d6; color: #e77600; font-weight:bold;
+    }
+    input[type="radio"] { display: none; }
 
     /* Action Buttons */
-    .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+    .action-buttons { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
     .btn-main {
-        border: none;
-        padding: 16px 0;
-        width: 100%;
-        border-radius: 50px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        text-transform: uppercase;
-        text-align: center;
-        text-decoration: none;
+        border: none; padding: 14px 0; width: 100%; border-radius: 25px;
+        font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
     }
-    .btn-cart { background-color: #f0f0f0; color: #000; }
-    .btn-cart:hover { background-color: #e0e0e0; }
-    .btn-buy { background-color: #000; color: #fff; }
-    .btn-buy:hover { background-color: #333; }
+    .btn-cart { background-color: #FFD814; color: #0F1111; }
+    .btn-cart:hover { background-color: #F7CA00; }
+    .btn-buy { background-color: #FFA41C; color: #0F1111; }
+    .btn-buy:hover { background-color: #FA8900; }
 
-    /* Description */
-    .details-box { border-top: 1px solid #eee; padding: 20px 0; }
-    .details-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; }
-    .details-text { color: #666; line-height: 1.6; font-size: 0.95rem; }
-
-    /* Ratings */
-    .rating-section { margin-top: 60px; border-top: 1px solid #ddd; padding-top: 40px; display: flex; gap: 60px; align-items: center; }
-    .big-rating { font-size: 5rem; font-weight: bold; line-height: 1; }
-    .stars-container { flex-grow: 1; max-width: 400px; }
-    .star-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .progress-bar { background: #eee; height: 8px; width: 100%; border-radius: 4px; overflow: hidden; }
-    .fill { background: #000; height: 100%; display: block; }
-
-    /* Mobile */
-    @media (max-width: 768px) {
-        .product-wrapper { grid-template-columns: 1fr; gap: 20px; }
-        .product-info { position: static; }
-        .rating-section { flex-direction: column; align-items: flex-start; gap: 20px; }
-        .action-buttons { grid-template-columns: 1fr; }
+    /* --- 3. MODAL STYLES (Game & 3D) --- */
+    
+    /* Game Modal Styles */
+    .game-circle {
+        width: 150px; height: 150px;
+        background: #ff3b30; color: white;
+        border-radius: 50%; border: 5px solid white;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; font-weight: bold;
+        cursor: pointer; user-select: none;
+        transition: transform 0.05s;
+        margin: 0 auto;
     }
+    .game-circle:active { transform: scale(0.9); background: #d32f2f; }
+    .game-timer { font-size: 40px; font-weight: 800; color: #333; margin: 10px 0; font-family: monospace; }
+    .game-progress { height: 10px; background: #eee; border-radius: 5px; margin: 20px 0; overflow: hidden; }
+    .game-bar { height: 100%; background: #28a745; width: 0%; transition: width 0.1s; }
 
-    /* --- 2. 3D MODAL STYLES (From Old Code) --- */
+    /* 3D Modal Styles */
     .studio-bg {
         width: 100%; height: 100%;
         background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 100%);
@@ -159,63 +169,61 @@
         z-index: 50; display: flex; align-items: center; gap: 10px;
     }
     .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #28a745; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .product-wrapper { grid-template-columns: 1fr; gap: 20px; }
+        .product-info { position: static; }
+    }
 </style>
 
 <div class="product-container">
-
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb" style="background:none; padding:0; margin-bottom:20px; font-size:13px; color:#888;">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}" style="color:#888; text-decoration:none;">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
-        </ol>
+    
+    <nav style="font-size:12px; color:#565959; margin-bottom:15px;">
+        Home > Men > T-Shirts > {{ product.name }}
     </nav>
 
     <div class="product-wrapper">
         
         <div class="product-gallery">
             {% if product.image_url %}
-                <img src="{{ product.image_url }}" alt="{{ product.name }}">
-                <img src="{{ product.image_url }}" style="opacity:0.5; filter:grayscale(100%);" title="Gallery Placeholder">
+                <img src="{{ product.image_url }}" alt="Front View">
+                <img src="{{ product.image_url }}" style="filter: brightness(0.9);" alt="Side View">
+                <img src="{{ product.image_url }}" style="filter: sepia(0.3);" alt="Detail View">
+                <img src="{{ product.image_url }}" style="filter: grayscale(1);" alt="Back View">
             {% elif product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                <img src="{{ product.image.url }}" style="opacity:0.5; filter:grayscale(100%);">
+                <img src="{{ product.image.url }}" alt="Front View">
+                <img src="{{ product.image.url }}" style="filter: brightness(0.9);" alt="Side View">
             {% else %}
-                <img src="https://via.placeholder.com/600" alt="No Image">
+                <img src="https://via.placeholder.com/600x700" alt="No Image">
             {% endif %}
         </div>
 
         <div class="product-info">
-            <span class="category-tag">{{ product.category }}</span>
             <h1 class="product-title">{{ product.name }}</h1>
+            <a href="#" style="font-size:14px; color:#007185; text-decoration:none;">Visit the TrendFlix Store</a>
             
-            <div class="price-block">
+            <div class="price-block mt-2">
+                <span class="discount-badge">-25%</span>
                 <span class="current-price">{{ product.selling_price|currency:request }}</span>
-                {% if product.cost_price %}
-                    <span class="mrp-price">{{ product.cost_price|add:"500"|currency:request }}</span>
-                    <span class="discount-badge">-25% OFF</span>
-                {% endif %}
+                <div style="color:#565959; font-size:14px;">M.R.P.: <span class="mrp-price">{{ product.cost_price|add:"500"|currency:request }}</span></div>
+                <div style="font-size:13px; color:#007185; margin-top:5px;">Inclusive of all taxes</div>
             </div>
+
+            <button class="btn-game-offer" data-bs-toggle="modal" data-bs-target="#gameModal">
+                <i class="fas fa-gamepad"></i> &nbsp; Play to Win 20% Off!
+            </button>
 
             <form action="{% url 'add_to_cart' product.id %}" method="POST">
                 {% csrf_token %}
                 
                 <div class="size-wrapper">
-                    <span class="size-label">Select Size</span>
+                    <span class="size-label">Size: Medium</span>
                     <div class="size-options">
-                        <input type="radio" name="size" id="size-s" value="S">
-                        <label for="size-s" class="size-btn-label">S</label>
-
-                        <input type="radio" name="size" id="size-m" value="M" checked>
-                        <label for="size-m" class="size-btn-label">M</label>
-
-                        <input type="radio" name="size" id="size-l" value="L">
-                        <label for="size-l" class="size-btn-label">L</label>
-
-                        <input type="radio" name="size" id="size-xl" value="XL">
-                        <label for="size-xl" class="size-btn-label">XL</label>
-                        
-                        <input type="radio" name="size" id="size-xxl" value="XXL">
-                        <label for="size-xxl" class="size-btn-label">XXL</label>
+                        <input type="radio" name="size" id="s" value="S"><label for="s" class="size-btn-label">S</label>
+                        <input type="radio" name="size" id="m" value="M" checked><label for="m" class="size-btn-label">M</label>
+                        <input type="radio" name="size" id="l" value="L"><label for="l" class="size-btn-label">L</label>
+                        <input type="radio" name="size" id="xl" value="XL"><label for="xl" class="size-btn-label">XL</label>
                     </div>
                 </div>
 
@@ -229,48 +237,61 @@
                 </div>
             </form>
 
-            <div class="details-box">
-                <div class="details-title">Description</div>
-                <p class="details-text">
-                    {{ product.description|default:"Loose-fit sweatshirt hoodie in medium weight cotton-blend fabric. Soft brushed inside for comfort." }}
-                </p>
+            <div style="font-size:14px; color:#333;">
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <i class="fas fa-truck" style="color:#565959;"></i> <span>Free Delivery by <b>Tuesday</b></span>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <i class="fas fa-undo" style="color:#565959;"></i> <span>10 Days Return Policy</span>
+                </div>
             </div>
             
-            <div class="details-box">
-                <div class="details-title">Shipping & Returns</div>
-                <p class="details-text">Free shipping on orders over ₹999. Easy 7-day return policy.</p>
+            <hr>
+            <h4 style="font-size:16px; font-weight:bold;">About this item</h4>
+            <p style="font-size:14px; color:#333; line-height:1.5;">{{ product.description }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="gameModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <div id="gameStart">
+                <h3 class="fw-bold mb-3">⚡ Speed Finger Challenge!</h3>
+                <p>Tap the button <b>50 times</b> in just <b>10 seconds</b> to unlock a special coupon!</p>
+                <div class="alert alert-warning small">
+                    <i class="fas fa-info-circle"></i> Coupon valid only if you buy now!
+                </div>
+                <button class="btn btn-dark btn-lg w-100 fw-bold" onclick="startGame()">START GAME 🚀</button>
+            </div>
+
+            <div id="gamePlay" style="display: none;">
+                <div class="game-timer" id="timerDisplay">10.00</div>
+                <div class="game-circle" id="tapBtn" onclick="tapAction()">
+                    <span id="scoreDisplay">0</span> / 50
+                </div>
+                <div class="game-progress"><div class="game-bar" id="progressBar"></div></div>
+            </div>
+
+            <div id="gameWin" style="display: none;">
+                <h2 class="text-success fw-bold">🎉 YOU WON! 🎉</h2>
+                <div class="bg-light p-3 border border-dashed border-dark rounded mb-3">
+                    <span class="fs-2 fw-bold text-danger" style="letter-spacing: 2px;">SPEEDY20</span>
+                </div>
+                <button class="btn btn-warning w-100 fw-bold" data-bs-dismiss="modal">Okay, I'll Buy Now!</button>
+            </div>
+
+            <div id="gameLose" style="display: none;">
+                <h2 class="text-secondary fw-bold">😢 Time's Up!</h2>
+                <h1 style="font-size: 50px;">🐌</h1>
+                <button class="btn btn-outline-dark w-100 mt-3" onclick="resetGame()">Try Again 🔄</button>
             </div>
         </div>
     </div>
-
-    <div class="rating-section">
-        <div>
-            <div class="big-rating">4.5</div>
-            <p style="color: #666;">(50 Reviews)</p>
-        </div>
-        <div class="stars-container">
-            <div class="star-row"><span>5 ★</span> <div class="progress-bar"><span class="fill" style="width: 70%"></span></div></div>
-            <div class="star-row"><span>4 ★</span> <div class="progress-bar"><span class="fill" style="width: 20%"></span></div></div>
-            <div class="star-row"><span>3 ★</span> <div class="progress-bar"><span class="fill" style="width: 5%"></span></div></div>
-        </div>
-    </div>
-
-    <div class="mt-5 mb-5">
-        <h2 style="font-size:1.5rem; font-weight:bold; margin-bottom:20px;">You might also like</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-            <div style="cursor:pointer;">
-                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=400" style="width:100%; border-radius:10px;">
-                <h3 style="font-size:16px; margin:10px 0 5px;">Gradient Tee</h3>
-                <div style="color:#666;">$22.00</div>
-            </div>
-            <div style="cursor:pointer;">
-                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=400" style="width:100%; border-radius:10px;">
-                <h3 style="font-size:16px; margin:10px 0 5px;">Striped Jacket</h3>
-                <div style="color:#666;">$45.00</div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <div class="modal fade" id="real3DModal" tabindex="-1" aria-hidden="true">
@@ -280,32 +301,25 @@
                 
                 <div class="col-lg-3 p-4 d-flex flex-column justify-content-center bg-white shadow-sm" style="z-index:100;">
                     <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-user-cog me-2"></i>Fit Config</h4>
-                    
                     <div class="mb-4">
                         <label class="small fw-bold text-muted mb-2">GENDER</label>
                         <div class="btn-group w-100" role="group">
-                            <input type="radio" class="btn-check" name="realGender" id="rg_male" autocomplete="off" checked onclick="setRealGender('male')">
+                            <input type="radio" class="btn-check" name="realGender" id="rg_male" checked onclick="setRealGender('male')">
                             <label class="btn btn-outline-dark" for="rg_male">Male</label>
-
-                            <input type="radio" class="btn-check" name="realGender" id="rg_female" autocomplete="off" onclick="setRealGender('female')">
+                            <input type="radio" class="btn-check" name="realGender" id="rg_female" onclick="setRealGender('female')">
                             <label class="btn btn-outline-dark" for="rg_female">Female</label>
                         </div>
                     </div>
-
                     <div class="mb-4">
                         <label class="small fw-bold text-muted">HEIGHT (CM) - <span id="valHeight">175</span></label>
                         <input type="range" class="form-range" min="150" max="210" value="175" id="rangeHeight" oninput="updateRealFit()">
                     </div>
-
                     <div class="mb-4">
                         <label class="small fw-bold text-muted">WEIGHT (KG) - <span id="valWeight">75</span></label>
                         <input type="range" class="form-range" min="50" max="150" value="75" id="rangeWeight" oninput="updateRealFit()">
                     </div>
-
                     <div class="mt-auto">
-                        <button class="btn btn-dark w-100 fw-bold rounded-pill py-3" data-bs-dismiss="modal">
-                            Close & Buy
-                        </button>
+                        <button class="btn btn-dark w-100 fw-bold rounded-pill py-3" data-bs-dismiss="modal">Confirm Size</button>
                     </div>
                 </div>
 
@@ -314,9 +328,7 @@
                         <div class="status-dot" id="statusDot"></div>
                         <span id="fitStatus">Perfect Fit</span>
                     </div>
-
                     <div id="realModel" class="model-container" style="background-image: url('https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png');"></div>
-
                     <div class="shirt-layer" id="realShirtContainer">
                         {% if product.image_url %}
                             <img src="{{ product.image_url }}" class="shirt-img">
@@ -327,6 +339,7 @@
                         {% endif %}
                     </div>
                 </div>
+
             </div>
             <button type="button" class="btn-close position-absolute top-0 end-0 m-4" data-bs-dismiss="modal"></button>
         </div>
@@ -337,14 +350,65 @@
 
 {% block extra_js %}
 <script>
-    // --- JS FOR 3D MODEL (Preserved) ---
+    // --- 1. GAME LOGIC ---
+    let clicks = 0;
+    let timeLeft = 10.00;
+    let gameTimer;
+    let isPlaying = false;
+    const targetClicks = 50;
+
+    function startGame() {
+        document.getElementById('gameStart').style.display = 'none';
+        document.getElementById('gamePlay').style.display = 'block';
+        document.getElementById('gameLose').style.display = 'none';
+        document.getElementById('gameWin').style.display = 'none';
+        
+        clicks = 0; timeLeft = 10.00; isPlaying = true; updateScore();
+
+        gameTimer = setInterval(() => {
+            timeLeft -= 0.01;
+            document.getElementById('timerDisplay').innerText = timeLeft.toFixed(2);
+            if (timeLeft <= 0) endGame(false);
+        }, 10);
+    }
+
+    function tapAction() {
+        if (!isPlaying) return;
+        clicks++;
+        updateScore();
+        
+        let rot = Math.random() * 20 - 10;
+        document.getElementById('tapBtn').style.transform = `scale(0.95) rotate(${rot}deg)`;
+        setTimeout(() => { document.getElementById('tapBtn').style.transform = `scale(1) rotate(0deg)`; }, 50);
+
+        if (clicks >= targetClicks) endGame(true);
+    }
+
+    function updateScore() {
+        document.getElementById('scoreDisplay').innerText = clicks;
+        document.getElementById('progressBar').style.width = (clicks / targetClicks) * 100 + "%";
+    }
+
+    function endGame(win) {
+        clearInterval(gameTimer);
+        isPlaying = false;
+        document.getElementById('gamePlay').style.display = 'none';
+        if (win) document.getElementById('gameWin').style.display = 'block';
+        else document.getElementById('gameLose').style.display = 'block';
+    }
+
+    function resetGame() {
+        document.getElementById('gameLose').style.display = 'none';
+        document.getElementById('gameStart').style.display = 'block';
+    }
+
+    // --- 2. 3D FIT LOGIC ---
     const maleRealUrl = "https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png"; 
     const femaleRealUrl = "https://pngimg.com/uploads/mannequin/mannequin_PNG17.png"; 
     
     function setRealGender(gender) {
         const model = document.getElementById('realModel');
         const shirt = document.getElementById('realShirtContainer');
-        
         if(gender === 'male') {
             model.style.backgroundImage = `url('${maleRealUrl}')`;
             shirt.style.top = "21%"; shirt.style.width = "155px";
@@ -358,7 +422,6 @@
     function updateRealFit() {
         const height = document.getElementById('rangeHeight').value;
         const weight = document.getElementById('rangeWeight').value;
-        
         document.getElementById('valHeight').innerText = height;
         document.getElementById('valWeight').innerText = weight;
 
