@@ -5,250 +5,221 @@
 {% block content %}
 <style>
     /* =========================================
-       DESKTOP STYLES (Original Website Design)
+       🖥️ DESKTOP STYLES (Pc/Laptop only)
        ========================================= */
-    .hero-wrap { padding: 30px 0; }
-    .main-banner { height: 450px; background-size: cover; background-position: center; border-radius: 10px; position: relative; overflow: hidden; display: flex; align-items: center; padding: 50px; }
-    .side-banner { height: 215px; background-size: cover; background-position: center; border-radius: 10px; position: relative; display: flex; align-items: center; padding: 30px; margin-bottom: 20px; transition: 0.3s; }
-    .side-banner:last-child { margin-bottom: 0; }
-    
-    /* Product Card Desktop */
-    .product-card { border: 1px solid #f0f0f0; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; position: relative; margin-bottom: 30px; }
-    .product-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-color: white; }
-    .product-img-wrap { height: 280px; position: relative; overflow: hidden; background: #f9f9f9; }
-    .product-img-link img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-    .product-card:hover .product-img-link img { transform: scale(1.05); }
+    @media (min-width: 769px) {
+        .hero-wrap { padding: 30px 0; }
+        .main-banner { height: 450px; background-size: cover; background-position: center; border-radius: 10px; padding: 50px; display: flex; align-items: center; }
+        .side-banner { height: 215px; background-size: cover; background-position: center; border-radius: 10px; padding: 30px; display: flex; align-items: center; margin-bottom: 20px; transition: 0.3s; }
+        .side-banner:hover { transform: translateY(-5px); }
+        
+        /* Desktop Product Card */
+        .product-card { border: 1px solid #f0f0f0; border-radius: 8px; overflow: hidden; transition: 0.3s; background: white; margin-bottom: 30px; }
+        .product-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-color: white; }
+        .product-img-wrap { height: 280px; position: relative; background: #f9f9f9; overflow: hidden; }
+        .product-img-link img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-card:hover .product-img-link img { transform: scale(1.05); }
+        
+        /* Desktop Actions */
+        .product-actions { position: absolute; top: 15px; right: -50px; transition: 0.3s; display: flex; flex-direction: column; gap: 10px; }
+        .product-card:hover .product-actions { right: 15px; }
+        .action-btn { width: 35px; height: 35px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .action-btn:hover { background: #0d6efd; color: white; }
 
-    /* Actions Desktop */
-    .product-actions { position: absolute; top: 15px; right: -50px; transition: 0.3s; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
-    .product-card:hover .product-actions { right: 15px; }
-    .action-btn { width: 35px; height: 35px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; box-shadow: 0 3px 10px rgba(0,0,0,0.1); transition: 0.3s; }
-    .action-btn:hover { background: #0d6efd; color: white; }
-
-    .product-info { padding: 15px; text-align: center; }
-    .product-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .product-price { color: #0d6efd; font-weight: 700; font-size: 16px; }
-    .btn-shop { background: #0d6efd; color: white; padding: 10px 30px; border-radius: 30px; font-weight: 600; border: none; transition: 0.3s; text-decoration: none; display: inline-block; }
-
-    /* Categories Desktop */
-    .cat-circle-item { text-align: center; margin: 30px 0; transition: 0.3s; width: 120px; display: inline-block;}
-    .cat-img-box { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 15px; border: 2px solid transparent; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    .cat-circle-item:hover .cat-img-box { border-color: #0d6efd; }
-    .cat-img-box img { width: 100%; height: 100%; object-fit: cover; }
-
+        /* Desktop Categories */
+        .cat-circle-item { text-align: center; width: 120px; display: inline-block; margin: 20px; transition: 0.3s; }
+        .cat-circle-item:hover { transform: translateY(-5px); }
+        .cat-img-box { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 15px; border: 2px solid transparent; }
+        .cat-circle-item:hover .cat-img-box { border-color: #0d6efd; }
+        
+        /* Hide Mobile Elements */
+        .mobile-only { display: none !important; }
+    }
 
     /* =========================================
-       🔥 MOBILE APP STYLES (Myntra/Ajio Look) 🔥
+       📱 MOBILE APP STYLES (Phone Only)
        ========================================= */
     @media (max-width: 768px) {
-        body { background-color: #f5f5f5; padding-bottom: 80px; } /* App background slight grey */
+        body { background-color: #fff; padding-bottom: 70px; }
         
-        /* 1. Header & Banner Clean up */
-        .hero-wrap { padding: 10px 10px; background: white; margin-bottom: 10px; }
-        .main-banner { height: 200px; padding: 15px; border-radius: 12px; }
-        .main-banner h1 { font-size: 22px; margin-bottom: 5px; }
-        .mobile-hidden { display: none !important; }
+        /* Mobile Layout Fixes */
+        .desktop-only { display: none !important; }
+        .container { padding-left: 10px; padding-right: 10px; }
+        
+        /* 1. App Banner */
+        .hero-wrap { padding: 10px 0; }
+        .main-banner { height: 200px; border-radius: 12px; background-size: cover; background-position: center; padding: 20px; display: flex; align-items: center; }
+        .main-banner h1 { font-size: 22px; line-height: 1.2; margin-bottom: 5px; }
+        .main-banner h4 { font-size: 10px; margin-bottom: 5px; }
+        .btn-shop { padding: 5px 15px; font-size: 12px; border-radius: 20px; background: white; color: black; border: none; font-weight: bold; }
 
-        /* 2. Categories (Instagram Stories Style) */
-        .category-section-mobile { background: white; padding: 15px 0; margin-bottom: 10px; }
-        .category-container-scroll {
+        /* 2. Instagram Story Style Categories */
+        .category-scroll-container {
             display: flex;
             overflow-x: auto;
-            padding: 0 15px;
             gap: 15px;
-            white-space: nowrap;
-            scrollbar-width: none;
+            padding: 10px 5px;
+            scrollbar-width: none; /* Hide scrollbar */
         }
-        .category-container-scroll::-webkit-scrollbar { display: none; }
+        .category-scroll-container::-webkit-scrollbar { display: none; }
         
-        .cat-circle-item { margin: 0; width: auto; display: flex; flex-direction: column; align-items: center; }
-        /* Pink Ring for "Story" feel */
-        .cat-img-box { width: 65px; height: 65px; margin-bottom: 5px; border: 2px solid #ff3f6c; padding: 2px; } 
-        .cat-name { font-size: 11px; font-weight: 500; color: #333; }
+        .cat-circle-item { display: flex; flex-direction: column; align-items: center; width: 70px; flex-shrink: 0; }
+        .cat-img-box { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff3f6c; padding: 2px; margin-bottom: 5px; }
+        .cat-img-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .cat-name { font-size: 11px; color: #333; font-weight: 500; text-align: center; }
 
-        /* 3. Product Grid (Professional App Grid) */
-        .products-section-mobile { background: white; padding: 15px 10px; }
-        .section-header-mobile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        /* 3. Myntra Style Product Grid */
+        .products-grid-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .product-card { border: none; margin-bottom: 10px; }
         
-        .product-card { 
-            border: none; 
-            margin-bottom: 0; 
-            box-shadow: none; 
-            background: transparent; 
-        }
-        
-        /* Taller Image for Fashion (Aspect Ratio 3:4) */
         .product-img-wrap { 
-            height: 240px; 
+            height: 230px; /* Taller images like fashion apps */
             border-radius: 8px; 
-            background: #eee;
-            margin-bottom: 8px;
+            overflow: hidden; 
+            background: #f4f4f4; 
+            position: relative;
         }
+        .product-img-link img { width: 100%; height: 100%; object-fit: cover; }
         
-        .product-info { padding: 0; text-align: left; }
-        .product-title { font-size: 13px; color: #282c3f; margin-bottom: 2px; font-weight: 400; }
-        .product-cat { display: none; }
-        .product-price { font-size: 14px; color: #282c3f; font-weight: 700; }
-        .old-price { font-size: 11px; color: #999; font-weight: 400; }
+        .product-info { padding: 8px 0; text-align: left; }
+        .product-title { font-size: 13px; color: #282c3f; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-cat { font-size: 10px; color: #999; text-transform: uppercase; margin-bottom: 2px; }
+        .product-price { font-size: 14px; font-weight: 700; color: #282c3f; }
+        .old-price { font-size: 11px; color: #999; text-decoration: line-through; margin-left: 5px; }
         
-        .product-actions { display: none; } /* Hide Hover Icons */
-        .btn-add-mobile { display: none; } /* Clean look, click image to buy */
+        /* Hide actions on mobile for clean look */
+        .product-actions { display: none; }
 
-        /* 4. Bottom Navigation (Fixed App Bar) */
+        /* 4. Bottom Navigation */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: white; border-top: 1px solid #eee;
             display: flex; justify-content: space-around; padding: 12px 0;
-            z-index: 1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+            z-index: 9999; box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
         }
-        .nav-item-app { text-align: center; color: #666; text-decoration: none; font-size: 10px; font-weight: 500; }
-        .nav-item-app i { font-size: 20px; display: block; margin-bottom: 3px; }
-        .nav-item-app.active { color: #ff3f6c; font-weight: 700; } /* Myntra Red Highlight */
+        .nav-item-app { text-align: center; text-decoration: none; color: #666; font-size: 10px; font-weight: 500; }
+        .nav-item-app i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item-app.active { color: #ff3f6c; font-weight: 700; }
     }
 </style>
 
-<div class="hero-wrap">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mb-4 mb-lg-0">
-                <div class="main-banner" style="background-image: url('{% if main_banner %}{{ main_banner.image.url }}{% else %}https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1470&q=80{% endif %}');">
-                    <div class="hero-content text-white">
-                        {% if main_banner %}
-                            <h4>{{ main_banner.small_text }}</h4>
-                            <h1>{{ main_banner.main_text }}</h1>
-                            <a href="{{ main_banner.button_link }}" class="btn-shop">{{ main_banner.button_text }}</a>
-                        {% else %}
-                            <h4>New Collection</h4>
-                            <h1>Summer Sale <br> Min 40% Off</h1>
-                            <a href="#" class="btn-shop">SHOP NOW</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 mobile-hidden">
-                <div class="side-banner" style="background-image: url('{% if side_top %}{{ side_top.image.url }}{% else %}https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1470&q=80{% endif %}');">
-                    <div class="hero-content text-white">
-                        {% if side_top %}
-                            <h4>{{ side_top.small_text }}</h4>
-                            <h2>{{ side_top.main_text }}</h2>
-                            <a href="{{ side_top.button_link }}" class="text-white fw-bold text-decoration-underline">{{ side_top.button_text }}</a>
-                        {% else %}
-                            <h4>Men's Shoes</h4>
-                            <h2>Up to 50% Off</h2>
-                            <a href="#" class="text-white fw-bold text-decoration-underline">Discover Now</a>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="side-banner" style="background-image: url('{% if side_bottom %}{{ side_bottom.image.url }}{% else %}https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=870&q=80{% endif %}');">
-                    <div class="hero-content text-white">
-                        {% if side_bottom %}
-                            <h4>{{ side_bottom.small_text }}</h4>
-                            <h2>{{ side_bottom.main_text }}</h2>
-                            <a href="{{ side_bottom.button_link }}" class="text-white fw-bold text-decoration-underline">{{ side_bottom.button_text }}</a>
-                        {% else %}
-                            <h4>Accessories</h4>
-                            <h2>New Arrivals</h2>
-                            <a href="#" class="text-white fw-bold text-decoration-underline">Shop Bags</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="category-section-mobile">
-    <div class="container">
-        <h6 class="fw-bold m-0 mb-3 d-none d-md-block text-center">Shop By Category</h6>
-        
-        <div class="category-container-scroll d-md-flex justify-content-center flex-wrap" style="gap: 20px;">
-            {% for cat in categories %}
-            <div class="cat-circle-item">
-                <div class="cat-img-box">
-                    {% if cat.image %}
-                        <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+<div class="container hero-wrap">
+    <div class="row">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="main-banner" style="background-image: url('{% if main_banner %}{{ main_banner.image.url }}{% else %}https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1470&q=80{% endif %}');">
+                <div class="hero-content text-white">
+                    {% if main_banner %}
+                        <h4>{{ main_banner.small_text }}</h4>
+                        <h1>{{ main_banner.main_text }}</h1>
+                        <a href="{{ main_banner.button_link }}" class="btn-shop">SHOP NOW</a>
                     {% else %}
-                        <img src="https://via.placeholder.com/100" alt="{{ cat.name }}">
+                        <h4>New Collection</h4>
+                        <h1>Summer Sale <br> Min 40% Off</h1>
+                        <a href="#" class="btn-shop">SHOP NOW</a>
                     {% endif %}
                 </div>
-                <div class="cat-name">{{ cat.name }}</div>
             </div>
-            {% empty %}
-                <p class="text-muted small">No categories</p>
-            {% endfor %}
+        </div>
+
+        <div class="col-lg-4 desktop-only">
+            <div class="side-banner" style="background-image: url('{% if side_top %}{{ side_top.image.url }}{% else %}https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1470&q=80{% endif %}');">
+                <div class="hero-content text-white">
+                    <h4>Men's Shoes</h4>
+                    <h2>Up to 50% Off</h2>
+                </div>
+            </div>
+            <div class="side-banner" style="background-image: url('{% if side_bottom %}{{ side_bottom.image.url }}{% else %}https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=870&q=80{% endif %}');">
+                <div class="hero-content text-white">
+                    <h4>Accessories</h4>
+                    <h2>New Arrivals</h2>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="products-section-mobile">
-    <div class="container">
-        <div class="section-header-mobile">
-            <h3 class="fw-bold m-0" style="font-size: 18px;">Featured Products</h3>
-            <a href="#" class="btn btn-outline-dark btn-sm rounded-pill px-3" style="font-size: 12px;">View All</a>
+<div class="container mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2 mobile-only">
+        <h6 class="fw-bold m-0">Shop by Category</h6>
+    </div>
+    
+    <div class="category-scroll-container d-lg-flex justify-content-center flex-wrap">
+        {% for cat in categories %}
+        <div class="cat-circle-item">
+            <div class="cat-img-box">
+                {% if cat.image %}
+                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/100" alt="{{ cat.name }}">
+                {% endif %}
+            </div>
+            <div class="cat-name">{{ cat.name }}</div>
         </div>
+        {% empty %}
+            <p class="text-muted small">No categories</p>
+        {% endfor %}
+    </div>
+</div>
 
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
-            {% for product in products %}
-            <div class="col">
-                <div class="product-card h-100">
-                    <div class="product-img-wrap">
-                        <a href="{% url 'product_detail' product.id %}" class="product-img-link">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                            {% else %}
-                                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;">
-                                    <i class="fas fa-camera fa-2x"></i>
-                                </div>
-                            {% endif %}
-                        </a>
-                        
-                        <div class="product-actions">
-                            <a href="#" class="action-btn"><i class="far fa-heart"></i></a>
-                            <a href="{% url 'product_detail' product.id %}" class="action-btn"><i class="far fa-eye"></i></a>
-                            <a href="{% url 'add_to_cart' product.id %}" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
-                        </div>
-                    </div>
+<div class="container py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold m-0" style="font-size: 18px;">Featured Products</h4>
+        <a href="#" class="text-dark small text-decoration-none border-bottom border-dark">View All</a>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2 g-lg-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="product-card h-100">
+                <div class="product-img-wrap">
+                    <a href="{% url 'product_detail' product.id %}" class="product-img-link">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;">
+                                <i class="fas fa-camera fa-2x"></i>
+                            </div>
+                        {% endif %}
+                    </a>
                     
-                    <div class="product-info">
-                        <div class="product-cat text-muted small d-none d-md-block">{{ product.category }}</div>
-                        <div class="product-title"><a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">{{ product.name }}</a></div>
-                        
-                        <div class="text-warning small mb-2 d-none d-md-block">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                        </div>
-
-                        <div class="product-price">
-                            {{ product.selling_price|currency:request }}
-                            <span class="old-price text-decoration-line-through ms-1">
-                                ₹ {{ product.cost_price|add:"200" }}
-                            </span>
-                        </div>
+                    <div class="product-actions">
+                        <a href="#" class="action-btn"><i class="far fa-heart"></i></a>
+                        <a href="{% url 'product_detail' product.id %}" class="action-btn"><i class="far fa-eye"></i></a>
+                        <a href="{% url 'add_to_cart' product.id %}" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <div class="product-cat">{{ product.category }}</div>
+                    <div class="product-title"><a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">{{ product.name }}</a></div>
+                    
+                    <div class="product-price">
+                        {{ product.selling_price|currency:request }}
+                        <span class="old-price">₹ {{ product.cost_price|add:"200" }}</span>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
 </div>
 
-<style>
-    /* Desktop Hide */
-    @media (min-width: 769px) { .bottom-nav { display: none; } }
-</style>
-
-<div class="bottom-nav">
+<div class="bottom-nav mobile-only">
     <a href="{% url 'home' %}" class="nav-item-app active">
-        <i class="fas fa-home"></i> Home
+        <i class="fas fa-home"></i>
+        Home
     </a>
     <a href="#" class="nav-item-app">
-        <i class="fas fa-th-large"></i> Categories
+        <i class="fas fa-th-large"></i>
+        Categories
     </a>
     <a href="{% url 'cart' %}" class="nav-item-app">
-        <i class="fas fa-shopping-bag"></i> Cart
+        <i class="fas fa-shopping-bag"></i>
+        Cart
     </a>
     <a href="#" class="nav-item-app">
-        <i class="fas fa-user"></i> Account
+        <i class="fas fa-user"></i>
+        Account
     </a>
 </div>
 
