@@ -100,3 +100,10 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 from .models import Category
 
 admin.site.register(Category)
+from django.contrib import admin
+from .models import Category, Product, SiteSettings, HomeBanner # HomeBanner ah import pannunga
+
+admin.site.register(Category)
+admin.site.register(Product)
+admin.site.register(SiteSettings)
+admin.site.register(HomeBanner) # Itha add pannunga

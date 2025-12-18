@@ -88,33 +88,54 @@
 <div class="container hero-wrap">
     <div class="row">
         <div class="col-lg-8 mb-4 mb-lg-0">
-            <div class="main-banner" style="background-image: url('{% if site_config.hero_banner %}{{ site_config.hero_banner.url }}{% else %}https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80{% endif %}');">
+            <div class="main-banner" style="background-image: url('{% if main_banner %}{{ main_banner.image.url }}{% else %}https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1470&q=80{% endif %}');">
                 <div class="hero-content text-white">
-                    <h4>New Collection</h4>
-                    <h1>Summer Sale <br> Min 40% Off</h1>
-                    <a href="#" class="btn-shop">SHOP NOW</a>
+                    {% if main_banner %}
+                        <h4>{{ main_banner.small_text }}</h4>
+                        <h1>{{ main_banner.main_text }}</h1>
+                        <a href="{{ main_banner.button_link }}" class="btn-shop">{{ main_banner.button_text }}</a>
+                    {% else %}
+                        <h4>New Collection</h4>
+                        <h1>Summer Sale <br> Min 40% Off</h1>
+                        <a href="#" class="btn-shop">SHOP NOW</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
+
         <div class="col-lg-4">
-            <div class="side-banner" style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');">
+            
+            <div class="side-banner" style="background-image: url('{% if side_top %}{{ side_top.image.url }}{% else %}https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1470&q=80{% endif %}');">
                 <div class="hero-content text-white">
-                    <h4>Men's Shoes</h4>
-                    <h2>Up to 50% Off</h2>
-                    <a href="#" class="text-white fw-bold text-decoration-underline">Discover Now</a>
+                    {% if side_top %}
+                        <h4>{{ side_top.small_text }}</h4>
+                        <h2>{{ side_top.main_text }}</h2>
+                        <a href="{{ side_top.button_link }}" class="text-white fw-bold text-decoration-underline">{{ side_top.button_text }}</a>
+                    {% else %}
+                        <h4>Men's Shoes</h4>
+                        <h2>Up to 50% Off</h2>
+                        <a href="#" class="text-white fw-bold text-decoration-underline">Discover Now</a>
+                    {% endif %}
                 </div>
             </div>
-            <div class="side-banner" style="background-image: url('https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80');">
+
+            <div class="side-banner" style="background-image: url('{% if side_bottom %}{{ side_bottom.image.url }}{% else %}https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=870&q=80{% endif %}');">
                 <div class="hero-content text-white">
-                    <h4>Accessories</h4>
-                    <h2>New Arrivals</h2>
-                    <a href="#" class="text-white fw-bold text-decoration-underline">Shop Bags</a>
+                    {% if side_bottom %}
+                        <h4>{{ side_bottom.small_text }}</h4>
+                        <h2>{{ side_bottom.main_text }}</h2>
+                        <a href="{{ side_bottom.button_link }}" class="text-white fw-bold text-decoration-underline">{{ side_bottom.button_text }}</a>
+                    {% else %}
+                        <h4>Accessories</h4>
+                        <h2>New Arrivals</h2>
+                        <a href="#" class="text-white fw-bold text-decoration-underline">Shop Bags</a>
+                    {% endif %}
                 </div>
             </div>
+
         </div>
     </div>
 </div>
-
 <div class="container">
     <div class="flash-sale-bar">
         <div class="flash-text">Flash Sale now on!</div>
@@ -144,6 +165,7 @@
 
     </div>
 </div>
+
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="section-title">Featured Products</h3>

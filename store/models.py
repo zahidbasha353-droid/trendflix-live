@@ -139,3 +139,24 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return "Website Configuration"
+    # --- BANNER MODEL ---
+class HomeBanner(models.Model):
+    POSITIONS = (
+        ('main', 'Main Big Banner (Left Side)'),
+        ('side_top', 'Side Top Banner (Right Top)'),
+        ('side_bottom', 'Side Bottom Banner (Right Bottom)'),
+    )
+    
+    position = models.CharField(max_length=20, choices=POSITIONS, unique=True, help_text="Select where this banner should appear")
+    image = models.ImageField(upload_to='banners/')
+    
+    # Text Control
+    small_text = models.CharField(max_length=100, help_text="Ex: New Collection (Top small text)")
+    main_text = models.CharField(max_length=100, help_text="Ex: Summer Sale (Big bold text)")
+    
+    # Button Control
+    button_text = models.CharField(max_length=50, default="SHOP NOW")
+    button_link = models.CharField(max_length=200, default="#", help_text="Paste product or category link here")
+    
+    def __str__(self):
+        return self.get_position_display()

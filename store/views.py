@@ -232,3 +232,22 @@ from .models import Category
 def home(request):
     categories = Category.objects.all() # Ella categories-ayum edukkom
     return render(request, 'index.html', {'categories': categories})
+from .models import Product, Category, HomeBanner # HomeBanner import pannunga
+
+def home(request):
+    # Fetch Banners based on position
+    main_banner = HomeBanner.objects.filter(position='main').first()
+    side_top = HomeBanner.objects.filter(position='side_top').first()
+    side_bottom = HomeBanner.objects.filter(position='side_bottom').first()
+    
+    categories = Category.objects.all()
+    products = Product.objects.all()
+    
+    context = {
+        'main_banner': main_banner,
+        'side_top': side_top,
+        'side_bottom': side_bottom,
+        'categories': categories,
+        'products': products
+    }
+    return render(request, 'index.html', context)
