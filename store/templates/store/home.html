@@ -14,7 +14,7 @@
     .hero-content h4 { font-weight: 300; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
     .hero-content h1 { font-size: 50px; font-weight: 700; margin-bottom: 20px; line-height: 1.2; }
     
-    /* --- FLASH SALE BAR (From Old Code) --- */
+    /* --- FLASH SALE BAR --- */
     .flash-sale-bar {
         background: #fdf59a; padding: 15px 0; margin: 0 0 40px 0;
         display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;
@@ -54,6 +54,31 @@
     
     .btn-shop { background: #0d6efd; color: white; padding: 10px 30px; border-radius: 30px; font-weight: 600; border: none; transition: 0.3s; }
     .btn-shop:hover { background: #004bb5; box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3); }
+
+    /* --- NEW MIXED SECTION STYLES --- */
+    .mixed-section { background: #fff; padding: 40px 0; border-top: 1px solid #eee; }
+    
+    /* Left Sidebar Slider */
+    .vertical-banner-slider { 
+        height: 100%; min-height: 400px; 
+        border-radius: 8px; overflow: hidden; position: relative; 
+    }
+    .carousel-item-custom { 
+        height: 400px; background-size: cover; background-position: center; 
+        position: relative;
+    }
+    .slider-content {
+        position: absolute; bottom: 30px; left: 20px; right: 20px;
+        background: rgba(255,255,255,0.9); padding: 20px;
+        text-align: center; border-radius: 5px;
+    }
+    .slider-title { font-weight: 700; font-size: 18px; margin-bottom: 5px; text-transform: uppercase; }
+    .slider-sub { font-size: 13px; color: #666; margin-bottom: 10px; }
+    
+    /* Right Side Product Grid Adjustment */
+    .mini-card { margin-bottom: 20px; border: 1px solid #f0f0f0; border-radius: 8px; transition: 0.3s; }
+    .mini-card:hover { border-color: #000; transform: translateY(-3px); }
+
 </style>
 
 <div class="container hero-wrap">
@@ -157,8 +182,7 @@
                     <div class="product-price">
                         {{ product.selling_price|currency:request }}
                         <span class="old-price">
-                            {% comment %} Calculation logic requires custom filter or backend, simplified display here {% endcomment %}
-                             ₹ {{ product.cost_price|add:"200" }}
+                            ₹ {{ product.cost_price|add:"200" }}
                         </span>
                     </div>
                 </div>
@@ -168,7 +192,82 @@
     </div>
 </div>
 
-<div class="container mb-5">
+<div class="mixed-section">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold text-uppercase m-0" style="letter-spacing: 1px;">Men's Fashion</h4>
+                    <a href="#" class="small text-muted text-decoration-underline">View All</a>
+                </div>
+
+                <div id="menSlider" class="carousel slide vertical-banner-slider shadow-sm" data-bs-ride="carousel">
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item active carousel-item-custom" style="background-image: url('https://images.unsplash.com/photo-1550246140-5119980d708e?q=80&w=1000');">
+                            <div class="slider-content">
+                                <div class="slider-title">Men's Accessories</div>
+                                <div class="slider-sub">Sale 30% Off</div>
+                                <a href="#" class="fw-bold text-dark small text-decoration-underline">SHOP NOW</a>
+                            </div>
+                        </div>
+                        <div class="carousel-item carousel-item-custom" style="background-image: url('https://images.unsplash.com/photo-1617137968427-85924c809a22?q=80&w=1000');">
+                            <div class="slider-content">
+                                <div class="slider-title">Summer Vibes</div>
+                                <div class="slider-sub">New T-Shirts Arrrived</div>
+                                <a href="#" class="fw-bold text-dark small text-decoration-underline">DISCOVER</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#menSlider" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#menSlider" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-end mb-3 gap-3 small text-uppercase fw-bold text-muted">
+                    <a href="#" class="text-dark border-bottom border-dark border-2 pb-1">T-Shirts</a>
+                    <a href="#" class="text-muted hover-dark">Jeans</a>
+                    <a href="#" class="text-muted hover-dark">Jackets</a>
+                </div>
+
+                <div class="row row-cols-2 row-cols-md-3 g-3">
+                    {% for product in products|slice:":6" %}
+                    <div class="col">
+                        <div class="product-card mini-card">
+                            <div class="product-img-wrap" style="height: 220px;">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/300x400" alt="No Image">
+                                {% endif %}
+                                <div class="product-actions">
+                                    <a href="{% url 'product_detail' product.id %}" class="action-btn"><i class="far fa-eye"></i></a>
+                                    <a href="{% url 'add_to_cart' product.id %}" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-info p-2">
+                                <div class="product-cat text-muted" style="font-size: 10px;">{{ product.category }}</div>
+                                <div class="product-title" style="font-size: 13px;"><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></div>
+                                <div class="product-price" style="font-size: 14px;">
+                                    {{ product.selling_price|currency:request }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5 mt-5">
     <div class="row g-0 rounded overflow-hidden shadow-sm">
         <div class="col-md-6 bg-light d-flex align-items-center p-5">
             <div>
