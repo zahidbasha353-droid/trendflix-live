@@ -1,176 +1,276 @@
 {% extends 'store/base.html' %}
 {% load static %}
-{% load custom_filters %} {% block content %}
+{% load custom_filters %} 
+
+{% block content %}
 
 <style>
-    /* --- 1. ELITE STANDARD STYLES (Main Page Design) --- */
-    .price-block .current-price { font-size: 28px; font-weight: 700; color: #B12704; }
-    .price-block .mrp-price { text-decoration: line-through; color: #565959; font-size: 14px; }
-    .price-block .save-price { color: #B12704; font-size: 14px; font-weight: 500; }
-    .offer-box { border: 1px solid #ddd; border-radius: 8px; padding: 10px; background: #fff; font-size: 13px; height: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-    .buy-box-sidebar { border: 1px solid #d5d9d9; border-radius: 12px; padding: 20px; background-color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .btn-amazon-cart { background-color: #ffd814; color: #111; width: 100%; border-radius: 50px; padding: 10px; border:none; font-weight: 600; margin-top:8px;}
-    .btn-amazon-buy { background-color: #ffa41c; color: #111; width: 100%; border-radius: 50px; padding: 10px; border:none; font-weight: 600; margin-top:8px; display:block; text-align:center; text-decoration:none;}
-    .size-option { cursor: pointer; border: 1px solid #ccc; padding: 6px 10px; margin-right: 4px; border-radius: 4px; display: inline-block; }
-    .size-option:hover { border-color: #000; background: #f8f9fa; }
-    input[type="radio"] { display: none; }
-    input[type="radio"]:checked + label { background-color: #000; color: #fff; border-color: #000; }
+    /* --- 1. NEW DESIGN STYLES (Clean & Sticky) --- */
+    body { font-family: 'Arial', sans-serif; background-color: #fff; color: #333; }
     
-    /* Trial Button */
-    .btn-trial { background: linear-gradient(135deg, #111, #333); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; position: relative; overflow: hidden; margin-bottom: 12px; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .btn-trial:hover { color: #ffc107; }
-    .buy-box-trust { font-size: 12px; color: #565959; }
-    .buy-box-trust i { color: #007600; width: 20px; text-align: center; }
+    .product-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
-    /* --- 2. REALISTIC 3D STUDIO STYLES (Modal Design) --- */
-    .studio-bg {
+    /* Layout Grid */
+    .product-wrapper {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr; /* Image wider than details */
+        gap: 50px;
+        margin-bottom: 60px;
+    }
+
+    /* Left Side: Gallery */
+    .product-gallery { display: flex; flex-direction: column; gap: 20px; }
+    .product-gallery img {
         width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 100%);
-        position: relative;
-        overflow: hidden;
+        border-radius: 12px;
+        background-color: #f4f4f4;
+        object-fit: cover;
+    }
+
+    /* Right Side: Sticky Details */
+    .product-info {
+        position: sticky;
+        top: 100px; /* Header height adjust pannikalam */
+        height: fit-content;
+    }
+
+    .category-tag { color: #888; font-size: 14px; margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 1px;}
+    .product-title { margin: 0 0 10px 0; font-size: 2.5rem; font-weight: 700; line-height: 1.1; }
+    
+    .price-block { margin-bottom: 25px; align-items: center; display: flex; gap: 15px; }
+    .current-price { font-size: 1.8rem; font-weight: bold; color: #000; }
+    .mrp-price { text-decoration: line-through; color: #888; font-size: 1.1rem; }
+    .discount-badge { background: #ffebeb; color: #d32f2f; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; }
+
+    /* Size Selector - Custom Radio Style */
+    .size-wrapper { margin-bottom: 25px; }
+    .size-label { font-weight: bold; display: block; margin-bottom: 10px; font-size: 0.9rem; }
+    .size-options { display: flex; gap: 10px; flex-wrap: wrap; }
+    
+    /* Hiding actual radio button */
+    .size-options input[type="radio"] { display: none; }
+    
+    /* Styling the label as a button */
+    .size-btn-label {
+        border: 1px solid #ddd;
+        background: #fff;
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-weight: 500;
+        min-width: 50px;
+        text-align: center;
+    }
+    /* When radio is checked */
+    .size-options input[type="radio"]:checked + .size-btn-label {
+        background: #000;
+        color: #fff;
+        border-color: #000;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .size-btn-label:hover { border-color: #000; }
+
+    /* 3D Fit Button */
+    .btn-3d-trial {
+        background: linear-gradient(135deg, #222, #444);
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        cursor: pointer;
         display: flex;
+        align-items: center;
         justify-content: center;
-        align-items: flex-end;
+        gap: 10px;
+        transition: 0.3s;
+    }
+    .btn-3d-trial:hover { background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+    /* Action Buttons */
+    .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+    .btn-main {
+        border: none;
+        padding: 16px 0;
+        width: 100%;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+    }
+    .btn-cart { background-color: #f0f0f0; color: #000; }
+    .btn-cart:hover { background-color: #e0e0e0; }
+    .btn-buy { background-color: #000; color: #fff; }
+    .btn-buy:hover { background-color: #333; }
+
+    /* Description */
+    .details-box { border-top: 1px solid #eee; padding: 20px 0; }
+    .details-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; }
+    .details-text { color: #666; line-height: 1.6; font-size: 0.95rem; }
+
+    /* Ratings */
+    .rating-section { margin-top: 60px; border-top: 1px solid #ddd; padding-top: 40px; display: flex; gap: 60px; align-items: center; }
+    .big-rating { font-size: 5rem; font-weight: bold; line-height: 1; }
+    .stars-container { flex-grow: 1; max-width: 400px; }
+    .star-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .progress-bar { background: #eee; height: 8px; width: 100%; border-radius: 4px; overflow: hidden; }
+    .fill { background: #000; height: 100%; display: block; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .product-wrapper { grid-template-columns: 1fr; gap: 20px; }
+        .product-info { position: static; }
+        .rating-section { flex-direction: column; align-items: flex-start; gap: 20px; }
+        .action-buttons { grid-template-columns: 1fr; }
     }
 
-    /* The Realistic Model Container */
+    /* --- 2. 3D MODAL STYLES (From Old Code) --- */
+    .studio-bg {
+        width: 100%; height: 100%;
+        background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 100%);
+        position: relative; overflow: hidden;
+        display: flex; justify-content: center; align-items: flex-end;
+    }
     .model-container {
-        height: 95%;
-        width: 350px;
-        background-size: contain;
-        background-repeat: no-repeat;
+        height: 95%; width: 350px;
+        background-size: contain; background-repeat: no-repeat;
         background-position: center bottom;
-        position: absolute;
-        bottom: 0;
-        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4));
-        transition: all 0.4s ease;
-        z-index: 10;
+        position: absolute; bottom: 0;
+        transition: all 0.4s ease; z-index: 10;
     }
-
-    /* Shirt Overlay - THE MAGIC BLEND */
     .shirt-layer {
-        position: absolute;
-        top: 21%; /* Male Chest Position Default */
-        left: 50%;
-        transform: translateX(-50%);
-        width: 155px; /* Adjust based on model size */
-        z-index: 20;
-        opacity: 0.96;
+        position: absolute; top: 21%; left: 50%;
+        transform: translateX(-50%); width: 155px;
+        z-index: 20; opacity: 0.96;
         transition: top 0.3s ease, width 0.3s ease;
     }
-
-    .shirt-img {
-        width: 100%;
-        height: auto;
-        /* 🔥 THIS REMOVES THE WHITE BOX! 🔥 */
-        mix-blend-mode: multiply; 
-        filter: contrast(1.15) brightness(1.05);
-    }
-
-    /* Controls Panel */
-    .controls-panel {
-        background: #fff;
-        border-right: 1px solid #eee;
-        z-index: 100;
-        box-shadow: 5px 0 15px rgba(0,0,0,0.05);
-    }
-
-    /* Status Badge */
+    .shirt-img { width: 100%; height: auto; mix-blend-mode: multiply; filter: contrast(1.15) brightness(1.05); }
     .status-badge {
         position: absolute; top: 20px; right: 20px;
         background: #fff; color: #000;
         padding: 8px 20px; border-radius: 30px;
-        font-weight: 800; font-size: 1rem;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        font-weight: 800; box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         z-index: 50; display: flex; align-items: center; gap: 10px;
     }
     .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #28a745; }
-
 </style>
 
-<div class="container my-5">
-    
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none text-muted">Home</a></li>
+<div class="product-container">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" style="background:none; padding:0; margin-bottom:20px; font-size:13px; color:#888;">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" style="color:#888; text-decoration:none;">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
         </ol>
     </nav>
 
-    <div class="row">
-        <div class="col-lg-5 mb-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative sticky-top" style="top: 100px;">
-                {% if product.image_url %}
-                    <img src="{{ product.image_url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;">
-                {% elif product.image %}
-                    <img src="{{ product.image.url }}" class="img-fluid w-100" style="max-height: 600px; object-fit: contain; background: #f8f9fa;">
-                {% else %}
-                    <img src="https://via.placeholder.com/600" class="img-fluid w-100">
-                {% endif %}
-                
-                {% if product.is_trending %}
-                    <span class="position-absolute top-0 start-0 bg-danger text-white px-3 py-1 m-3 rounded-pill small fw-bold">🔥 Trending</span>
-                {% endif %}
-            </div>
+    <div class="product-wrapper">
+        
+        <div class="product-gallery">
+            {% if product.image_url %}
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                <img src="{{ product.image_url }}" style="opacity:0.5; filter:grayscale(100%);" title="Gallery Placeholder">
+            {% elif product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <img src="{{ product.image.url }}" style="opacity:0.5; filter:grayscale(100%);">
+            {% else %}
+                <img src="https://via.placeholder.com/600" alt="No Image">
+            {% endif %}
         </div>
 
-        <div class="col-lg-4 px-lg-4 mb-4">
-            <h1 class="fw-bold mb-2">{{ product.name }}</h1>
-            <p class="text-muted mb-3">{{ product.category }}</p>
-            <hr class="my-3">
+        <div class="product-info">
+            <span class="category-tag">{{ product.category }}</span>
+            <h1 class="product-title">{{ product.name }}</h1>
             
-            <div class="price-block mb-3">
-                <span class="text-danger fs-5 me-2">-25%</span> 
+            <div class="price-block">
                 <span class="current-price">{{ product.selling_price|currency:request }}</span>
-                <div class="text-muted small">M.R.P.: <span class="mrp-price">{{ product.cost_price|add:"500"|currency:request }}</span></div>
+                {% if product.cost_price %}
+                    <span class="mrp-price">{{ product.cost_price|add:"500"|currency:request }}</span>
+                    <span class="discount-badge">-25% OFF</span>
+                {% endif %}
+            </div>
+
+            <form action="{% url 'add_to_cart' product.id %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="size-wrapper">
+                    <span class="size-label">Select Size</span>
+                    <div class="size-options">
+                        <input type="radio" name="size" id="size-s" value="S">
+                        <label for="size-s" class="size-btn-label">S</label>
+
+                        <input type="radio" name="size" id="size-m" value="M" checked>
+                        <label for="size-m" class="size-btn-label">M</label>
+
+                        <input type="radio" name="size" id="size-l" value="L">
+                        <label for="size-l" class="size-btn-label">L</label>
+
+                        <input type="radio" name="size" id="size-xl" value="XL">
+                        <label for="size-xl" class="size-btn-label">XL</label>
+                        
+                        <input type="radio" name="size" id="size-xxl" value="XXL">
+                        <label for="size-xxl" class="size-btn-label">XXL</label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-3d-trial" data-bs-toggle="modal" data-bs-target="#real3DModal">
+                    <i class="fas fa-cube"></i> Check Real 3D Fit
+                </button>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn-main btn-cart">Add to Cart</button>
+                    <a href="{% url 'buy_now' product.id %}" class="btn-main btn-buy">Buy Now</a>
+                </div>
+            </form>
+
+            <div class="details-box">
+                <div class="details-title">Description</div>
+                <p class="details-text">
+                    {{ product.description|default:"Loose-fit sweatshirt hoodie in medium weight cotton-blend fabric. Soft brushed inside for comfort." }}
+                </p>
             </div>
             
-            <div class="mb-4">
-                <h6 class="fw-bold"><i class="fa-solid fa-tags text-danger me-1"></i> Available Offers</h6>
-                <div class="row g-2 mt-1">
-                    <div class="col-6"><div class="offer-box"><div class="offer-title">Bank Offer</div>Get 5% Cashback on Elite HDFC Credit Cards.</div></div>
-                    <div class="col-6"><div class="offer-box"><div class="offer-title">Partner Offer</div>Sign up for Elite Prime and get free faster delivery.</div></div>
-                </div>
-            </div>
-            <p class="text-muted small">{{ product.description }}</p>
-        </div>
-
-        <div class="col-lg-3">
-            <div class="buy-box-sidebar sticky-top" style="top: 100px;">
-                <div class="fs-4 fw-bold text-danger mb-2">{{ product.selling_price|currency:request }}</div>
-                <div class="small mb-3">FREE delivery <span class="fw-bold">Tomorrow</span>.</div>
-                <div class="fs-5 text-success fw-bold mb-3">In Stock.</div>
-
-                <form action="{% url 'add_to_cart' product.id %}" method="POST">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="fw-bold small mb-1 d-block">Select Size:</label>
-                        <div>
-                            <input type="radio" name="size" id="size-s" value="S"><label for="size-s" class="size-option">S</label>
-                            <input type="radio" name="size" id="size-m" value="M" checked><label for="size-m" class="size-option">M</label>
-                            <input type="radio" name="size" id="size-l" value="L"><label for="size-l" class="size-option">L</label>
-                            <input type="radio" name="size" id="size-xl" value="XL"><label for="size-xl" class="size-option">XL</label>
-                            <input type="radio" name="size" id="size-xxl" value="XXL"><label for="size-xxl" class="size-option">XXL</label>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn-trial" data-bs-toggle="modal" data-bs-target="#real3DModal">
-                        <i class="fas fa-street-view me-2"></i> Real 3D Fit Check
-                        <span class="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-10" style="transform: skewX(-20deg); animation: shine 3s infinite;"></span>
-                    </button>
-
-                    <button type="submit" class="btn-amazon-cart">Add to Cart</button>
-                    <a href="{% url 'buy_now' product.id %}" class="btn-amazon-buy">Buy Now</a>
-                </form>
-                
-                <div class="buy-box-trust mt-3 pt-3 border-top text-muted">
-                    <div class="mb-2"><i class="fa-solid fa-lock"></i> Secure transaction</div>
-                    <div class="mb-2"><i class="fa-solid fa-truck"></i> Dispatched by Elite Class</div>
-                </div>
+            <div class="details-box">
+                <div class="details-title">Shipping & Returns</div>
+                <p class="details-text">Free shipping on orders over ₹999. Easy 7-day return policy.</p>
             </div>
         </div>
     </div>
+
+    <div class="rating-section">
+        <div>
+            <div class="big-rating">4.5</div>
+            <p style="color: #666;">(50 Reviews)</p>
+        </div>
+        <div class="stars-container">
+            <div class="star-row"><span>5 ★</span> <div class="progress-bar"><span class="fill" style="width: 70%"></span></div></div>
+            <div class="star-row"><span>4 ★</span> <div class="progress-bar"><span class="fill" style="width: 20%"></span></div></div>
+            <div class="star-row"><span>3 ★</span> <div class="progress-bar"><span class="fill" style="width: 5%"></span></div></div>
+        </div>
+    </div>
+
+    <div class="mt-5 mb-5">
+        <h2 style="font-size:1.5rem; font-weight:bold; margin-bottom:20px;">You might also like</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div style="cursor:pointer;">
+                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=400" style="width:100%; border-radius:10px;">
+                <h3 style="font-size:16px; margin:10px 0 5px;">Gradient Tee</h3>
+                <div style="color:#666;">$22.00</div>
+            </div>
+            <div style="cursor:pointer;">
+                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=400" style="width:100%; border-radius:10px;">
+                <h3 style="font-size:16px; margin:10px 0 5px;">Striped Jacket</h3>
+                <div style="color:#666;">$45.00</div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="modal fade" id="real3DModal" tabindex="-1" aria-hidden="true">
@@ -178,43 +278,38 @@
         <div class="modal-content border-0" style="background: #f8f9fa; height: 90vh;">
             <div class="modal-body p-0 d-flex flex-column flex-lg-row h-100">
                 
-                <div class="col-lg-3 p-4 d-flex flex-column justify-content-center controls-panel">
-                    <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-user-cog me-2"></i>Model Config</h4>
+                <div class="col-lg-3 p-4 d-flex flex-column justify-content-center bg-white shadow-sm" style="z-index:100;">
+                    <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-user-cog me-2"></i>Fit Config</h4>
                     
                     <div class="mb-4">
-                        <label class="small fw-bold text-muted mb-2">SELECT MODEL</label>
+                        <label class="small fw-bold text-muted mb-2">GENDER</label>
                         <div class="btn-group w-100" role="group">
                             <input type="radio" class="btn-check" name="realGender" id="rg_male" autocomplete="off" checked onclick="setRealGender('male')">
-                            <label class="btn btn-outline-dark" for="rg_male"><i class="fas fa-male"></i> Male</label>
+                            <label class="btn btn-outline-dark" for="rg_male">Male</label>
 
                             <input type="radio" class="btn-check" name="realGender" id="rg_female" autocomplete="off" onclick="setRealGender('female')">
-                            <label class="btn btn-outline-dark" for="rg_female"><i class="fas fa-female"></i> Female</label>
+                            <label class="btn btn-outline-dark" for="rg_female">Female</label>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="small fw-bold text-muted">HEIGHT (CM)</label>
+                        <label class="small fw-bold text-muted">HEIGHT (CM) - <span id="valHeight">175</span></label>
                         <input type="range" class="form-range" min="150" max="210" value="175" id="rangeHeight" oninput="updateRealFit()">
-                        <div class="text-end fw-bold small"><span id="valHeight">175</span> cm</div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="small fw-bold text-muted">WEIGHT (KG)</label>
+                        <label class="small fw-bold text-muted">WEIGHT (KG) - <span id="valWeight">75</span></label>
                         <input type="range" class="form-range" min="50" max="150" value="75" id="rangeWeight" oninput="updateRealFit()">
-                        <div class="text-end fw-bold small"><span id="valWeight">75</span> kg</div>
                     </div>
 
-                    <hr class="my-4">
-                    
                     <div class="mt-auto">
                         <button class="btn btn-dark w-100 fw-bold rounded-pill py-3" data-bs-dismiss="modal">
-                            Confirm This Size <i class="fas fa-check ms-2"></i>
+                            Close & Buy
                         </button>
                     </div>
                 </div>
 
                 <div class="col-lg-9 p-0 studio-bg">
-                    
                     <div class="status-badge">
                         <div class="status-dot" id="statusDot"></div>
                         <span id="fitStatus">Perfect Fit</span>
@@ -231,9 +326,7 @@
                             <div class="text-center mt-5">No Image</div>
                         {% endif %}
                     </div>
-
                 </div>
-
             </div>
             <button type="button" class="btn-close position-absolute top-0 end-0 m-4" data-bs-dismiss="modal"></button>
         </div>
@@ -242,37 +335,22 @@
 
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-    input[type=range] { accent-color: #333; }
-</style>
-{% endblock %}
-
 {% block extra_js %}
 <script>
-    // --- REALISTIC IMAGE ASSETS ---
-    // Using high quality transparent PNGs
+    // --- JS FOR 3D MODEL (Preserved) ---
     const maleRealUrl = "https://purepng.com/public/uploads/large/purepng.com-mannequinmannequinarticulated-dollmodeldummy-1421526462719d3f1l.png"; 
     const femaleRealUrl = "https://pngimg.com/uploads/mannequin/mannequin_PNG17.png"; 
     
-    let currentGender = 'male';
-
     function setRealGender(gender) {
-        currentGender = gender;
         const model = document.getElementById('realModel');
         const shirt = document.getElementById('realShirtContainer');
         
         if(gender === 'male') {
             model.style.backgroundImage = `url('${maleRealUrl}')`;
-            // Adjust shirt position for Male
-            shirt.style.top = "21%"; 
-            shirt.style.width = "155px";
+            shirt.style.top = "21%"; shirt.style.width = "155px";
         } else {
             model.style.backgroundImage = `url('${femaleRealUrl}')`;
-            // Adjust shirt position for Female (Lower chest usually)
-            shirt.style.top = "24%"; 
-            shirt.style.width = "140px";
+            shirt.style.top = "24%"; shirt.style.width = "140px";
         }
         updateRealFit();
     }
@@ -284,7 +362,6 @@
         document.getElementById('valHeight').innerText = height;
         document.getElementById('valWeight').innerText = weight;
 
-        // 1. Realistic Scaling Logic
         let weightFactor = weight / 75; 
         if(weightFactor < 0.85) weightFactor = 0.85; 
         if(weightFactor > 1.5) weightFactor = 1.5; 
@@ -294,36 +371,20 @@
         const status = document.getElementById('fitStatus');
         const dot = document.getElementById('statusDot');
 
-        // Scale the body width based on weight
         model.style.transform = `scaleX(${weightFactor})`;
 
-        // 2. Fit Logic (Shirt vs Body)
         if (weight > 95) {
-            // Tight Fit
             shirt.style.transform = `translateX(-50%) scaleX(${weightFactor * 0.92})`; 
-            status.innerText = "Tight Fit (Athletic)";
-            status.style.color = "#d9534f";
-            dot.style.background = "#d9534f";
-        } 
-        else if (weight < 65) {
-            // Baggy Fit
+            status.innerText = "Tight Fit (Athletic)"; status.style.color = "#d9534f"; dot.style.background = "#d9534f";
+        } else if (weight < 65) {
             shirt.style.transform = `translateX(-50%) scaleX(${weightFactor * 1.15})`;
-            status.innerText = "Relaxed / Baggy Fit";
-            status.style.color = "#007bff";
-            dot.style.background = "#007bff";
-        } 
-        else {
-            // Perfect Fit
+            status.innerText = "Relaxed / Baggy Fit"; status.style.color = "#007bff"; dot.style.background = "#007bff";
+        } else {
             shirt.style.transform = `translateX(-50%) scaleX(${weightFactor})`;
-            status.innerText = "Perfect Regular Fit";
-            status.style.color = "#28a745";
-            dot.style.background = "#28a745";
+            status.innerText = "Perfect Regular Fit"; status.style.color = "#28a745"; dot.style.background = "#28a745";
         }
     }
-
-    // Init
-    document.addEventListener('DOMContentLoaded', function() {
-        updateRealFit();
-    });
+    
+    document.addEventListener('DOMContentLoaded', function() { updateRealFit(); });
 </script>
 {% endblock %}
