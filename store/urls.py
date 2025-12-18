@@ -1,9 +1,17 @@
+from django.contrib import admin
 from django.urls import path
-from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+from store import views  # <--- Ithu romba mukkiyam!
 
 urlpatterns = [
-    # Base Pages
+    # --- ADMIN PANEL ---
+    path('admin/', admin.site.urls),
+
+    # --- HOMEPAGE (Idhu thaan 404 error fix pannum) ---
     path('', views.home, name='home'),
+
+    # --- OTHER PAGES (Unga Old Coding) ---
     path('custom-design/', views.custom_design_view, name='custom_design'),
     
     # Auth
@@ -28,16 +36,13 @@ urlpatterns = [
     # Dashboards & Uploads
     path('dashboard/designer/', views.designer_dashboard, name='designer_dashboard'),
     path('upload-design/', views.upload_design, name='upload_design'),
-    
-    # (Optional: Inga owner dashboard irukalam, but main urls-la irukurathu thaan mukkiyam)
     path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard_app'),
 
-    # 🔥 GLOBAL CURRENCY SWITCHER 🔥
+    # Global Currency Switcher
     path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
 ]
-from django.conf import settings
-from django.conf.urls.static import static
 
-urlpatterns = [
-    # ... unga matha urls ...
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# --- MEDIA & STATIC FILES SETTINGS (Images Load Aaga) ---
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
