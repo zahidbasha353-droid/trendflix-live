@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.html import format_html
 import csv
-from .models import Product, Order, OrderItem, Cart, SavedDesign
+from .models import Product, Order, OrderItem, Cart, SavedDesign, Category, SiteSettings, HomeBanner
 
 # --- QC ACTION (Quality Check) ---
 def mark_qc_passed(modeladmin, request, queryset):
@@ -52,7 +52,6 @@ class OrderItemInline(admin.TabularInline):
 # --- ORDER ADMIN ---
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    # 🔥 List Display Updated
     list_display = ('id', 'full_name', 'country_flag', 'total_amount', 'status', 'tracking_number', 'qc_passed')
     list_filter = ('country', 'status', 'qc_passed', 'created_at')
     search_fields = ('id', 'full_name', 'phone', 'tracking_number')
@@ -66,44 +65,44 @@ class OrderAdmin(admin.ModelAdmin):
 # --- PRODUCT ADMIN ---
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    # 🔥 FIXED: Matching New Models.py
-    # Removed 'slug', changed 'price' -> 'selling_price', 'is_active' -> 'is_approved'
     list_display = ('name', 'selling_price', 'cost_price', 'profit', 'category', 'is_approved', 'is_trending', 'is_bestseller')
     list_filter = ('category', 'is_approved', 'is_trending', 'is_bestseller')
     search_fields = ('name', 'sku', 'category')
     list_editable = ('selling_price', 'is_approved', 'is_trending', 'is_bestseller')
+
+# --- CATEGORY ADMIN ---
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'image_preview')
     
-    # Optional: Display Image thumbnail in Admin (Advanced)
-    # def image_tag(self, obj):
-    #     return format_html('<img src="{}" width="50" height="50" />'.format(obj.image.url)) if obj.image else "-"
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="50" style="border-radius:50px;" />'.format(obj.image.url))
+        return "-"
+    image_preview.short_description = "Image"
 
-# --- OTHER REGISTRATIONS ---
-admin.site.register(Cart)
-admin.site.register(SavedDesign)
-# --- SITE SETTINGS (Dynamic Logo, Banner & Themes) ---
-# --- store/admin.py ---
-from django.contrib import admin
-from .models import Product, Order, Cart, CartItem, SiteSettings  # SiteSettings inga irukanum
+# --- BANNER ADMIN ---
+@admin.register(HomeBanner)
+class HomeBannerAdmin(admin.ModelAdmin):
+    list_display = ('position', 'main_text', 'image_preview')
+    
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="100" style="border-radius:5px;" />'.format(obj.image.url))
+        return "-"
+    image_preview.short_description = "Preview"
 
-# ... Vera admin classes irukkum ...
-
-# 👇 Itha mattum add pannunga (Delete old wrong code) 👇
+# --- SITE SETTINGS ADMIN ---
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ('site_name', 'active_theme')
     
+    # Idhu mukkiyam: Oru vaati settings create pannita, thirumba "Add" button vara kudadhu
     def has_add_permission(self, request):
         if SiteSettings.objects.exists():
             return False
         return True
-    from django.contrib import admin
-from .models import Category
 
-admin.site.register(Category)
-from django.contrib import admin
-from .models import Category, Product, SiteSettings, HomeBanner # HomeBanner ah import pannunga
-
-admin.site.register(Category)
-admin.site.register(Product)
-admin.site.register(SiteSettings)
-admin.site.register(HomeBanner) # Itha add pannunga
+# --- OTHER SIMPLE REGISTRATIONS ---
+admin.site.register(Cart)
+admin.site.register(SavedDesign)
