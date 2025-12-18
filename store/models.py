@@ -120,7 +120,11 @@ class SiteSettings(models.Model):
     def __str__(self):
         return "Website Configuration"
 
+    class SiteSettings(models.Model):
+    # unga fields (banner, logo etc) inga irukum...
+
     class Meta:
+        verbose_name = "Site Setting"
         verbose_name_plural = "Site Settings"
         from django.db import models
 
