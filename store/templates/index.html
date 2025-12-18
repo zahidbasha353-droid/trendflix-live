@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendFlix - Home</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header { background-color: #333; color: white; padding: 15px; text-align: center; }
+        .hero { background-color: #f4f4f4; padding: 50px; text-align: center; }
+        
+        /* Category Section Styles */
+        .category-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .category-item {
+            text-align: center;
+            cursor: pointer;
+        }
+        .category-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+        .category-item p { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>TrendFlix Store</h1>
+    </header>
+
+    <div class="hero">
+        <h2>Welcome to TrendFlix</h2>
+        <p>Find your favorite products here.</p>
+    </div>
+
+    <h3 style="text-align: center; margin-top: 30px;">Shop by Category</h3>
+    
+    <div class="category-container">
+        {% for cat in categories %}
+        <div class="category-item">
+            {% if cat.image %}
+                <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+            {% else %}
+                <div style="width:80px; height:80px; background:#ccc; border-radius:50%; line-height:80px;">No Img</div>
+            {% endif %}
+            
+            <p>{{ cat.name }}</p>
+        </div>
+        {% empty %}
+            <p>No categories found. Please add some in Admin Panel.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
