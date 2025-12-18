@@ -126,33 +126,24 @@
 
 <div class="container py-5 border-bottom border-top">
     <div class="d-flex justify-content-between overflow-auto" style="gap: 20px;">
+        
+        {% for cat in categories %}
         <div class="cat-circle-item">
-            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1617137968427-85924c809a22?auto=format&fit=crop&w=300&q=80" alt="Men"></div>
-            <div class="cat-name">Men</div>
+            <div class="cat-img-box">
+                {% if cat.image %}
+                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/100" alt="{{ cat.name }}">
+                {% endif %}
+            </div>
+            <div class="cat-name">{{ cat.name }}</div>
         </div>
-        <div class="cat-circle-item">
-            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=300&q=80" alt="Women"></div>
-            <div class="cat-name">Women</div>
-        </div>
-        <div class="cat-circle-item">
-            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80" alt="Shoes"></div>
-            <div class="cat-name">Shoes</div>
-        </div>
-        <div class="cat-circle-item">
-            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=300&q=80" alt="Watches"></div>
-            <div class="cat-name">Watches</div>
-        </div>
-        <div class="cat-circle-item">
-            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=300&q=80" alt="Bags"></div>
-            <div class="cat-name">Bags</div>
-        </div>
-        <div class="cat-circle-item">
-            <div class="cat-img-box"><img src="https://images.unsplash.com/photo-1599643478518-17488fbbcd75?auto=format&fit=crop&w=300&q=80" alt="Jewelry"></div>
-            <div class="cat-name">Jewellery</div>
-        </div>
+        {% empty %}
+            <p>No categories found. Add in Admin Panel.</p>
+        {% endfor %}
+
     </div>
 </div>
-
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="section-title">Featured Products</h3>
