@@ -35,3 +35,9 @@ urlpatterns = [
     # 🔥 GLOBAL CURRENCY SWITCHER 🔥
     path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
 ]
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # ... unga matha urls ...
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

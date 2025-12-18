@@ -96,3 +96,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         if SiteSettings.objects.exists():
             return False
         return True
+    from django.contrib import admin
+from .models import Category
+
+admin.site.register(Category)

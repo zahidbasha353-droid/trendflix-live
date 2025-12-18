@@ -274,3 +274,12 @@
 
 </body>
 </html>
+<div class="category-container">
+    {% for cat in categories %}
+    <div class="category-item">
+        <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+        
+        <p>{{ cat.name }}</p>
+    </div>
+    {% endfor %}
+</div>

@@ -227,3 +227,8 @@ def owner_dashboard(request):
         'top_products': top_products,
     }
     return render(request, 'admin/owner_dashboard.html', context)
+from .models import Category
+
+def home(request):
+    categories = Category.objects.all() # Ella categories-ayum edukkom
+    return render(request, 'index.html', {'categories': categories})

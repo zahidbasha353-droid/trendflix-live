@@ -122,3 +122,11 @@ class SiteSettings(models.Model):
 
     class Meta:
         verbose_name_plural = "Site Settings"
+        from django.db import models
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)  # Category peyar (e.g., Men, Women)
+    image = models.ImageField(upload_to='category_images/') # Category image
+    
+    def __str__(self):
+        return self.name
