@@ -18,7 +18,7 @@ class SiteSettings(models.Model):
     def __str__(self):
         return self.site_name
 
-# --- 2. HOME BANNERS ---
+# --- 2. HOME BANNERS (Merged & Fixed) ---
 class HomeBanner(models.Model):
     POSITIONS = (
         ('main', 'Main Big Banner (Left Side)'),
@@ -26,15 +26,17 @@ class HomeBanner(models.Model):
         ('side_bottom', 'Side Bottom Banner (Right Bottom)'),
     )
     
+    title = models.CharField(max_length=200, blank=True)
     position = models.CharField(max_length=20, choices=POSITIONS, unique=True)
-    image = models.ImageField(upload_to='banners/', blank=True, null=True)
+    image = models.ImageField(upload_to='banners/')
     small_text = models.CharField(max_length=100, blank=True)
     main_text = models.CharField(max_length=100, blank=True)
     button_text = models.CharField(max_length=50, default="SHOP NOW")
     button_link = models.CharField(max_length=200, default="#")
+    is_active = models.BooleanField(default=True)
     
     def __str__(self):
-        return self.get_position_display()
+        return f"{self.get_position_display()} - {self.title}"
 
 # --- 3. CATEGORY ---
 class Category(models.Model):
@@ -43,15 +45,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    # --- 3. CATEGORY ---
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='categories/', blank=True, null=True)
 
-    def __str__(self):
-        return self.name
-
-# 👇 PUDHU MODEL: SUB-CATEGORY 👇
+# --- 4. SUB-CATEGORY ---
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -59,18 +54,16 @@ class SubCategory(models.Model):
     def __str__(self):
         return f"{self.category.name} > {self.name}"
 
-# --- 4. PRODUCT (AFFILIATE READY) ---
+# --- 5. PRODUCT (AFFILIATE READY) ---
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    # Changed to null=True to fix database error
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     
     cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     
-    # Affiliate Fields
     affiliate_link = models.URLField(default='https://www.amazon.in/', blank=True, null=True)
     deal_type = models.CharField(max_length=50, choices=[('Hot', 'Hot Deal'), ('New', 'New Arrival'), ('Best', 'Best Seller')], default='New')
 
@@ -89,7 +82,7 @@ class Product(models.Model):
             return int(discount)
         return 0
 
-# --- 5. CART SYSTEM ---
+# --- 6. CART SYSTEM ---
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -107,7 +100,7 @@ class CartItem(models.Model):
     def total_price(self):
         return self.product.selling_price * self.quantity
 
-# --- 6. ORDER SYSTEM ---
+# --- 7. ORDER SYSTEM ---
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
@@ -140,9 +133,8 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
 
-# --- 7. SAVED DESIGNS ---
+# --- 8. SAVED DESIGNS ---
 class SavedDesign(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # Changed to null=True to fix database error
     image = models.ImageField(upload_to='designs/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

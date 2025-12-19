@@ -1,48 +1,67 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from store import views  # <--- Ithu romba mukkiyam!
+from store import views  # store app views-ah import panrom
 
 urlpatterns = [
     # --- ADMIN PANEL ---
     path('admin/', admin.site.urls),
 
-    # --- HOMEPAGE (Idhu thaan 404 error fix pannum) ---
+    # --- HOMEPAGE ---
     path('', views.home, name='home'),
 
-    # --- OTHER PAGES (Unga Old Coding) ---
-    path('custom-design/', views.custom_design_view, name='custom_design'),
-    
-    # Auth
+    # --- AUTH PAGES ---
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
 
-    # Product Flow
+    # --- PRODUCT FLOW ---
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    path('cart/', views.cart_view, name='cart'),
+    path('cart/', views.cart_view, name='cart_view'),
     path('buy-now/<int:product_id>/', views.buy_now, name='buy_now'),
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
 
-    # Checkout & Payment
-    path('checkout/', views.checkout_view, name='checkout'),
-    path('place-cod-order/', views.place_cod_order, name='place_cod_order'), 
-    
-    # Success Page
+    # --- CHECKOUT & PAYMENT ---
+    path('checkout/', views.checkout_view, name='checkout_view'),
     path('order-success/', views.order_success_view, name='order_success_view'),
-
-    # Dashboards & Uploads
+    
+    # --- DASHBOARDS & CUSTOM DESIGN ---
+    path('custom-design/', views.custom_design_view, name='custom_design'),
     path('dashboard/designer/', views.designer_dashboard, name='designer_dashboard'),
     path('upload-design/', views.upload_design, name='upload_design'),
-    path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard_app'),
+    path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
 
-    # Global Currency Switcher
+    # --- GLOBAL CURRENCY SWITCHER ---
     path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
 ]
 
-# --- MEDIA & STATIC FILES SETTINGS (Images Load Aaga) ---
+# --- 💡 MEDIA & STATIC FILES (Hero Banners Load Aaga Idhu Romba Mukkiyam) ---
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    # trendflix_core/urls.py
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.home, name='home'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register_view, name='register'),
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/', views.cart_view, name='cart_view'),
+    path('buy-now/<int:product_id>/', views.buy_now, name='buy_now'),
+    path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('checkout/', views.checkout_view, name='checkout_view'),
+    
+    # Inga dhaan prachanai - 'order_success_view' nu function irukanum
+    path('order-success/', views.order_success_view, name='order_success_view'),
+    
+    path('custom-design/', views.custom_design_view, name='custom_design'),
+    path('dashboard/designer/', views.designer_dashboard, name='designer_dashboard'),
+    path('upload-design/', views.upload_design, name='upload_design'),
+    path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
+    path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
+]
