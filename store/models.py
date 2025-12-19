@@ -27,7 +27,7 @@ class HomeBanner(models.Model):
     )
     
     position = models.CharField(max_length=20, choices=POSITIONS, unique=True)
-    image = models.ImageField(upload_to='banners/')
+    image = models.ImageField(upload_to='banners/', blank=True, null=True)
     small_text = models.CharField(max_length=100, blank=True)
     main_text = models.CharField(max_length=100, blank=True)
     button_text = models.CharField(max_length=50, default="SHOP NOW")
@@ -44,23 +44,21 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-# --- 4. PRODUCT (AFFILIATE + OLD FEATURES) ---
+# --- 4. PRODUCT (AFFILIATE READY) ---
 class Product(models.Model):
-    # Basic Info
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='products/')
+    # Changed to null=True to fix database error
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
     
-    # Prices
-    cost_price = models.DecimalField(max_digits=10, decimal_places=2) # Original MRP
-    selling_price = models.DecimalField(max_digits=10, decimal_places=2) # Discount Price
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     
-    # Affiliate Fields (New Logic)
-    affiliate_link = models.URLField(default='https://www.amazon.in/', help_text="Paste Amazon Product Link Here")
+    # Affiliate Fields
+    affiliate_link = models.URLField(default='https://www.amazon.in/', blank=True, null=True)
     deal_type = models.CharField(max_length=50, choices=[('Hot', 'Hot Deal'), ('New', 'New Arrival'), ('Best', 'Best Seller')], default='New')
 
-    # Ranking/Sorting
     is_approved = models.BooleanField(default=True)
     is_trending = models.BooleanField(default=False)
     is_bestseller = models.BooleanField(default=False)
@@ -71,17 +69,16 @@ class Product(models.Model):
 
     @property
     def profit(self):
-        # Calculates Percentage OFF for display
         if self.cost_price > 0:
             discount = ((self.cost_price - self.selling_price) / self.cost_price) * 100
             return int(discount)
         return 0
 
-# --- 5. CART SYSTEM (Kept for safety) ---
+# --- 5. CART SYSTEM ---
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     @property
     def total_price(self):
         return sum(item.total_price for item in self.items.all())
@@ -90,12 +87,12 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    
+
     @property
     def total_price(self):
         return self.product.selling_price * self.quantity
 
-# --- 6. ORDER SYSTEM (Kept for safety, though not used in Affiliate) ---
+# --- 6. ORDER SYSTEM ---
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
@@ -131,5 +128,6 @@ class OrderItem(models.Model):
 # --- 7. SAVED DESIGNS ---
 class SavedDesign(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='designs/')
+    # Changed to null=True to fix database error
+    image = models.ImageField(upload_to='designs/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
