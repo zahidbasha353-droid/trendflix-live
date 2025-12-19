@@ -56,6 +56,9 @@ class SubCategory(models.Model):
 
 # --- 5. PRODUCT (AUTOMATION & AFFILIATE READY) ---
 class Product(models.Model):
+    # ... munnadi irukra fields ...
+    rating = models.CharField(max_length=10, default="4.0", blank=True, null=True)
+    # ...
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=True) # Automated-ah fill aaga blank=True
     
