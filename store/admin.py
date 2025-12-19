@@ -50,3 +50,10 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         if SiteSettings.objects.exists():
             return False
         return True
+    # ... (CategoryAdmin mela irukkum) ...
+
+@admin.register(SubCategory)
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category')
+    list_filter = ('category',)
+    search_fields = ('name',)

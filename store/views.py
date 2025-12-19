@@ -251,3 +251,17 @@ def home(request):
         'products': products
     }
     return render(request, 'index.html', context)
+def home(request):
+    # 'prefetch_related' use panrom, idhu subcategories-a fast-a edukum
+    categories = Category.objects.prefetch_related('subcategories').all()
+    
+    products = Product.objects.filter(is_approved=True)
+    
+    # ... (Mattha logic apdiye irukattum like cart, etc.) ...
+
+    context = {
+        'categories': categories,
+        'products': products,
+        # ... matha context variables ...
+    }
+    return render(request, 'index.html', context)

@@ -32,6 +32,22 @@
         .nav-link:hover, .nav-link.active { color: #0d6efd !important; }
         .promo-badge { background: #ff0000; color: white; font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-left: 5px; vertical-align: text-top; }
 
+        /* 🔥 MEGA MENU CSS (Added New) 🔥 */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0; 
+        }
+        .dropdown-menu {
+            border-top: 3px solid #f43397; /* Meesho Pink Top Border */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 0 0 5px 5px;
+        }
+        .dropdown-item { font-size: 13px; padding: 8px 20px; }
+        .dropdown-item:hover {
+            background-color: #fce4ec; /* Light Pink Hover */
+            color: #f43397;
+        }
+
         /* --- FOOTER --- */
         footer { background: #111; color: #bbb; padding: 60px 0 20px; font-size: 14px; }
         footer h5 { color: white; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
@@ -132,14 +148,33 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link text-primary" href="{% url 'home' %}">HOME</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">MEN'S FASHION</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">WOMEN'S FASHION</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">ACCESSORIES</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">NEW ARRIVALS <span class="promo-badge">HOT</span></a></li>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">HOME</a>
+                    </li>
+
+                    {% for cat in categories %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown{{ cat.id }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ cat.name }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown{{ cat.id }}">
+                            {% for sub in cat.subcategories.all %}
+                                <li><a class="dropdown-item" href="#">{{ sub.name }}</a></li>
+                            {% empty %}
+                                <li><a class="dropdown-item text-muted" href="#">No items yet</a></li>
+                            {% endfor %}
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item fw-bold" href="#">View All {{ cat.name }}</a></li>
+                        </ul>
+                    </li>
+                    {% endfor %}
+
                     <li class="nav-item"><a class="nav-link text-danger" href="#">SALE</a></li>
                 </ul>
+                
                 <div class="d-flex align-items-center">
                     <span class="small fw-bold me-2 text-muted">SPECIAL OFFER:</span>
                     <a href="#" class="btn btn-sm btn-dark rounded-pill px-3">GET 30% OFF</a>
@@ -277,12 +312,3 @@
 
 </body>
 </html>
-<div class="category-container">
-    {% for cat in categories %}
-    <div class="category-item">
-        <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
-        
-        <p>{{ cat.name }}</p>
-    </div>
-    {% endfor %}
-</div>

@@ -43,6 +43,21 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    # --- 3. CATEGORY ---
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+# 👇 PUDHU MODEL: SUB-CATEGORY 👇
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.category.name} > {self.name}"
 
 # --- 4. PRODUCT (AFFILIATE READY) ---
 class Product(models.Model):
