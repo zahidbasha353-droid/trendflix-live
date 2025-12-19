@@ -1,6 +1,15 @@
-from .models import SiteSettings
+from .models import Category, SiteSettings
+
+def menu_links(request):
+    try:
+        categories = Category.objects.prefetch_related('subcategories').all()
+    except:
+        categories = None
+    return {'categories': categories}
 
 def website_settings(request):
-    # Get the last added setting, or return None
-    settings = SiteSettings.objects.last()
-    return {'site_config': settings}
+    try:
+        site_config = SiteSettings.objects.first()
+    except:
+        site_config = None
+    return {'site_config': site_config}
