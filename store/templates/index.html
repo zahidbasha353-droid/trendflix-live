@@ -56,18 +56,23 @@
         .cat-circle-item { text-align: center; width: 120px; display: inline-block; margin: 20px; }
         .cat-img-box { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 10px; }
         .mobile-only { display: none !important; }
+        
+        /* Desktop Grid for Amazon Products */
+        .hz-scroll-container { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 10px; }
+        .hz-card { min-width: 200px; border: 1px solid #eee; border-radius: 8px; padding: 10px; }
     }
 
-    /* --- 6. 🔥 MOBILE APP STYLES (Myntra/Ajio Feel) 🔥 --- */
+    /* --- 6. 🔥 MOBILE APP STYLES (Myntra/Ajio/Amazon Feel) 🔥 --- */
     @media (max-width: 768px) {
         body { background-color: #f5f5f5 !important; padding-bottom: 80px !important; }
         .desktop-only { display: none !important; }
         .container { padding-left: 10px; padding-right: 10px; }
 
         /* Banner */
-        .main-banner { height: 220px; border-radius: 12px; background-size: cover; padding: 20px; display: flex; align-items: center; margin-top: 10px; }
-        .main-banner h1 { font-size: 24px; color: white; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        
+        .main-banner { height: 180px; border-radius: 12px; background-size: cover; padding: 20px; display: flex; align-items: center; margin-top: 10px; }
+        .main-banner h1 { font-size: 22px; color: white; text-shadow: 0 2px 5px rgba(0,0,0,0.3); font-weight: 800; }
+        .btn-shop { background: white; color: black; border: none; padding: 5px 15px; border-radius: 4px; font-size: 12px; font-weight: bold; text-decoration: none; margin-top: 5px; display: inline-block; }
+
         /* Categories (Story Scroll) */
         .category-scroll-container { display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px; scrollbar-width: none; }
         .cat-circle-item { display: flex; flex-direction: column; align-items: center; min-width: 70px; }
@@ -75,23 +80,35 @@
         .cat-img-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .cat-name { font-size: 11px; font-weight: 600; color: #333; }
 
-        /* Product Grid (2 Columns) */
-        .products-grid-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .product-card { background: white; border-radius: 8px; overflow: hidden; padding-bottom: 10px; }
-        .product-img-wrap { height: 230px; position: relative; background: #f4f4f4; }
-        .product-img-link img { width: 100%; height: 100%; object-fit: cover; }
+        /* Horizontal Product Scroll (Amazon Style) */
+        .hz-scroll-container { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; scrollbar-width: none; }
+        .hz-scroll-container::-webkit-scrollbar { display: none; }
         
-        .product-info { padding: 8px; text-align: left; }
-        .product-title { font-size: 13px; font-weight: 400; color: #282c3f; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .product-price { font-size: 14px; font-weight: 700; color: #282c3f; }
-        .old-price { font-size: 11px; color: #999; text-decoration: line-through; margin-left: 5px; }
-        .product-actions { display: none !important; }
+        .hz-card { min-width: 140px; width: 140px; background: white; border-radius: 8px; overflow: hidden; border: 1px solid #eee; }
+        .hz-img-wrap { height: 140px; padding: 10px; display: flex; align-items: center; justify-content: center; background: #fff; }
+        .hz-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .hz-info { padding: 8px; }
+        .hz-badge { background: #CC0C39; color: white; font-size: 9px; padding: 2px 4px; border-radius: 2px; font-weight: bold; }
+        .hz-deal-txt { color: #CC0C39; font-size: 11px; font-weight: 700; margin-top: 2px; }
+        .hz-price { font-size: 14px; color: #333; font-weight: 700; }
+        .hz-btn { background: #FFD814; border: 1px solid #FCD200; border-radius: 20px; width: 100%; font-size: 11px; padding: 4px; margin-top: 5px; color: #111; font-weight: 600; text-align: center; display: block; text-decoration: none; }
+
+        /* Main Grid (Bottom) */
+        .products-grid-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-card { background: white; border-radius: 8px; padding: 10px; border: 1px solid #eee; }
+        .grid-img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 8px; }
+        .grid-title { font-size: 12px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 12px 0; z-index: 9999; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
         .nav-item-app { text-align: center; color: #666; font-size: 10px; font-weight: 600; text-decoration: none; }
         .nav-item-app i { font-size: 20px; display: block; margin-bottom: 4px; }
         .nav-item-app.active { color: #ff3f6c; }
+        
+        /* Section Headers */
+        .section-head { display: flex; justify-content: space-between; align-items: center; margin: 15px 0 10px 0; }
+        .section-title { font-size: 16px; font-weight: 800; color: #232f3e; display: flex; align-items: center; gap: 5px; }
+        .view-all { font-size: 12px; color: #007185; text-decoration: none; font-weight: 600; }
     }
 </style>
 
@@ -100,16 +117,15 @@
 <div class="container hero-wrap">
     <div class="row">
         <div class="col-lg-8 mb-4 mb-lg-0 p-0 p-lg-3">
-            <div class="main-banner skeleton-load" style="background-image: url('{% if main_banner %}{{ main_banner.image.url }}{% else %}https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1470&q=80{% endif %}');">
+            <div class="main-banner skeleton-load" style="background-image: url('{% if main_banner %}{{ main_banner.image.url }}{% else %}https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1470&q=80{% endif %}');">
                 <div class="hero-content text-white">
                     {% if main_banner %}
                         <h4>{{ main_banner.small_text }}</h4>
                         <h1>{{ main_banner.main_text }}</h1>
-                        <a href="{{ main_banner.button_link }}" class="btn btn-light btn-sm rounded-pill px-4 fw-bold">SHOP NOW</a>
+                        <a href="{{ main_banner.button_link }}" class="btn-shop">SHOP NOW</a>
                     {% else %}
-                        <h4>New Collection</h4>
-                        <h1>Summer Sale</h1>
-                        <a href="#" class="btn btn-light btn-sm rounded-pill px-4 fw-bold">SHOP NOW</a>
+                        <h1>Great Indian <br> Festival Sale</h1>
+                        <a href="#" class="btn-shop">Explore Deals</a>
                     {% endif %}
                 </div>
             </div>
@@ -151,32 +167,84 @@
     </div>
 </div>
 
+<div class="container">
+    <div class="section-head">
+        <div class="section-title">⏰ Deal of the Day</div>
+        <a href="#" class="view-all">View all</a>
+    </div>
+    
+    <div class="hz-scroll-container">
+        {% for product in products|slice:":5" %} 
+        <div class="hz-card">
+            <div class="hz-img-wrap">
+                <a href="{{ product.affiliate_link }}" target="_blank">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="hz-img">
+                    {% else %}
+                         <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;"><i class="fas fa-camera"></i></div>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="hz-info">
+                <span class="hz-badge">80% off</span>
+                <div class="hz-deal-txt">Great Indian Deal</div>
+                <div class="hz-price">{{ product.selling_price|currency:request }}</div>
+                <a href="{{ product.affiliate_link }}" target="_blank" class="hz-btn">Buy on Amazon</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="section-head">
+        <div class="section-title">🎧 Top Tech Deals</div>
+        <a href="#" class="view-all">View all</a>
+    </div>
+    <div class="hz-scroll-container">
+        {% for product in products|slice:"5:10" %} 
+        <div class="hz-card">
+            <div class="hz-img-wrap">
+                <a href="{{ product.affiliate_link }}" target="_blank">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="hz-img">
+                    {% else %}
+                         <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;"><i class="fas fa-camera"></i></div>
+                    {% endif %}
+                </a>
+            </div>
+            <div class="hz-info">
+                <div class="hz-price">{{ product.selling_price|currency:request }}</div>
+                <small class="text-muted text-decoration-line-through">{{ product.cost_price|add:"500" }}</small>
+                <a href="{{ product.affiliate_link }}" target="_blank" class="hz-btn">Check Price</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 <div class="container py-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold m-0" style="font-size: 16px;">Featured Products</h4>
-        <a href="#" class="text-dark small text-decoration-none border-bottom border-dark" style="font-size:12px;">View All</a>
+    <div class="section-head">
+        <div class="section-title">⚡ More Recommendations</div>
     </div>
 
     <div class="products-grid-mobile d-md-none"> 
         {% for product in products %}
-        <div class="product-card">
-            <div class="product-img-wrap skeleton-load">
-                <a href="{% url 'product_detail' product.id %}" class="product-img-link">
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" onload="this.parentElement.classList.remove('skeleton')">
-                    {% else %}
-                        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;"><i class="fas fa-camera"></i></div>
-                    {% endif %}
-                </a>
+        <div class="grid-card">
+            <a href="{{ product.affiliate_link }}" target="_blank">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="grid-img">
+                {% else %}
+                    <div style="width:100%; height:150px; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;"><i class="fas fa-camera"></i></div>
+                {% endif %}
+            </a>
+            <div class="grid-title">{{ product.name|truncatechars:30 }}</div>
+            <div class="text-warning small"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="hz-price">{{ product.selling_price|currency:request }}</span>
+                <span style="font-size:10px; color:#007185; font-weight:bold;">✔ Prime</span>
             </div>
-            <div class="product-info">
-                <div class="product-title">{{ product.name }}</div>
-                <div class="product-price">
-                    {{ product.selling_price|currency:request }}
-                    <span class="old-price">₹ {{ product.cost_price|add:"200" }}</span>
-                </div>
-                <button onclick="fakeAddToCart()" class="btn btn-sm btn-outline-dark w-100 mt-2" style="font-size: 10px;">ADD TO CART</button>
-            </div>
+            <a href="{{ product.affiliate_link }}" target="_blank" class="hz-btn mt-2">View on Amazon</a>
         </div>
         {% endfor %}
     </div>
@@ -186,7 +254,7 @@
         <div class="col">
             <div class="product-card h-100">
                 <div class="product-img-wrap">
-                    <a href="{% url 'product_detail' product.id %}">
+                    <a href="{{ product.affiliate_link }}" target="_blank">
                         {% if product.image %}
                             <img src="{{ product.image.url }}" alt="{{ product.name }}">
                         {% else %}
@@ -194,9 +262,12 @@
                         {% endif %}
                     </a>
                 </div>
-                <div class="product-info">
-                    <div class="product-title">{{ product.name }}</div>
-                    <div class="product-price">{{ product.selling_price|currency:request }}</div>
+                <div class="product-info p-3 text-center">
+                    <div class="product-title fw-bold">{{ product.name }}</div>
+                    <div class="product-price mb-2 text-primary fw-bold">{{ product.selling_price|currency:request }}</div>
+                    <a href="{{ product.affiliate_link }}" target="_blank" class="btn btn-warning w-100 fw-bold">
+                        Buy Now
+                    </a>
                 </div>
             </div>
         </div>
@@ -209,10 +280,10 @@
         <i class="fas fa-home"></i> Home
     </a>
     <a href="#" class="nav-item-app">
-        <i class="fas fa-th-large"></i> Categories
+        <i class="fas fa-bolt"></i> Deals
     </a>
-    <a href="{% url 'cart' %}" class="nav-item-app">
-        <i class="fas fa-shopping-bag"></i> Cart
+    <a href="#" class="nav-item-app">
+        <i class="fas fa-th-large"></i> Categories
     </a>
     <a href="#" class="nav-item-app">
         <i class="fas fa-user"></i> Account
@@ -238,12 +309,6 @@
         x.innerText = message;
         x.className = "show";
         setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-    }
-
-    // 3. Fake Add to Cart (Visual Feedback)
-    function fakeAddToCart() {
-        showToast("✅ Added to Cart!");
-        // Here you would normally do the AJAX call to real cart
     }
 
     // 4. Daily Tap Challenge Game

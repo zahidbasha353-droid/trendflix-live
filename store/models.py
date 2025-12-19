@@ -160,3 +160,11 @@ class HomeBanner(models.Model):
     
     def __str__(self):
         return self.get_position_display()
+    class Product(models.Model):
+    # ... pazhaya fields ...
+    name = models.CharField(max_length=200)
+    # ...
+    
+    # 👇 INDHA 2 LINES MUKKIYAM 👇
+    affiliate_link = models.URLField(default='https://www.amazon.in/', help_text="Paste Amazon Product Link Here")
+    deal_type = models.CharField(max_length=50, choices=[('Hot', 'Hot Deal'), ('New', 'New Arrival'), ('Best', 'Best Seller')], default='New')
