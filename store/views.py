@@ -32,24 +32,14 @@ def _get_cart(request):
 
 # --- HOME VIEW (BANNER + CATEGORY + PRODUCT) ---
 def home(request):
-    # 1. Banners (Hero Section)
-    banners = HomeBanner.objects.filter(is_active=True)
-    
-    # 2. Categories with Subcategories (Menu & Section)
+    banners = HomeBanner.objects.filter(is_active=True) # Banner edukkurom
     categories = Category.objects.prefetch_related('subcategories').all()
+    products = Product.objects.filter(is_approved=True)
     
-    # 3. Products (Approved & Trending First)
-    products = Product.objects.filter(is_approved=True).order_by('-is_trending', '-created_at')
-    
-    # 4. Cart Count for Header
-    cart = _get_cart(request)
-    cart_count = cart.items.count()
-
     context = {
-        'banners': banners,
+        'banners': banners, # Idhu irundha dhaan Hero Banner theriyum!
         'categories': categories,
         'products': products,
-        'cart_count': cart_count,
     }
     return render(request, 'index.html', context)
 
@@ -206,3 +196,14 @@ def switch_currency(request, currency_code):
     if currency_code in valid_currencies:
         request.session['currency'] = currency_code
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+# store/views.py
+
+@login_required
+def designer_dashboard(request):
+    """Designer Dashboard page placeholder"""
+    return render(request, 'store/designer_dashboard.html')
+
+@login_required
+def upload_design(request):
+    """Design upload page placeholder"""
+    return render(request, 'store/upload_design.html')
