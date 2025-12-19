@@ -62,6 +62,7 @@ TEMPLATES = [
                 
                 # Namma puthusa add panna line
                 'store.context_processors.website_settings',
+                'store.context_processors.menu_links',
             ],
         },
     },
