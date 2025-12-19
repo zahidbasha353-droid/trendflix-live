@@ -1,71 +1,58 @@
-import os
+import requests
+from bs4 import BeautifulSoup
 import random
-import string
-import json
-from django.conf import settings
 
-# --- 1. AUTO-GENERATE PRINT FILE (Manifest) ---
-def generate_print_manifest(order):
-    """
-    Creates a text file with order details for the printing team.
-    In a real app, this would generate a High-Res PDF/PNG.
-    """
-    # Create 'media/print_files' directory if not exists
-    base_dir = settings.BASE_DIR
-    print_dir = os.path.join(base_dir, 'media', 'print_files')
-    if not os.path.exists(print_dir):
-        os.makedirs(print_dir)
+# Fake User Agents (Amazon Block pannama irukka)
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+]
 
-    # File Content
-    filename = f"MANIFEST_{order.id}_{order.full_name.replace(' ', '_')}.txt"
-    filepath = os.path.join(print_dir, filename)
+def get_amazon_details(url):
+    headers = {
+        "User-Agent": random.choice(USER_AGENTS),
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive"
+    }
     
-    content = f"""
-    =========================================
-    🖨️ TRENDFLIX PRINT MANIFEST - ORDER #{order.id}
-    =========================================
-    Customer: {order.full_name}
-    Country:  {order.country}
-    Shipping: {order.address}, {order.city}, {order.zipcode}
-    -----------------------------------------
-    ITEMS TO PRINT:
-    """
-    
-    for item in order.items.all():
-        content += f"\n[ ] {item.quantity} x {item.product.name} | Size: {getattr(item, 'size', 'M')} | SKU: {item.product.sku}"
-    
-    content += "\n\n========================================="
-    
-    # Save File
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
-    
-    return f"/media/print_files/{filename}"
-
-# --- 2. SUPPLIER API HIT (Simulation) ---
-def push_to_supplier(order):
-    """
-    Simulates sending data to Qikink (India) or Printify (Global).
-    Returns: (Success Boolean, Tracking Number)
-    """
-    print(f"🤖 BOT: Analyzing Order #{order.id} for Country: {order.country}")
-
-    # ROUTING LOGIC
-    supplier = "UNKNOWN"
-    if order.country.lower() == "india":
-        supplier = "Qikink / Printrove"
-    else:
-        supplier = "Printify (Global)"
-
-    print(f"🚀 BOT: Pushing Order to {supplier} API...")
-    
-    # SIMULATE API DELAY & RESPONSE
-    # In real code: requests.post('https://api.qikink.com/order', json=data)
-    
-    # Auto-Generate Fake Tracking Number
-    tracking_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=12))
-    final_tracking = f"{supplier[:3].upper()}-{tracking_code}"
-    
-    print(f"✅ BOT: Success! Tracking ID Received: {final_tracking}")
-    
-    return True, final_tracking
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        
+        if response.status_code != 200:
+            return None
+            
+        soup = BeautifulSoup(response.content, "lxml")
+        
+        # 1. Get Title
+        title_tag = soup.find("span", attrs={"id": "productTitle"})
+        title = title_tag.get_text().strip() if title_tag else "New Amazon Product"
+        
+        # 2. Get Price
+        price = 0
+        price_tag = soup.find("span", attrs={"class": "a-price-whole"})
+        if not price_tag:
+            price_tag = soup.find("span", attrs={"class": "a-offscreen"})
+            
+        if price_tag:
+            price_text = price_tag.get_text().replace(".", "").replace(",", "").replace("₹", "").strip()
+            clean_price = ""
+            for char in price_text:
+                if char.isdigit():
+                    clean_price += char
+            if clean_price:
+                price = int(clean_price)
+            
+        # 3. Get Image
+        image_tag = soup.find("img", attrs={"id": "landingImage"})
+        image_url = image_tag['src'] if image_tag else None
+        
+        return {
+            "name": title,
+            "price": price,
+            "image_url": image_url
+        }
+        
+    except Exception as e:
+        print(f"Error scraping: {e}")
+        return None
