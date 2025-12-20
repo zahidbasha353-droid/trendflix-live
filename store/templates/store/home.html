@@ -34,15 +34,16 @@
                 {% endif %}
 
                 <div class="product-img-wrap">
-                    <a href="{{ product.affiliate_link }}" target="_blank" class="product-img-link">
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                        {% elif product.image_url_path %}
-                            <img src="{{ product.image_url_path }}" alt="{{ product.name }}" style="width: 100%; height: 250px; object-fit: contain;">
-                        {% else %}
-                            <img src="https://via.placeholder.com/300x400" alt="No Image">
-                        {% endif %}
-                    </a>
+    <a href="{{ product.affiliate_link }}" target="_blank">
+        {% if product.image_url_path %}
+            <img src="{{ product.image_url_path }}" alt="{{ product.name }}" style="width: 100%; height: 250px; object-fit: contain;">
+        {% elif product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+            <img src="https://via.placeholder.com/300x400" alt="No Image">
+        {% endif %}
+    </a>
+</div>
                     
                     <div class="product-actions">
                         <a href="#" class="action-btn"><i class="far fa-heart"></i></a>
