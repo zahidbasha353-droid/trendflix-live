@@ -38,7 +38,7 @@
                         {% if product.image %}
                             <img src="{{ product.image.url }}" alt="{{ product.name }}">
                         {% elif product.image_url_path %}
-                            <img src="{{ product.image_url_path }}" alt="{{ product.name }}">
+                            <img src="{{ product.image_url_path }}" alt="{{ product.name }}" style="width: 100%; height: 250px; object-fit: contain;">
                         {% else %}
                             <img src="https://via.placeholder.com/300x400" alt="No Image">
                         {% endif %}
@@ -81,3 +81,4 @@
 </div>
 
 {% endblock %}
+<a href="{{ product.affiliate_link }}" target="_blank" class="btn btn-warning">Buy on Amazon</a>
