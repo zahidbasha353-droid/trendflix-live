@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # --- 1. GLOBAL CHOICES ---
-# Idhai moadhala define pannanum, appo dhaan NameError varaadhu
+# Idhai top-la vachutta thaan Product model-la use pannumbothu error varaathu
 DEAL_CHOICES = (
     ('top_deal', 'Top Deal'),
     ('best_seller', 'Best Seller'),
@@ -33,7 +33,6 @@ class HomeBanner(models.Model):
         ('side_top', 'Side Top Banner (Right Top)'),
         ('side_bottom', 'Side Bottom Banner (Right Bottom)'),
     )
-    
     title = models.CharField(max_length=200, blank=True)
     position = models.CharField(max_length=20, choices=POSITIONS, unique=True)
     image = models.ImageField(upload_to='banners/')
@@ -62,25 +61,23 @@ class SubCategory(models.Model):
     def __str__(self):
         return f"{self.category.name} > {self.name}"
 
-# --- 6. PRODUCT (AUTOMATION & AFFILIATE READY) ---
+# --- 6. PRODUCT ---
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=True)
     rating = models.CharField(max_length=10, default="4.0", blank=True, null=True)
     
-    # Amazon Automation Fields
+    # Amazon Automation
     amazon_url = models.URLField(max_length=500, blank=True, null=True, help_text="Amazon link-ah paste pannunga")
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     image_url_path = models.URLField(max_length=1000, blank=True, null=True)
     
-    # Price Logic
+    # Prices
     cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     
     affiliate_link = models.URLField(default='https://www.amazon.in/', blank=True, null=True)
-    
-    # UPDATED DEAL LOGIC
     deal_type = models.CharField(max_length=20, choices=DEAL_CHOICES, default='top_deal')
 
     is_approved = models.BooleanField(default=True)
@@ -130,12 +127,24 @@ class Order(models.Model):
     phone = models.CharField(max_length=20)
     address = models.TextField()
     city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100, default="India")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    tracking_number = models.CharField(max_length=100, blank=True, null=True)
+    qc_passed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order #{self.id} - {self.full_name}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name}"
 
 # --- 9. SAVED DESIGNS ---
 class SavedDesign(models.Model):
