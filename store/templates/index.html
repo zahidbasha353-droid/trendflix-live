@@ -5,9 +5,6 @@
 {% block content %}
 
 <style>
-    /* =========================================
-       🎨 MEESHO STYLE COLOR PALETTE
-       ========================================= */
     :root {
         --meesho-pink: #f43397;
         --meesho-bg: #f9f9f9;
@@ -18,43 +15,20 @@
 
     body { background-color: var(--meesho-bg) !important; font-family: 'Mier B', -apple-system, BlinkMacSystemFont, sans-serif; }
 
-    /* 1. PINK APP STRIP (Sticky) */
     .app-download-strip {
         background-color: var(--meesho-pink);
-        color: white;
-        padding: 10px 0;
-        text-align: center;
-        font-size: 14px;
-        position: sticky;
-        top: 0;
-        z-index: 1050;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        color: white; padding: 10px 0; text-align: center; font-size: 14px;
+        position: sticky; top: 0; z-index: 1050; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .download-btn {
-        background-color: white;
-        color: var(--meesho-pink);
-        padding: 4px 12px;
-        border-radius: 20px;
-        text-decoration: none;
-        font-weight: bold;
-        margin-left: 10px;
-        font-size: 12px;
+        background-color: white; color: var(--meesho-pink); padding: 4px 12px;
+        border-radius: 20px; text-decoration: none; font-weight: bold; margin-left: 10px; font-size: 12px;
     }
 
     .main-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    
-    /* 2. DYNAMIC HERO BANNER */
-    .hero-banner { 
-        width: 100%; margin-bottom: 30px; border-radius: 12px; overflow: hidden;
-    }
-    .banner-item { position: relative; width: 100%; margin-bottom: 10px; }
+    .hero-banner { width: 100%; margin-bottom: 30px; border-radius: 12px; overflow: hidden; }
     .banner-item img { width: 100%; border-radius: 12px; display: block; }
-    .banner-text {
-        position: absolute; bottom: 20px; left: 20px; color: white;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
 
-    /* 3. CATEGORY STRIP */
     .brand-strip-title { font-size: 24px; font-weight: 700; margin: 20px 0; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
     .brand-scroll { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
     .brand-scroll::-webkit-scrollbar { display: none; }
@@ -62,25 +36,31 @@
     .brand-img-box { width: 100%; height: 110px; border-radius: 50%; overflow: hidden; border: 1px solid #e0e0e0; background: white; }
     .brand-img-box img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* 4. PRODUCT GRID */
     .content-wrapper { display: flex; gap: 20px; }
     .filter-sidebar { width: 260px; display: none; background: white; padding: 15px; border-radius: 8px; border: 1px solid #eee; height: fit-content; }
     .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; flex: 1; }
 
-    /* CARD STYLING */
-    .m-card { background: white; border-radius: 8px; border: 1px solid #eee; transition: 0.3s; overflow: hidden; }
+    .m-card { background: white; border-radius: 8px; border: 1px solid #eee; transition: 0.3s; overflow: hidden; height: 100%; }
     .m-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    .m-img-wrap { height: 250px; }
-    .m-img { width: 100%; height: 100%; object-fit: cover; }
-    .m-info { padding: 10px; }
+    .m-img-wrap { height: 250px; overflow: hidden; background: #fff; }
+    .m-img { width: 100%; height: 100%; object-fit: contain; }
+    .m-info { padding: 12px; }
     .m-price { font-size: 18px; font-weight: 800; color: var(--text-dark); }
     .m-off { color: var(--rating-green); font-size: 12px; font-weight: 600; }
-    .m-btn { display: block; width: 100%; border: 1px solid var(--meesho-pink); color: var(--meesho-pink); padding: 8px; border-radius: 4px; text-align: center; font-weight: 600; text-decoration: none; margin-top: 10px; }
+    
+    /* Premium Amazon Button Style */
+    .btn-amazon {
+        background-color: #ffd814; color: #0f1111 !important;
+        font-weight: 700; border-radius: 8px; border: none;
+        padding: 10px; text-align: center; text-decoration: none;
+        display: block; margin-top: 10px; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn-amazon:hover { background-color: #f7ca00; }
 
     @media (min-width: 992px) { .filter-sidebar { display: block; } }
     @media (max-width: 768px) {
         .grid-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .m-img-wrap { height: 200px; }
+        .m-img-wrap { height: 180px; }
     }
 </style>
 
@@ -92,19 +72,12 @@
 </div>
 
 <div class="main-container">
-
     <section class="hero-banner">
         {% for banner in banners %}
             <div class="banner-item">
                 <a href="{{ banner.button_link }}">
                     <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
                 </a>
-                {% if banner.main_text %}
-                <div class="banner-text">
-                    <h3>{{ banner.main_text }}</h3>
-                    <p>{{ banner.small_text }}</p>
-                </div>
-                {% endif %}
             </div>
         {% empty %}
             <img src="https://via.placeholder.com/1200x400?text=Welcome+to+TrendFlix+HQ" style="width:100%;">
@@ -143,25 +116,41 @@
             <div class="grid-container">
                 {% for product in products %}
                 <div class="m-card">
-                    <a href="{{ product.affiliate_link }}" target="_blank" style="text-decoration: none; color: inherit;">
-                        <div class="m-img-wrap">
-                            <img src="{% if product.image %}{{ product.image.url }}{% else %}https://via.placeholder.com/300x400{% endif %}" class="m-img">
+                    <div class="m-img-wrap">
+                        <a href="{{ product.affiliate_link }}" target="_blank">
+                            {% if product.image_url_path %}
+                                <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
+                            {% elif product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300x400" alt="No Image" class="m-img">
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <div class="m-info">
+                        <div style="font-size: 13px; color: #666; height: 38px; overflow: hidden; margin-bottom: 5px;">
+                            {{ product.name|truncatechars:45 }}
                         </div>
-                        <div class="m-info">
-                            <div style="font-size: 13px; color: #999; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ product.name }}</div>
-                            <div style="margin: 5px 0;">
-                                <span class="m-price">{{ product.selling_price|currency:request }}</span>
-                                <span style="font-size: 11px; text-decoration: line-through; color: #999; margin-left: 5px;">₹{{ product.cost_price }}</span>
-                                <span class="m-off">{{ product.profit }}% off</span>
-                            </div>
-                            <div style="font-size: 12px; color: var(--rating-green);">
-                                <span style="background: var(--rating-green); color: white; padding: 2px 6px; border-radius: 10px; font-weight: bold;">4.2 ★</span>
-                                <span style="color: #666; margin-left: 5px;">Free Delivery</span>
-                            </div>
-                            <div class="m-btn">Shop Now</div>
+                        
+                        <div style="margin: 5px 0;">
+                            <span class="m-price">{{ product.selling_price|currency:request }}</span>
+                            <span style="font-size: 11px; text-decoration: line-through; color: #999; margin-left: 5px;">₹{{ product.cost_price }}</span>
+                            <span class="m-off">{{ product.profit }}% off</span>
                         </div>
-                    </a>
+
+                        <div style="font-size: 12px; color: var(--rating-green); margin-bottom: 10px;">
+                            <span style="background: var(--rating-green); color: white; padding: 2px 6px; border-radius: 10px; font-weight: bold;">4.2 ★</span>
+                            <span style="color: #666; margin-left: 5px;">Free Delivery</span>
+                        </div>
+
+                        <a href="{{ product.affiliate_link }}" target="_blank" class="btn-amazon">
+                            <i class="fab fa-amazon"></i> Buy on Amazon
+                        </a>
+                    </div>
                 </div>
+                {% empty %}
+                <p class="text-center w-100">No products found. Start your Amazon Bot!</p>
                 {% endfor %}
             </div>
         </div>
@@ -169,15 +158,3 @@
 </div>
 
 {% endblock %}
-<div class="m-img-wrap">
-    <a href="{{ product.affiliate_link }}" target="_blank">
-        {% if product.image_url_path %}
-            <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
-        {% elif product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
-        {% else %}
-            <img src="https://via.placeholder.com/300x400" alt="No Image" class="m-img">
-            <p>DEBUG: {{ product.image_url_path }}</p>
-        {% endif %}
-    </a>
-</div>
