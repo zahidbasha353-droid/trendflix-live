@@ -64,4 +64,12 @@ urlpatterns = [
     path('upload-design/', views.upload_design, name='upload_design'),
     path('dashboard/owner/', views.owner_dashboard, name='owner_dashboard'),
     path('switch-currency/<str:currency_code>/', views.switch_currency, name='switch_currency'),
+    
+]
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # ... unga matha paths ...
+    path('auto-update/<str:category_name>/', views.auto_update_products, name='auto_update_products'),
 ]

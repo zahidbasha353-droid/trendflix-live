@@ -220,3 +220,64 @@ def upload_design(request):
 # Views.py logic
 mens_deals = Product.objects.filter(category__name='Men', deal_type='top_deal')[:4]
 womens_clearance = Product.objects.filter(category__name='Women', deal_type='clearance')[:4]
+import requests
+from bs4 import BeautifulSoup
+from django.contrib import messages
+from django.shortcuts import redirect
+from .models import Product, Category
+
+def auto_update_products(request, category_name):
+    # Category-ah kandupudikkiroam
+    try:
+        category = Category.objects.get(name__icontains=category_name)
+    except Category.DoesNotExist:
+        messages.error(request, f"Category '{category_name}' find panna mudiyala!")
+        return redirect('/admin/store/product/')
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    }
+    
+    # Amazon search URL (Category-padi search pannum)
+    search_url = f"https://www.amazon.in/s?k={category_name}+deals"
+    response = requests.get(search_url, headers=headers)
+    soup = BeautifulSoup(response.content, "html.parser")
+    items = soup.find_all("div", {"data-component-type": "s-search-result"})
+
+    count = 0
+    for item in items[:30]: # Extra products check pandroam to get 20 clean ones
+        if count >= 20: break
+        
+        try:
+            name = item.h2.text.strip()
+            price_span = item.find("span", "a-price-whole")
+            price = float(price_span.text.replace(',', '').strip()) if price_span else 499.00
+            
+            img_tag = item.find("img", "s-image")
+            img_url = img_tag['src'] if img_tag else ""
+
+            link_tag = item.find("a", "a-link-normal")
+            raw_url = "https://www.amazon.in" + link_tag['href']
+            affiliate_url = f"{raw_url.split('?')[0]}?tag=zahidbasha-21"
+
+            # 🚨 DUPLICATE CHECK: URL vachhu check pandroam
+            product, created = Product.objects.get_or_create(
+                amazon_url=raw_url,
+                defaults={
+                    'name': name[:200],
+                    'category': category,
+                    'image_url_path': img_url,
+                    'selling_price': price,
+                    'cost_price': price + 200, # Mock cost price for discount
+                    'affiliate_link': affiliate_url,
+                    'deal_type': 'top_deal',
+                    'is_approved': True
+                }
+            )
+            if created:
+                count += 1
+        except:
+            continue
+
+    messages.success(request, f"Success! {count} pudhu products '{category_name}' section-la update aayiduchi!")
+    return redirect('/admin/store/product/')
