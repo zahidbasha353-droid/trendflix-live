@@ -147,3 +147,9 @@ class SavedDesign(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='designs/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    DEAL_CHOICES = (
+    ('top_deal', 'Top Deal'),
+    ('best_seller', 'Best Seller'),
+    ('clearance', 'Stock Clearance'),
+)
+deal_type = models.CharField(max_length=20, choices=DEAL_CHOICES, default='top_deal')

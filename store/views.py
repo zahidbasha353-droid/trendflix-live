@@ -207,3 +207,6 @@ def designer_dashboard(request):
 def upload_design(request):
     """Design upload page placeholder"""
     return render(request, 'store/upload_design.html')
+# Views.py logic
+mens_deals = Product.objects.filter(category__name='Men', deal_type='top_deal')[:4]
+womens_clearance = Product.objects.filter(category__name='Women', deal_type='clearance')[:4]
