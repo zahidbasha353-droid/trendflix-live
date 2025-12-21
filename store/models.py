@@ -1,7 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# --- 1. SITE SETTINGS ---
+# --- 1. GLOBAL CHOICES ---
+# Idhai moadhala define pannanum, appo dhaan NameError varaadhu
+DEAL_CHOICES = (
+    ('top_deal', 'Top Deal'),
+    ('best_seller', 'Best Seller'),
+    ('clearance', 'Stock Clearance'),
+)
+
+# --- 2. SITE SETTINGS ---
 class SiteSettings(models.Model):
     THEME_CHOICES = [
         ('default', 'Default'),
@@ -18,7 +26,7 @@ class SiteSettings(models.Model):
     def __str__(self):
         return self.site_name
 
-# --- 2. HOME BANNERS ---
+# --- 3. HOME BANNERS ---
 class HomeBanner(models.Model):
     POSITIONS = (
         ('main', 'Main Big Banner (Left Side)'),
@@ -38,7 +46,7 @@ class HomeBanner(models.Model):
     def __str__(self):
         return f"{self.get_position_display()} - {self.title}"
 
-# --- 3. CATEGORY ---
+# --- 4. CATEGORY ---
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
@@ -46,7 +54,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-# --- 4. SUB-CATEGORY ---
+# --- 5. SUB-CATEGORY ---
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -54,27 +62,26 @@ class SubCategory(models.Model):
     def __str__(self):
         return f"{self.category.name} > {self.name}"
 
-# --- 5. PRODUCT (AUTOMATION & AFFILIATE READY) ---
+# --- 6. PRODUCT (AUTOMATION & AFFILIATE READY) ---
 class Product(models.Model):
-    # ... munnadi irukra fields ...
-    rating = models.CharField(max_length=10, default="4.0", blank=True, null=True)
-    # ...
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, blank=True) # Automated-ah fill aaga blank=True
+    name = models.CharField(max_length=200, blank=True)
+    rating = models.CharField(max_length=10, default="4.0", blank=True, null=True)
     
-    # Pudhu field - Amazon URL Input-kaga
-    amazon_url = models.URLField(max_length=500, blank=True, null=True, help_text="Amazon product link-ah inga paste pannunga")
-    
+    # Amazon Automation Fields
+    amazon_url = models.URLField(max_length=500, blank=True, null=True, help_text="Amazon link-ah paste pannunga")
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
-    # Scraping images-kaga oru direct URL field (Optional but useful)
     image_url_path = models.URLField(max_length=1000, blank=True, null=True)
     
+    # Price Logic
     cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     
     affiliate_link = models.URLField(default='https://www.amazon.in/', blank=True, null=True)
-    deal_type = models.CharField(max_length=50, choices=[('Hot', 'Hot Deal'), ('New', 'New Arrival'), ('Best', 'Best Seller')], default='New')
+    
+    # UPDATED DEAL LOGIC
+    deal_type = models.CharField(max_length=20, choices=DEAL_CHOICES, default='top_deal')
 
     is_approved = models.BooleanField(default=True)
     is_trending = models.BooleanField(default=False)
@@ -86,12 +93,12 @@ class Product(models.Model):
 
     @property
     def profit(self):
-        if self.cost_price > 0:
+        if self.cost_price > 0 and self.selling_price > 0:
             discount = ((self.cost_price - self.selling_price) / self.cost_price) * 100
             return int(discount)
         return 0
 
-# --- 6. CART SYSTEM ---
+# --- 7. CART SYSTEM ---
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -109,7 +116,7 @@ class CartItem(models.Model):
     def total_price(self):
         return self.product.selling_price * self.quantity
 
-# --- 7. ORDER SYSTEM ---
+# --- 8. ORDER SYSTEM ---
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
@@ -123,33 +130,15 @@ class Order(models.Model):
     phone = models.CharField(max_length=20)
     address = models.TextField()
     city = models.CharField(max_length=100)
-    country = models.CharField(max_length=100, default="India")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    tracking_number = models.CharField(max_length=100, blank=True, null=True)
-    qc_passed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Order #{self.id} - {self.full_name}"
 
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
-
-# --- 8. SAVED DESIGNS ---
+# --- 9. SAVED DESIGNS ---
 class SavedDesign(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='designs/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    DEAL_CHOICES = (
-    ('top_deal', 'Top Deal'),
-    ('best_seller', 'Best Seller'),
-    ('clearance', 'Stock Clearance'),
-)
-deal_type = models.CharField(max_length=20, choices=DEAL_CHOICES, default='top_deal')
