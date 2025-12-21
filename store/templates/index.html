@@ -177,6 +177,7 @@
             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
         {% else %}
             <img src="https://via.placeholder.com/300x400" alt="No Image" class="m-img">
+            <p>DEBUG: {{ product.image_url_path }}</p>
         {% endif %}
     </a>
 </div>
