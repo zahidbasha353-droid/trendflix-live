@@ -169,3 +169,14 @@
 </div>
 
 {% endblock %}
+<div class="m-img-wrap">
+    <a href="{{ product.affiliate_link }}" target="_blank">
+        {% if product.image_url_path %}
+            <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
+        {% elif product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
+        {% else %}
+            <img src="https://via.placeholder.com/300x400" alt="No Image" class="m-img">
+        {% endif %}
+    </a>
+</div>
