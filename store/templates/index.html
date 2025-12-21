@@ -38,17 +38,16 @@
 
     .content-wrapper { display: flex; gap: 20px; }
     .filter-sidebar { width: 260px; display: none; background: white; padding: 15px; border-radius: 8px; border: 1px solid #eee; height: fit-content; }
-    .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; flex: 1; }
+    .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; flex: 1; margin-bottom: 40px;}
 
-    .m-card { background: white; border-radius: 8px; border: 1px solid #eee; transition: 0.3s; overflow: hidden; height: 100%; }
+    .m-card { background: white; border-radius: 8px; border: 1px solid #eee; transition: 0.3s; overflow: hidden; height: 100%; display: flex; flex-direction: column;}
     .m-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     .m-img-wrap { height: 250px; overflow: hidden; background: #fff; }
     .m-img { width: 100%; height: 100%; object-fit: contain; }
-    .m-info { padding: 12px; }
+    .m-info { padding: 12px; flex-grow: 1; }
     .m-price { font-size: 18px; font-weight: 800; color: var(--text-dark); }
     .m-off { color: var(--rating-green); font-size: 12px; font-weight: 600; }
     
-    /* Premium Amazon Button Style */
     .btn-amazon {
         background-color: #ffd814; color: #0f1111 !important;
         font-weight: 700; border-radius: 8px; border: none;
@@ -112,47 +111,90 @@
         </div>
 
         <div class="product-grid-area" style="flex: 1;">
-            <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">Products For You</div>
+            
+            {% if mens_deals %}
+            <div style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">🔥 Men's Wear: Top Deals</div>
             <div class="grid-container">
-                {% for product in products %}
-                <div class="m-card">
-                    <div class="m-img-wrap">
-                        <a href="{{ product.affiliate_link }}" target="_blank">
-                            {% if product.image_url_path %}
-                                <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
-                            {% elif product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
-                            {% else %}
-                                <img src="https://via.placeholder.com/300x400" alt="No Image" class="m-img">
-                            {% endif %}
-                        </a>
+                {% for product in mens_deals %}
+                    <div class="m-card">
+                        <div class="m-img-wrap">
+                            <a href="{{ product.affiliate_link }}" target="_blank">
+                                {% if product.image_url_path %}
+                                    <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
+                                {% elif product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/300x400" alt="No Image" class="m-img">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="m-info">
+                            <div style="font-size: 13px; color: #666; height: 38px; overflow: hidden;">{{ product.name|truncatechars:45 }}</div>
+                            <div style="margin: 5px 0;">
+                                <span class="m-price">{{ product.selling_price|currency:request }}</span>
+                                <span class="m-off">{{ product.profit }}% off</span>
+                            </div>
+                            <a href="{{ product.affiliate_link }}" target="_blank" class="btn-amazon"><i class="fab fa-amazon"></i> Buy on Amazon</a>
+                        </div>
                     </div>
-
-                    <div class="m-info">
-                        <div style="font-size: 13px; color: #666; height: 38px; overflow: hidden; margin-bottom: 5px;">
-                            {{ product.name|truncatechars:45 }}
-                        </div>
-                        
-                        <div style="margin: 5px 0;">
-                            <span class="m-price">{{ product.selling_price|currency:request }}</span>
-                            <span style="font-size: 11px; text-decoration: line-through; color: #999; margin-left: 5px;">₹{{ product.cost_price }}</span>
-                            <span class="m-off">{{ product.profit }}% off</span>
-                        </div>
-
-                        <div style="font-size: 12px; color: var(--rating-green); margin-bottom: 10px;">
-                            <span style="background: var(--rating-green); color: white; padding: 2px 6px; border-radius: 10px; font-weight: bold;">4.2 ★</span>
-                            <span style="color: #666; margin-left: 5px;">Free Delivery</span>
-                        </div>
-
-                        <a href="{{ product.affiliate_link }}" target="_blank" class="btn-amazon">
-                            <i class="fab fa-amazon"></i> Buy on Amazon
-                        </a>
-                    </div>
-                </div>
-                {% empty %}
-                <p class="text-center w-100">No products found. Start your Amazon Bot!</p>
                 {% endfor %}
             </div>
+            {% endif %}
+
+            {% if womens_clearance %}
+            <div style="font-size: 20px; font-weight: bold; margin: 30px 0 15px;">📦 Women's Stock Clearance</div>
+            <div class="grid-container">
+                {% for product in womens_clearance %}
+                    <div class="m-card">
+                        <div class="m-img-wrap">
+                            <a href="{{ product.affiliate_link }}" target="_blank">
+                                {% if product.image_url_path %}
+                                    <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
+                                {% elif product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="m-info">
+                            <div style="font-size: 13px; color: #666; height: 38px; overflow: hidden;">{{ product.name|truncatechars:45 }}</div>
+                            <div style="margin: 5px 0;">
+                                <span class="m-price">{{ product.selling_price|currency:request }}</span>
+                                <span class="m-off">{{ product.profit }}% off</span>
+                            </div>
+                            <a href="{{ product.affiliate_link }}" target="_blank" class="btn-amazon"><i class="fab fa-amazon"></i> Buy on Amazon</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div style="font-size: 20px; font-weight: bold; margin: 30px 0 15px;">🌟 Best Sellers For You</div>
+            <div class="grid-container">
+                {% for product in best_sellers %}
+                    <div class="m-card">
+                        <div class="m-img-wrap">
+                            <a href="{{ product.affiliate_link }}" target="_blank">
+                                {% if product.image_url_path %}
+                                    <img src="{{ product.image_url_path }}" alt="{{ product.name }}" class="m-img">
+                                {% elif product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="m-img">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="m-info">
+                            <div style="font-size: 13px; color: #666; height: 38px; overflow: hidden;">{{ product.name|truncatechars:45 }}</div>
+                            <div style="margin: 5px 0;">
+                                <span class="m-price">{{ product.selling_price|currency:request }}</span>
+                                <span class="m-off">{{ product.profit }}% off</span>
+                            </div>
+                            <a href="{{ product.affiliate_link }}" target="_blank" class="btn-amazon"><i class="fab fa-amazon"></i> Buy on Amazon</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No Best Sellers yet. Start adding from Admin!</p>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
 </div>

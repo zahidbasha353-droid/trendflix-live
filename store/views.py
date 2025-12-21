@@ -32,16 +32,26 @@ def _get_cart(request):
 
 # --- HOME VIEW (BANNER + CATEGORY + PRODUCT) ---
 def home(request):
-    banners = HomeBanner.objects.filter(is_active=True) # Banner edukkurom
-    categories = Category.objects.prefetch_related('subcategories').all()
-    products = Product.objects.filter(is_approved=True)
+    categories = Category.objects.all()
+    banners = HomeBanner.objects.filter(is_active=True)
     
+    # 1. Men's Top Deals section-kaga
+    mens_deals = Product.objects.filter(category__name__icontains='Men', deal_type='top_deal')[:4]
+    
+    # 2. Women's Clearance section-kaga
+    womens_clearance = Product.objects.filter(category__name__icontains='Women', deal_type='clearance')[:4]
+    
+    # 3. Best Sellers section-kaga
+    best_sellers = Product.objects.filter(deal_type='best_seller')[:8]
+
     context = {
-        'banners': banners, # Idhu irundha dhaan Hero Banner theriyum!
         'categories': categories,
-        'products': products,
+        'banners': banners,
+        'mens_deals': mens_deals,
+        'womens_clearance': womens_clearance,
+        'best_sellers': best_sellers,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'store/index.html', context)
 
 # --- PRODUCT DETAIL ---
 def product_detail(request, product_id):
